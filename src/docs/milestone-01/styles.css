@@ -144,7 +144,7 @@ p:not(.member-cards),
 img.card-img {
     border-radius: 5px 5px 0 0;
     width: 175px;
-    height: auto;
+    height: 175px;
     display: block;
     margin-left: auto;
     margin-right: auto;
