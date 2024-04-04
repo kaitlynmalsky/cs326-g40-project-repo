@@ -1,330 +1,410 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>VillageLink</title>
     <!-- CSS Stylesheets -->
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css" />
     <!-- JavaScript Files -->
     <script type="module" src="script.js" defer></script>
-</head>
+  </head>
 
-<body>
+  <body>
     <header id="vision">
-        <h1>VillageLink</h1>
+      <h1>VillageLink</h1>
     </header>
     <nav>
-        <ul>
-            <li><a href="#team">Team Members</a></li>
-            <li><a href="#overview">Overview</a></li>
-            <li><a href="#application-parts">Application Parts</a></li>
-            <li><a href="#data-requirements">Data Requirements</a></li>
-            <li><a href="#wire-frames">Wire Frames</a></li>
-            <li><a href="#real-world">Real World Connection</a></li>
-            <li><a href="#integrative-experience">Integrative Experience</a></li>
-        </ul>
+      <ul>
+        <li><a href="#team">Team Members</a></li>
+        <li><a href="#overview">Overview</a></li>
+        <li><a href="#application-parts">Application Parts</a></li>
+        <li><a href="#data-requirements">Data Requirements</a></li>
+        <li><a href="#wire-frames">Wire Frames</a></li>
+        <li><a href="#real-world">Real World Connection</a></li>
+        <li><a href="#integrative-experience">Integrative Experience</a></li>
+      </ul>
     </nav>
     <main>
-        <!-- Main content of the document -->
-        <section id="team" class="collapsible">
-            <h2 class="active">Team Members</h2>
-            <div class="collapsible-show">
-                <div class="member-cards">
-                    <div class="card">
-                        <img src="./images/matthew.jpeg" alt="Matthew Profile" class="card-img">
-                        <div class="container-cards">
-                            <h3>Matthew Kotchkin</h3>
-                            <p>Web backend, JS/TS, Git/GitHub</p>
-                            <p>
-                                I am a sophomore CS student with extensive experience in Node.js web backend development
-                                with TypeScript in both server and serverless environments. Additional experience
-                                includes both SQL (Postgres, SQLite) and NoSQL databases (MongoDB, Cassandra, DynamoDB),
-                                Rust, Elixir, C, Java, and Golang.
-                            </p>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <img src="./images/kaitlyn.jpeg" alt="Kaitlyn Profile" class="card-img">
-                        <div class="container-cards">
-                            <h3>Kaitlyn Malsky</h3>
-                            <p>Web frontend, JS/TS, C, Python, Java</p>
-                            <p>
-                                I am a junior CS student with a diverse skill set with experience in React and previous
-                                experience in web development. I have experience with both Javascript and Typescript, as
-                                well as Java, Python, C, and PostgresQL, as well as some research experience
-                                with natural language processing.
-                            </p>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <img src="./images/sreyas.jpeg" alt="Sreyas Profile" class="card-img">
-                        <div class="container-cards">
-                            <h3>Sreyas Rajasekharuni</h3>
-                            <p>Web frontend, JS/TS, Project Management, Python</p>
-                            <p>
-                                I have some experience with react and bootstrap for frontend and some experience with
-                                data management using MongoDB and Mongoose. I also have research experience with Python,
-                                Pytorch, MATLAB, CUDA and using ML and computer vision techniques.
-                            </p>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <img src="./images/shivay.jpeg" alt="Shivay Profile" class="card-img">
-                        <div class="container-cards">
-                            <h3>Shivay Wadhawan</h3>
-                            <p>Frontend, React.js, Javascript/Typescript</p>
-                            <p>
-                                I am a CS Senior. Skills relevant to the Project: I have experience with React.js/Redux
-                                , bootstrap for css and figma for building UI.
-                            </p>
-                        </div>
-                    </div>
-                </div>
+      <!-- Main content of the document -->
+      <section id="team" class="collapsible">
+        <h2 class="active">Team Members</h2>
+        <div class="collapsible-show">
+          <div class="member-cards">
+            <div class="card">
+              <img
+                src="./images/matthew.jpeg"
+                alt="Matthew Profile"
+                class="card-img"
+              />
+              <div class="container-cards">
+                <h3>Matthew Kotchkin</h3>
+                <p>Web backend, JS/TS, Git/GitHub</p>
+                <p>
+                  I am a sophomore CS student with extensive experience in
+                  Node.js web backend development with TypeScript in both server
+                  and serverless environments. Additional experience includes
+                  both SQL (Postgres, SQLite) and NoSQL databases (MongoDB,
+                  Cassandra, DynamoDB), Rust, Elixir, C, Java, and Golang.
+                </p>
+              </div>
             </div>
-        </section>
-        <section id="overview" class="collapsible">
-            <!-- Related content or subsections -->
-            <h2 class="active">Overview</h2>
-            <p class="collapsible-show">
-                Our project is going to be an interactive map with the goal of reducing loneliness by bringing people
-                that just want to hang out together. The user of this app will be able to put a pin on a map expressing
-                that they want to hang out at some location and
-                some time, and other people will be able to quickly and easily join their group. After using the
-                application to find somebody, it will use the hangout information to build a social graph of people you
-                spent time with, adding them to a
-                “village” of people. Loneliness is a serious problem for college students and for the world as a whole;
-                on a large campus like UMass many people have the problem of being physically surrounded by a lot of
-                people but still feeling alone.
-                Asking random strangers to be friends can be intimidating for so many people, and the aim of this
-                project is to make meeting new people seem safe, fun, and approachable. The target audience of this
-                project is college students, young adults,
-                and just adults in general who struggle with making friends in their day-to-day lives.
+            <div class="card">
+              <img
+                src="./images/kaitlyn.jpeg"
+                alt="Kaitlyn Profile"
+                class="card-img"
+              />
+              <div class="container-cards">
+                <h3>Kaitlyn Malsky</h3>
+                <p>Web frontend, JS/TS, C, Python, Java</p>
+                <p>
+                  I am a junior CS student with a diverse skill set with
+                  experience in React and previous experience in web
+                  development. I have experience with both Javascript and
+                  Typescript, as well as Java, Python, C, and PostgresQL, as
+                  well as some research experience with natural language
+                  processing.
+                </p>
+              </div>
+            </div>
+            <div class="card">
+              <img
+                src="./images/sreyas.jpeg"
+                alt="Sreyas Profile"
+                class="card-img"
+              />
+              <div class="container-cards">
+                <h3>Sreyas Rajasekharuni</h3>
+                <p>Web frontend, JS/TS, Project Management, Python</p>
+                <p>
+                  I have some experience with react and bootstrap for frontend
+                  and some experience with data management using MongoDB and
+                  Mongoose. I also have research experience with Python,
+                  Pytorch, MATLAB, CUDA and using ML and computer vision
+                  techniques.
+                </p>
+              </div>
+            </div>
+            <div class="card">
+              <img
+                src="./images/shivay.jpeg"
+                alt="Shivay Profile"
+                class="card-img"
+              />
+              <div class="container-cards">
+                <h3>Shivay Wadhawan</h3>
+                <p>Frontend, React.js, Javascript/Typescript</p>
+                <p>
+                  I am a CS Senior. Skills relevant to the Project: I have
+                  experience with React.js/Redux , bootstrap for css and figma
+                  for building UI.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section id="overview" class="collapsible">
+        <!-- Related content or subsections -->
+        <h2 class="active">Overview</h2>
+        <p class="collapsible-show">
+          Our project is going to be an interactive map with the goal of
+          reducing loneliness by bringing people that just want to hang out
+          together. The user of this app will be able to put a pin on a map
+          expressing that they want to hang out at some location and some time,
+          and other people will be able to quickly and easily join their group.
+          After using the application to find somebody, it will use the hangout
+          information to build a social graph of people you spent time with,
+          adding them to a “village” of people. Loneliness is a serious problem
+          for college students and for the world as a whole; on a large campus
+          like UMass many people have the problem of being physically surrounded
+          by a lot of people but still feeling alone. Asking random strangers to
+          be friends can be intimidating for so many people, and the aim of this
+          project is to make meeting new people seem safe, fun, and
+          approachable. The target audience of this project is college students,
+          young adults, and just adults in general who struggle with making
+          friends in their day-to-day lives.
+        </p>
+      </section>
+      <section id="application-parts" class="collapsible">
+        <h2>Application Parts</h2>
+        <div>
+          <section class="collapsible">
+            <h3>Login</h3>
+            <p>
+              An essential part of the application is the login system. Users
+              must sign up before using our web app and can only sign up using
+              their UMass email for safety reasons. The user must enter their
+              name, a short bio that is capped at 200 characters, password, and
+              choose an avatar to represent themselves in the interface. The
+              short bio could include age, interests, and any other information
+              the user considers relevant.
             </p>
-        </section>
-        <section id="application-parts" class="collapsible">
-            <h2>Application Parts</h2>
+          </section>
+          <section class="collapsible">
+            <h3>People Finder</h3>
+            <p>
+              The primary feature of VillageLink is the people finder. As the
+              main page of the application, the user is presented with a
+              map-based view that highlights “pins”. Each pin represents a
+              person or group of people seeking to get other users to join them
+              in an activity or event. Users can create pins or select pins
+              created by other users in order to find other people. Pins created
+              by users in your village are highlighted more than other users'
+              pins. Our web app also prioritizes pins with very few people
+              already joined, encouraging more users to join and grow those
+              smaller hangouts into larger social gatherings.
+            </p>
+          </section>
+          <section class="collapsible">
+            <h3>Village View</h3>
+            <p>
+              The second core feature is the village view. We believe that
+              maintaining connections with people is just as important as the
+              initial connection itself. After attending an activity or an event
+              initiated through a pin, users have the ability to connect with
+              the others they met and add them to their personal village - a
+              network representing their real-world social connections. Thus,
+              the village view allows users to stay in touch with other users
+              they have previously discovered. Further, by navigating to the
+              village page of other users in their village, the app will show
+              transitive and mutual connections, enabling users to better expand
+              and manage their village network.
+            </p>
+          </section>
+          <section class="collapsible">
+            <h3>Messaging</h3>
+            <p>
+              The third key feature is messaging. Messaging allows users to
+              converse with other users on the platform who are interested in
+              the same pins. Thus, any necessary meetup planning can occur
+              without leaving the bounds of the application. This ensures that
+              meetups can go smoothly as all planning can be accounted for in
+              VillageLink.
+            </p>
+          </section>
+        </div>
+      </section>
+      <section id="data-requirements" class="collapsible">
+        <h2>Data Requirements</h2>
+        <div>
+          <p>
+            The foundational data requirement of VillageLink is the database of
+            members which have signed up for our application. This includes the
+            name of the member, accompanied by an avatar, a short bio and the
+            creation of a “village” for the user. This database is the backbone
+            of our application as it allows all the users on our application to
+            interact with each other and build our community.
+          </p>
+          <p>
+            A village is a supplementary database which stores information about
+            the people the user has interacted with and the events organized and
+            attended by the user. This feature allows users to find friends of
+            friends and connect with them. Users have full control of the people
+            that are a part of their village.
+          </p>
+          <p>
+            Another data requirement of our application is the list of current
+            events created by our members. For each event the database will
+            store the location of the event, details of the creator of the event
+            , and other information describing the event. The location of the
+            event allows the users in a close proximity to the event location to
+            view the details of the event. The details of the creator of the
+            event allows the users who are a part of the creator’s village to
+            also view the event.
+          </p>
+          <p>
+            The location of the member is used to allow the member to drop pins
+            on the map and create events. It is also used to interact with
+            people in close proximity to the user. Events that are scheduled to
+            take place within a predefined range close to the user’s location
+            become visible to the user which allows the user to get all the
+            details of the event and possibly attend it.
+          </p>
+        </div>
+      </section>
+      <section id="wire-frames" class="collapsible">
+        <h2>Wire Frames</h2>
+        <div>
+          <section class="collapsible">
+            <h3>Login</h3>
             <div>
-                <section class="collapsible">
-                    <h3>Login</h3>
-                    <p>
-                        An essential part of the application is the login system. Users must sign up before using our
-                        web app and can only sign up using their UMass email for safety reasons. The user must enter
-                        their name, a short bio that is capped at 200 characters, password,
-                        and choose an avatar to represent themselves in the interface. The short bio could include age,
-                        interests, and any other information the user considers relevant.
-                    </p>
-                </section>
-                <section class="collapsible">
-                    <h3>People Finder</h3>
-                    <p>
-                        The primary feature of VillageLink is the people finder. As the main page of the application,
-                        the user is presented with a map-based view that highlights “pins”. Each pin represents a person
-                        or group of people seeking to get other users to join them in
-                        an activity or event. Users can create pins or select pins created by other users in order to
-                        find other people. Pins created by users in your village are highlighted more than other users'
-                        pins. Our web app also prioritizes pins
-                        with very few people already joined, encouraging more users to join and grow those smaller
-                        hangouts into larger social gatherings.
-                    </p>
-                </section>
-                <section class="collapsible">
-                    <h3>Village View</h3>
-                    <p>
-                        The second core feature is the village view. We believe that maintaining connections with people
-                        is just as important as the initial connection itself. After attending an activity or an event
-                        initiated through a pin, users have the ability to connect
-                        with the others they met and add them to their personal village - a network representing their
-                        real-world social connections. Thus, the village view allows users to stay in touch with other
-                        users they have previously discovered.
-                        Further, by navigating to the village page of other users in their village, the app will show
-                        transitive and mutual connections, enabling users to better expand and manage their village
-                        network.
-                    </p>
-                </section>
-                <section class="collapsible">
-                    <h3>Messaging</h3>
-                    <p>
-                        The third key feature is messaging. Messaging allows users to converse with other users on the
-                        platform who are interested in the same pins. Thus, any necessary meetup planning can occur
-                        without leaving the bounds of the application. This ensures that
-                        meetups can go smoothly as all planning can be accounted for in VillageLink.
-                    </p>
-                </section>
+              <img
+                src="./images/wf_login.png "
+                alt="Login Wireframe"
+                class="wireframe-img"
+              />
+              <p>
+                The user will be prompted with a login page when entering the
+                application for the first time. The user can choose to enter
+                their username and password or to create a new account. For
+                security, the user can not access the rest of the application
+                without an account.
+              </p>
             </div>
-        </section>
-        <section id="data-requirements" class="collapsible">
-            <h2>Data Requirements</h2>
+          </section>
+          <section class="collapsible">
+            <h3>Create Account</h3>
             <div>
-                <p>
-                    The foundational data requirement of VillageLink is the database of members which have signed up for
-                    our application. This includes the name of the member, accompanied by an avatar, a short bio and the
-                    creation of a “village” for the user. This database
-                    is the backbone of our application as it allows all the users on our application to interact with
-                    each other and build our community.
-                </p>
-                <p>
-                    A village is a supplementary database which stores information about the people the user has
-                    interacted with and the events organized and attended by the user. This feature allows users to find
-                    friends of friends and connect with them. Users have full
-                    control of the people that are a part of their village.
-                </p>
-                <p>
-                    Another data requirement of our application is the list of current events created by our members.
-                    For each event the database will store the location of the event, details of the creator of the
-                    event , and other information describing the event. The location
-                    of the event allows the users in a close proximity to the event location to view the details of the
-                    event. The details of the creator of the event allows the users who are a part of the creator’s
-                    village to also view the event.
-                </p>
-                <p>
-                    The location of the member is used to allow the member to drop pins on the map and create events. It
-                    is also used to interact with people in close proximity to the user. Events that are scheduled to
-                    take place within a predefined range close to the user’s
-                    location become visible to the user which allows the user to get all the details of the event and
-                    possibly attend it.
-                </p>
+              <img
+                src="./images/wf_create_account.png "
+                alt="Create Account Wireframe"
+                class="wireframe-img"
+              />
+              <p>
+                The user inputs their unique username, email address, and
+                password to create a new account. In the scope of this project,
+                the user will be restricted to using a UMass email address.
+              </p>
             </div>
-        </section>
-        <section id="wire-frames" class="collapsible">
-            <h2>Wire Frames</h2>
+          </section>
+          <section class="collapsible">
+            <h3>New Pin</h3>
             <div>
-                <section class="collapsible">
-                    <h3>Login</h3>
-                    <div>
-                        <img src="./images/wf_login.png " alt="Login Wireframe" class="wireframe-img">
-                        <p>
-                            The user will be prompted with a login page when entering the application for the first
-                            time. The user can choose to enter their username and password or to create a new account.
-                            For security, the user can not access the rest of the application without
-                            an account.
-                        </p>
-                    </div>
-                </section>
-                <section class="collapsible">
-                    <h3>Create Account</h3>
-                    <div>
-                        <img src="./images/wf_create_account.png " alt="Create Account Wireframe" class="wireframe-img">
-                        <p>
-                            The user inputs their unique username, email address, and password to create a new account.
-                            In the scope of this project, the user will be restricted to using a UMass email address.
-                        </p>
-                    </div>
-                </section>
-                <section class="collapsible">
-                    <h3>New Pin</h3>
-                    <div>
-                        <img src="./images/wf_new_pin.png " alt="New Pin wireframe" class="wireframe-img">
-                        <p>
-                            To create a new pin on the map, the user will press the “+” icon on the bottom right of the
-                            map and then choose a location on the map to place a pin on. Once the user chooses a
-                            location, they will then add an event start time, end time, and details that
-                            other users will be able to read when looking at their pin on the map.
-                        </p>
-                    </div>
-                </section>
+              <img
+                src="./images/wf_new_pin.png "
+                alt="New Pin wireframe"
+                class="wireframe-img"
+              />
+              <p>
+                To create a new pin on the map, the user will press the “+” icon
+                on the bottom right of the map and then choose a location on the
+                map to place a pin on. Once the user chooses a location, they
+                will then add an event start time, end time, and details that
+                other users will be able to read when looking at their pin on
+                the map.
+              </p>
+            </div>
+          </section>
 
-                <section class="collapsible">
-                    <h3>Existing Pin</h3>
-                    <div>
-                        <img src="./images/wf_existing_pin.png " alt="Existing pin wireframe" class="wireframe-img">
-                        <p>
-                            Users will be able to see other pins that users have placed on the map. They will be able to
-                            see their location, details, the time of the event, and the number of people already
-                            associated with the group.
-                        </p>
-                    </div>
-                </section>
-                <section class="collapsible">
-                    <h3>Messaging</h3>
-                    <div>
-                        <img src="./images/wf_messaging.png " alt="Messaging wireframe" class="wireframe-img">
-                        <p>
-                            Once the user is part of a pin event, they will be able to message other users who joined
-                            the same event, which will facilitate coordination for the event. The user will be able to
-                            access old pins’ groups as well, making it easier for them to communicate
-                            with people that they have hung out with in the past.
-                        </p>
-                    </div>
-                </section>
-                <section class="collapsible">
-                    <h3>Village</h3>
-                    <div>
-                        <img src="./images/wf_village.png " alt="Village wireframe" class="wireframe-img">
-                        <p>
-                            Using the hangout/pin feature at least once unlocks the village feature, which allows the
-                            user to see people that they have hung out with in the past. It is sort of like a friend
-                            list, but with the additional feature of being able to look at other people’s
-                            villages, with the restrictions of only being able to see the villages of people you’ve met
-                            in person and not being able to see any levels deeper than friends of friends.
-                        </p>
-                    </div>
-                </section>
-            </div>
-        </section>
-        <section id="real-world" class="collapsible">
-            <h2>Real World Connection</h2>
+          <section class="collapsible">
+            <h3>Existing Pin</h3>
             <div>
-                <p>
-                    In today's world, the hyperconnectivity of the online world can make us feel as if we are constantly
-                    surrounded by other people. Despite that, finding people to talk to or hang out with in person can
-                    be an extreme challenge. Loneliness is now a major
-                    public health crisis, with studies showing over 60% of Americans report feeling lonely. For college
-                    students, the transition to a new environment and juggling responsibilities makes it especially
-                    difficult to build real world connections.
-                </p>
-                <p>
-                    Loneliness is now associated with a greater risk of cardiovascular disease, dementia, stroke,
-                    anxiety and depression. While social media apps have made it easier to interact with people
-                    anywhere, they often fail to meet the fundamental need of in-person
-                    relationships and a sense of community belonging.
-                </p>
-                <p>
-                    Our web application aims to make it easier to find real world human interaction and help combat
-                    loneliness that college students face by introducing them to other people seeking human interaction.
-                    By allowing users to easily find and join casual hangouts
-                    nearby, it provides a low-pressure way for people to meet people with common interests or people who
-                    live in the same area (in our case Amherst). By reducing intimidation around meeting new people, our
-                    app helps curate authentic connections.
-                </p>
+              <img
+                src="./images/wf_existing_pin.png "
+                alt="Existing pin wireframe"
+                class="wireframe-img"
+              />
+              <p>
+                Users will be able to see other pins that users have placed on
+                the map. They will be able to see their location, details, the
+                time of the event, and the number of people already associated
+                with the group.
+              </p>
             </div>
-        </section>
-        <section id="integrative-experience" class="collapsible">
-            <h2>Integrative Experience</h2>
+          </section>
+          <section class="collapsible">
+            <h3>Messaging</h3>
             <div>
-                <p>
-                    The development of our application serves as a compelling embodiment of the Integrative Experience
-                    (IE), weaving together diverse educational insights and practical applications to address the
-                    widespread issue of loneliness. Being college students, we
-                    are aware of the widespread issue of loneliness which affects a large population of students in this
-                    country. Reflecting on the Sociology courses taken by our team, we know that loneliness can affect a
-                    person's well-being and their
-                    academic success. Our project draws upon interdisciplinary knowledge acquired through General
-                    Education courses and specialized learning in the field of Computer Science and Sociology.
-                </p>
-                <p>
-                    Through the development process, we work collaboratively, combining our diverse skill sets to create
-                    a cohesive platform that promotes social connections. This collaborative effort mirrors real-world
-                    scenarios, preparing us for professional environments
-                    where effective teamwork and communication are vital.
-                </p>
-                <p>
-                    Lastly, our project offers a shared learning experience, allowing us to apply our cumulative
-                    learning to address a significant societal issue. By reflecting on our educational journey and
-                    understanding the value of our diverse courses, we gain insights
-                    into the interconnectedness of our education, preparing us for lifelong learning and engagement in
-                    addressing societal challenges. Through this integrative project, we not only contribute to
-                    combating loneliness but also cultivate
-                    a sense of community and connection, fostering personal growth and societal well-being.
-                </p>
+              <img
+                src="./images/wf_messaging.png "
+                alt="Messaging wireframe"
+                class="wireframe-img"
+              />
+              <p>
+                Once the user is part of a pin event, they will be able to
+                message other users who joined the same event, which will
+                facilitate coordination for the event. The user will be able to
+                access old pins’ groups as well, making it easier for them to
+                communicate with people that they have hung out with in the
+                past.
+              </p>
             </div>
-        </section>
+          </section>
+          <section class="collapsible">
+            <h3>Village</h3>
+            <div>
+              <img
+                src="./images/wf_village.png "
+                alt="Village wireframe"
+                class="wireframe-img"
+              />
+              <p>
+                Using the hangout/pin feature at least once unlocks the village
+                feature, which allows the user to see people that they have hung
+                out with in the past. It is sort of like a friend list, but with
+                the additional feature of being able to look at other people’s
+                villages, with the restrictions of only being able to see the
+                villages of people you’ve met in person and not being able to
+                see any levels deeper than friends of friends.
+              </p>
+            </div>
+          </section>
+        </div>
+      </section>
+      <section id="real-world" class="collapsible">
+        <h2>Real World Connection</h2>
+        <div>
+          <p>
+            In today's world, the hyperconnectivity of the online world can make
+            us feel as if we are constantly surrounded by other people. Despite
+            that, finding people to talk to or hang out with in person can be an
+            extreme challenge. Loneliness is now a major public health crisis,
+            with studies showing over 60% of Americans report feeling lonely.
+            For college students, the transition to a new environment and
+            juggling responsibilities makes it especially difficult to build
+            real world connections.
+          </p>
+          <p>
+            Loneliness is now associated with a greater risk of cardiovascular
+            disease, dementia, stroke, anxiety and depression. While social
+            media apps have made it easier to interact with people anywhere,
+            they often fail to meet the fundamental need of in-person
+            relationships and a sense of community belonging.
+          </p>
+          <p>
+            Our web application aims to make it easier to find real world human
+            interaction and help combat loneliness that college students face by
+            introducing them to other people seeking human interaction. By
+            allowing users to easily find and join casual hangouts nearby, it
+            provides a low-pressure way for people to meet people with common
+            interests or people who live in the same area (in our case Amherst).
+            By reducing intimidation around meeting new people, our app helps
+            curate authentic connections.
+          </p>
+        </div>
+      </section>
+      <section id="integrative-experience" class="collapsible">
+        <h2>Integrative Experience</h2>
+        <div>
+          <p>
+            The development of our application serves as a compelling embodiment
+            of the Integrative Experience (IE), weaving together diverse
+            educational insights and practical applications to address the
+            widespread issue of loneliness. Being college students, we are aware
+            of the widespread issue of loneliness which affects a large
+            population of students in this country. Reflecting on the Sociology
+            courses taken by our team, we know that loneliness can affect a
+            person's well-being and their academic success. Our project draws
+            upon interdisciplinary knowledge acquired through General Education
+            courses and specialized learning in the field of Computer Science
+            and Sociology.
+          </p>
+          <p>
+            Through the development process, we work collaboratively, combining
+            our diverse skill sets to create a cohesive platform that promotes
+            social connections. This collaborative effort mirrors real-world
+            scenarios, preparing us for professional environments where
+            effective teamwork and communication are vital.
+          </p>
+          <p>
+            Lastly, our project offers a shared learning experience, allowing us
+            to apply our cumulative learning to address a significant societal
+            issue. By reflecting on our educational journey and understanding
+            the value of our diverse courses, we gain insights into the
+            interconnectedness of our education, preparing us for lifelong
+            learning and engagement in addressing societal challenges. Through
+            this integrative project, we not only contribute to combating
+            loneliness but also cultivate a sense of community and connection,
+            fostering personal growth and societal well-being.
+          </p>
+        </div>
+      </section>
     </main>
     <footer>
-        <!-- Footer content like copyright, links to privacy policy, etc. -->
-        &copy; 2024 VillageLink. All rights reserved.
+      <!-- Footer content like copyright, links to privacy policy, etc. -->
+      &copy; 2024 VillageLink. All rights reserved.
     </footer>
-</body>
-
+  </body>
 </html>

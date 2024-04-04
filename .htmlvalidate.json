@@ -1,10 +1,15 @@
 {
-    "extends": [
-      "html-validate:recommended"
-    ],
-  
-    "rules": {
+  "extends": [
+      "html-validate:prettier"
+  ],
+  "rules": {
+      "doctype-style": "off",
       "close-order": "error",
-      "void": ["warn", {"style": "omit"}]
-    }
+      "void-style": [
+          "warn",
+          {
+              "style": "selfclosing"
+          }
+      ]
   }
+}
