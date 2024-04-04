@@ -1,6 +1,4 @@
-import { TodoListView } from './TodoListView.js';
-import { Events } from './Events.js';
-import { NavBar } from './Navbar.js';
+import { MapView } from './Map/MapView.js'
 
 export class App {
   
@@ -12,7 +10,16 @@ export class App {
     const rootElm = document.getElementById(root);
     rootElm.innerHTML = '';
 
-    const map = document.createElement('div');
+    const mapElement = document.createElement('div');
+    mapElement.id = 'map';
+
+    rootElm.appendChild(mapElement);
+    let map = L.map('map').setView([51.505, -0.09], 13);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(map);
+    
     
   }
 
