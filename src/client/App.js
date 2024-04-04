@@ -12,6 +12,7 @@ export class App {
     const rootElm = document.getElementById(root);
     rootElm.innerHTML = '';
 
+    const map = document.createElement('div');
     
   }
 
