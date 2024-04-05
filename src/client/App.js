@@ -14,7 +14,7 @@ export class App {
     mapElement.id = 'map';
 
     rootElm.appendChild(mapElement);
-    let map = L.map('map').setView([51.505, -0.09], 13);
+    let map = L.map('map').setView([42.3868, -72.5293], 17);
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'

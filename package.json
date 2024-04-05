@@ -1,59 +1,63 @@
 {
-	"name": "village-link",
-	"version": "1.0.0",
-	"description": "",
-	"main": "index.js",
-	"type": "module",
-	"license": "AGPL-version-3.0",
-	"private": false,
-	"engines": {
-		"node": ">= 14.0.0",
-		"npm": ">= 6.0.0"
-	},
-	"homepage": "",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/kaitlynmalsky/cs326-g40-project-repo"
-	},
-	"bugs": "",
-	"keywords": [],
-	"author": {
-		"name": "VillageLink"
-	},
-	"collaborators": [
-		{
-			"name": "Kaitlyn Malsky",
-			"email": "kmalsky@umass.edu",
-			"username": "kaitlynmalsky"
-		},
-		{
-			"name": "Matthew Kotchkin",
-			"email": "mkotchkin@umass.edu",
-			"username": "AnotherGenZ"
-		},
-		{
-			"name": "Sreyas Rajasekharuni",
-			"email": "srajasekharu@umass.edu",
-			"username": "Sreyas2401"
-		},
-		{
-			"name": "Shivay Wadhawan",
-			"email": "swadhawan@umass.edu",
-			"username": "wadhawanShivay"
-		}
-	],
-	"scripts": {
-		"milestone-01": "http-server src/docs/milestone-01 -p 3000 -c-1 -o -s",
-		"milestone-02": "http-server src/client -p 3000 -c-1 -o -s",
-		"validate-html": "html-validate 'src/**/*.html'",
-		"prettier": "prettier src —write",
-		"dev": "concurrently \"npm run milestone-02\" \"tailwindcss -i ./src/client/main.css -o ./src/client/styles.css --watch\""
-	},
-	"devDependencies": {
-		"concurrently": "^8.2.2",
-		"html-validate": "^8.18.0",
-		"http-server": "^14.1.1",
-		"prettier": "^3.2.5",
-		"tailwindcss": "^3.4.3"
-	}
+    "name": "village-link",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "type": "module",
+    "license": "AGPL-version-3.0",
+    "private": false,
+    "engines": {
+        "node": ">= 14.0.0",
+        "npm": ">= 6.0.0"
+    },
+    "homepage": "",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/kaitlynmalsky/cs326-g40-project-repo"
+    },
+    "bugs": "",
+    "keywords": [],
+    "author": {
+        "name": "VillageLink"
+    },
+    "collaborators": [{
+            "name": "Kaitlyn Malsky",
+            "email": "kmalsky@umass.edu",
+            "username": "kaitlynmalsky"
+        },
+        {
+            "name": "Matthew Kotchkin",
+            "email": "mkotchkin@umass.edu",
+            "username": "AnotherGenZ"
+        },
+        {
+            "name": "Sreyas Rajasekharuni",
+            "email": "srajasekharu@umass.edu",
+            "username": "Sreyas2401"
+        },
+        {
+            "name": "Shivay Wadhawan",
+            "email": "swadhawan@umass.edu",
+            "username": "wadhawanShivay"
+        },
+        {
+            "name": "Enver Amboy",
+            "email": "eamboy@umass.edu",
+            "username": "enveramboy"
+        }
+    ],
+    "scripts": {
+        "milestone-01": "http-server src/docs/milestone-01 -p 3000 -c-1 -o -s",
+        "milestone-02": "http-server src/client -p 3000 -c-1 -o -s",
+        "validate-html": "html-validate 'src/**/*.html'",
+        "prettier": "prettier src —write",
+        "dev": "concurrently \"npm run milestone-02\" \"tailwindcss -i ./src/client/main.css -o ./src/client/styles.css --watch\""
+    },
+    "devDependencies": {
+        "concurrently": "^8.2.2",
+        "html-validate": "^8.18.0",
+        "http-server": "^14.1.1",
+        "prettier": "^3.2.5",
+        "tailwindcss": "^3.4.3"
+    }
 }
