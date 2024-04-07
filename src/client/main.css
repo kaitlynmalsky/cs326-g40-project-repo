@@ -38,7 +38,7 @@ main {
     color: saddlebrown;
 }
 
-.leaflet-popup-content {
+.leaflet-popup-content-wrapper {
     background: bisque;
 }
 
