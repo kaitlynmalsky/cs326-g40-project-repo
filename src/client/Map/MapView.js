@@ -54,9 +54,9 @@ export default class MapView extends View {
 
       iconSize: [50, 50], // size of the icon
       //   shadowSize: [50, 50], // size of the shadow
-      iconAnchor: [22, 94], // point of the icon which will correspond to marker's location
+      iconAnchor: [25, 25], // point of the icon which will correspond to marker's location
       //   shadowAnchor: [4, 92], // the same for the shadow
-      popupAnchor: [-3, -76], // point from which the popup should open relative to the iconAnchor
+      popupAnchor: [0, -25], // point from which the popup should open relative to the iconAnchor
     });
     return L.marker([x, y], { icon: newIcon }).addTo(this.#map);
   };
@@ -73,7 +73,7 @@ export default class MapView extends View {
             <input type="time" id="${end}"/><br>
             <label for="${detail}" class="pin-label-text">Details:</label><br>
             <textarea id="${detail}" rows="4" cols="30"></textarea><br>
-            <input type="button" id="${post}" class="pin-button" value="Post"/>
+            <input type="button" id="${post}" class="bg-orange-500 hover:bg-orange-400 text-white font-bold py-2 px-4 border-b-4 border-orange-700 hover:border-orange-500 rounded" value="Post"/>
             `,
       { className: 'customPopup' },
     );
