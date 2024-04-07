@@ -592,3 +592,20 @@ main {
   height: 100%;
   width: 100%;
 }
+
+.pin-label-text {
+  color: saddlebrown;
+}
+
+/* .leaflet-popup-content-wrapper {
+    background-color: bisque;
+}
+
+.leaflet-popup-content-wrapper .leaflet-popup-content,
+.popupCustom {
+    background-color: bisque;
+} */
+
+.customPopup {
+  background-color: bisque;
+}
