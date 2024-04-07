@@ -554,6 +554,41 @@ video {
   --tw-contain-style:  ;
 }
 
+#root {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+}
+
+#navbar {
+  position: sticky;
+  top: 0px;
+  margin-bottom: 1.25rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 0.5rem;
+  text-align: center;
+}
+
+#active-view {
+  height: 100%;
+  width: 100%;
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  height: 100%;
+}
+
+main {
+  height: 100%;
+}
+
 #map {
-  height: 2000px;
+  height: 100%;
+  width: 100%;
 }

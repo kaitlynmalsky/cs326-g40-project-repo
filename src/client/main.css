@@ -1,6 +1,30 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+#root {
+  @apply h-full flex flex-col;
+}
+
+#navbar {
+  @apply sticky top-0 text-center mb-5 flex flex-row gap-2 justify-center;
+}
+
+#active-view {
+  @apply w-full h-full;
+}
+
+html {
+  @apply h-full;
+}
+body {
+  @apply h-full;
+}
+main {
+  @apply h-full;
+}
+
 #map {
-    height: 2000px;
+  height: 100%;
+  width: 100%;
 }
