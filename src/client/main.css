@@ -9,6 +9,10 @@
   @apply sticky top-0 text-center mb-5 flex flex-row gap-2 justify-center;
 }
 
+#navbar a:hover {
+  cursor: pointer;
+}
+
 #active-view {
   @apply w-full h-full;
 }
@@ -45,4 +49,8 @@ main {
 
 .customPopup {
   background-color: bisque;
+}
+
+.leaflet-popup-content-wrapper {
+    background: bisque;
 }

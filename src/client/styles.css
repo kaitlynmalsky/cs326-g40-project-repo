@@ -587,6 +587,10 @@ video {
   text-align: center;
 }
 
+#navbar a:hover {
+  cursor: pointer;
+}
+
 #active-view {
   height: 100%;
   width: 100%;
@@ -624,4 +628,8 @@ main {
 
 .customPopup {
   background-color: bisque;
+}
+
+.leaflet-popup-content-wrapper {
+  background: bisque;
 }
