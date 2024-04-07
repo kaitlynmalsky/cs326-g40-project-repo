@@ -33,10 +33,10 @@ export default class NavBar {
   }
 
   setActive (routeKey) {
-    const activeNavlinks = this.#navBarElm.querySelectorAll(`a.active`);
+    const activeNavLinks = this.#navBarElm.querySelectorAll(`a.active`);
 
-    if (activeNavlinks.length > 0) {
-      activeNavlinks.forEach((navLink) => navLink.classList.remove('active'));
+    if (activeNavLinks.length > 0) {
+      activeNavLinks.forEach((navLink) => navLink.classList.remove('active'));
     }
 
     const activeNavLink = this.#navBarElm.querySelector(
