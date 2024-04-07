@@ -33,10 +33,6 @@ export class App {
     GlobalEvents.addEventListener('navigate', (navEvent) =>
       this.#navigateTo(navEvent.navTarget),
     );
-   
-
-    
-
   }
 
   #addRoute(routeKey, view) {
