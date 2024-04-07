@@ -742,24 +742,37 @@ main {
   height: 100%;
 }
 
-#map {
+#map,
+#leaflet {
   height: 100%;
   width: 100%;
 }
 
 .pin-label-text {
-  color: #451A03;
+  color: #451a03;
   /* amber 950 */
 }
 
 .leaflet-popup-content-wrapper {
-  background: #FFF7ED;
+  background: #fff7ed;
   /* orange 50 */
 }
 
 #post-button-1 {
   margin-top: 10px;
   cursor: pointer;
+}
+
+.button-action {
+  background: black;
+  height: 40px;
+  width: 200px;
+  text-decoration: none;
+  text-align: center;
+  color: white;
+  line-height: 26px;
+  padding-top: 6px;
+  margin-bottom: 40px;
 }
 
 .hover\:border-orange-900:hover {

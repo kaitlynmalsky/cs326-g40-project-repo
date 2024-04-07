@@ -10,7 +10,20 @@ export default class MapView extends View {
   async render() {
     const elm = document.createElement('div');
     elm.id = 'map';
-    
+
+    const leafletElm = document.createElement('div');
+    leafletElm.id = 'leaflet';
+
+    const btnDiv = document.createElement('div');
+    btnDiv.id = 'create-pin';
+    btnDiv.className = 'leaflet-bottom leaflet-right ';
+    btnDiv.innerHTML = `
+    <button class="button-action">Action!</button>
+    `;
+
+    elm.appendChild(leafletElm);
+    elm.appendChild(btnDiv);
+
     return elm;
   }
 
@@ -21,28 +34,28 @@ export default class MapView extends View {
 
   placeTestMarker() {
     const testMarker = this.createMarker(
-        './images/placeholder_avatar.png',
-        './images/shadowcircletemp.png',
-        42.3868,
-        -72.5293,
-      );
-      this.bindPopup(testMarker, `<p>This is some <strong>text</strong></p>`);
-      let startTimeInput = 'start-time-input-1';
-      let endTimeInput = 'end-time-input-1';
-      let detailInput = 'detail-input-1';
-      let postButton = 'post-button-1';
-      this.bindPopupTemplate(
-        testMarker,
-        startTimeInput,
-        endTimeInput,
-        detailInput,
-        postButton,
-      );
-      this.showPopup(testMarker);
+      './images/placeholder_avatar.png',
+      './images/shadowcircletemp.png',
+      42.3868,
+      -72.5293,
+    );
+    this.bindPopup(testMarker, `<p>This is some <strong>text</strong></p>`);
+    let startTimeInput = 'start-time-input-1';
+    let endTimeInput = 'end-time-input-1';
+    let detailInput = 'detail-input-1';
+    let postButton = 'post-button-1';
+    this.bindPopupTemplate(
+      testMarker,
+      startTimeInput,
+      endTimeInput,
+      detailInput,
+      postButton,
+    );
+    this.showPopup(testMarker);
   }
 
   async setView(x, y, zoom) {
-    this.#map = L.map('map').setView([x, y], zoom);
+    this.#map = L.map('leaflet').setView([x, y], zoom);
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
       attribution:
@@ -69,8 +82,10 @@ export default class MapView extends View {
   }
   bindPopupTemplate(marker, start, end, detail, post) {
     const timeClass = `bg-gray-50 border leading-none border-gray-300 text-gray-900 text-sm rounded-lg  block w-full p-2.5`;
-    const detailClass = "bg-gray-50 border border-gray-300 block mb-2 text-sm font-medium text-gray-900 dark:text-white rounded-lg"
-    const buttonClass = "bg-orange-700 hover:bg-orange-600 text-white font-bold py-2 px-4 border-b-4 border-orange-800 hover:border-orange-900 rounded";
+    const detailClass =
+      'bg-gray-50 border border-gray-300 block mb-2 text-sm font-medium text-gray-900 dark:text-white rounded-lg';
+    const buttonClass =
+      'bg-orange-700 hover:bg-orange-600 text-white font-bold py-2 px-4 border-b-4 border-orange-800 hover:border-orange-900 rounded';
     marker.bindPopup(
       `<div class="pin-label-text"><strong>New Pin</strong></div><br><br>
             <label for="${start}" class="pin-label-text">Start time:</label>
@@ -88,5 +103,4 @@ export default class MapView extends View {
   showPopup(marker) {
     marker.openPopup();
   }
-
 }

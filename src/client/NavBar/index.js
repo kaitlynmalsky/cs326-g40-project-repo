@@ -32,7 +32,7 @@ export default class NavBar {
     return navBarElm;
   }
 
-  setActive (routeKey) {
+  setActive(routeKey) {
     const activeNavLinks = this.#navBarElm.querySelectorAll(`a.active`);
 
     if (activeNavLinks.length > 0) {
@@ -46,5 +46,5 @@ export default class NavBar {
     if (activeNavLink) {
       activeNavLink.classList.add('active');
     }
-  };
+  }
 }
