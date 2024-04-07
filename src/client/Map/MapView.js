@@ -10,7 +10,7 @@ export default class MapView extends View {
   async render() {
     const elm = document.createElement('div');
     elm.id = 'map';
-
+    
     return elm;
   }
 
