@@ -44,13 +44,16 @@ main {
 }
 
 .pin-label-text {
-    color: saddlebrown;
+    color: #451A03;
+    /* amber 950 */
 }
 
 .leaflet-popup-content-wrapper {
-    background: bisque;
+    background: #FFF7ED;
+    /* orange 50 */
 }
 
 #post-button-1 {
     margin-top: 10px;
+    cursor: pointer;
 }
