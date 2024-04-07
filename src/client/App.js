@@ -5,6 +5,7 @@ import VillageView from './Village/index.js';
 
 export class App {
   #activeViewElm;
+  #navbar;
   #routes = {};
 
   constructor() {}
@@ -14,6 +15,7 @@ export class App {
     rootElm.innerHTML = '';
 
     const navbar = new NavBar();
+    this.#navbar = navbar;
     const navbarElm = await navbar.render();
 
     this.#activeViewElm = document.createElement('div');
@@ -58,5 +60,6 @@ export class App {
     }
 
     window.location.hash = routeKey;
+    this.#navbar.setActive(routeKey);
   }
 }

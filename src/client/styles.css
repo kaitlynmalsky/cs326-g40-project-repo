@@ -626,16 +626,27 @@ video {
 #navbar {
   position: sticky;
   top: 0px;
-  margin-bottom: 1.25rem;
   display: flex;
   flex-direction: row;
   justify-content: center;
-  gap: 0.5rem;
+  gap: 2.5rem;
+  padding-bottom: 0.5rem;
   text-align: center;
+  --tw-bg-opacity: 1;
+  background-color: rgb(59 130 246 / var(--tw-bg-opacity));
+}
+
+#navbar a {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 
 #navbar a:hover {
   cursor: pointer;
+}
+
+#navbar a.active {
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity));
 }
 
 #active-view {

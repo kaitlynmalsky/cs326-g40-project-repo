@@ -6,11 +6,20 @@
 }
 
 #navbar {
-    @apply sticky top-0 text-center mb-5 flex flex-row gap-2 justify-center;
+    @apply sticky top-0 text-center pb-2 flex flex-row gap-10 justify-center;
+    @apply bg-blue-500
+}
+
+#navbar a {
+    @apply font-mono
 }
 
 #navbar a:hover {
     cursor: pointer;
+}
+
+#navbar a.active {
+    @apply text-white
 }
 
 #active-view {
