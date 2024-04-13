@@ -12,6 +12,8 @@ export default class MapView extends View {
   endTimeInputElm = null;
   detailInputElm = null;
   postButtonElm = null;
+
+  #markerList = [];
   
 
   constructor() {
@@ -80,7 +82,7 @@ export default class MapView extends View {
 
   placeMarker(imageLink) {
     const mark = this.createMarker(
-      './images/placeholder_avatar.png',
+      imageLink,
       './images/shadowcircletemp.png',
       this.#map.getCenter().lat,
       this.#map.getCenter().lng
@@ -94,9 +96,19 @@ export default class MapView extends View {
     // this.postButtonElm = document.getElementById(this.postButton);
     console.log(this.postButtonElm);
     this.postButtonElm.addEventListener("click", () => {
-      console.log("hi");
-    })
+      this.hidePopup(mark);
+      mark.dragging.disable();
+      console.log(mark.options);
+      // save marker to database here
+      console.log(mark);
+    });
 
+    mark.addEventListener("dragstart", () => {
+      this.hidePopup(mark);
+    });
+    mark.addEventListener("dragend", () => {
+      this.showPopup(mark);
+    })
   }
 
 
@@ -135,7 +147,7 @@ export default class MapView extends View {
       //   shadowAnchor: [4, 92], // the same for the shadow
       popupAnchor: [0, -50], // point from which the popup should open relative to the iconAnchor
     });
-    return L.marker([x, y], { icon: newIcon, draggable: true }).addTo(this.#map);
+    return L.marker([x, y], { icon: newIcon, draggable: true, autoPan: true}).addTo(this.#map);
   };
 
   bindPopup(marker, content) {
@@ -165,17 +177,12 @@ export default class MapView extends View {
     detailsLabel.innerHTML = "Details: ";
 
     popupHTML.appendChild(pinTitle);
-    popupHTML.appendChild(br);
-    popupHTML.appendChild(br);
     popupHTML.appendChild(startLabel);
     popupHTML.appendChild(this.startTimeInputElm);
-    popupHTML.appendChild(br);
     popupHTML.append(endLabel);
     popupHTML.appendChild(this.endTimeInputElm);
-    popupHTML.appendChild(br);
     popupHTML.appendChild(detailsLabel);
     popupHTML.appendChild(this.detailInputElm);
-    popupHTML.appendChild(br);
 
     popupHTML.appendChild(this.postButtonElm);
 

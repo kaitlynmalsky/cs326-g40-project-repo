@@ -1,5 +1,6 @@
 import GlobalEvents from './Events/index.js';
 import MapView from './Map/MapView.js';
+import MessagesView from './Messages/Messages.js';
 import NavBar from './NavBar/index.js';
 import VillageView from './Village/index.js';
 
@@ -29,6 +30,9 @@ export class App {
 
     const villageView = new VillageView();
     this.#addRoute('village', villageView);
+
+    const messagesView = new MessagesView();
+    this.#addRoute('messages', messagesView);
 
     history.replaceState('map', '', '#map');
     this.#navigateTo('map');
