@@ -16,13 +16,13 @@ export default class VillageView extends View {
     this.graph.addNode(this.currentUser);
 
     const user2 = {
-      id: 2, 
+      id: 2,
       name: 'Cat',
       avatar: '../images/placeholder_avatar.png'
     }
 
     const user3 = {
-      id: 3, 
+      id: 3,
       name: 'nemo',
       avatar: '../images/nemo.png'
     }
@@ -31,7 +31,7 @@ export default class VillageView extends View {
     const newUser2 = new Node(user3);
     this.graph.addNode(newUser);
     this.graph.addNode(newUser2);
-    
+
     this.graph.addConnection(user, newUser);
     this.graph.addConnection(user, newUser2);
     console.log(this.graph);
@@ -41,33 +41,29 @@ export default class VillageView extends View {
     const villageViewElm = document.createElement('div');
     villageViewElm.id = 'village-view';
 
-    const currentUserElm = document.createElement('div');
-    currentUserElm.className = 'user';
-    currentUserElm.innerHTML = `
-    <img src="${this.currentUser.getAvatar()}" alt="${this.currentUser.getName()}">
-    <p>${this.currentUser.getName()}</p>
-  `;
-    villageViewElm.appendChild(currentUserElm);
-
     const connections = this.graph.getConnections(this.currentUser);
 
     console.log('connections', connections);
 
     const numConnections = Object.keys(connections).length;
-    const connectionSpacing = numConnections > 1 ? 100 / (numConnections - 1) : 0;
 
     let leftPosition = 0;
     for (const userId in connections) {
       const connection = connections[userId];
       const connectionElm = document.createElement('div');
       connectionElm.className = 'user_connections';
-      connectionElm.style.left = leftPosition + '%';
       connectionElm.innerHTML = `
       <img src="${connection.getAvatar()}" alt="${connection.getName()}">
-      <p>${connection.getName()}</p>
     `;
       villageViewElm.appendChild(connectionElm);
-      leftPosition += connectionSpacing;
+      const overlayElm = document.createElement('div');
+      overlayElm.className = 'overlay';
+      const text = document.createElement('div');
+      text.className = 'text';
+      text.innerHTML = `${connection.getName()}`;
+      overlayElm.appendChild(text);
+      connectionElm.appendChild(overlayElm);
+
     }
 
     return villageViewElm;
