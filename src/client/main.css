@@ -6,8 +6,10 @@
 }
 
 #navbar {
-    @apply sticky top-0 text-center pb-2 flex flex-row gap-10 justify-center;
-    @apply bg-blue-500;
+    @apply sticky top-0 h-10 flex flex-row items-center justify-center align-middle gap-5;
+    @apply p-6 lg:px-8;
+    background: #f3c659;
+  
 }
 
 #navbar a {
@@ -19,7 +21,7 @@
 }
 
 #navbar a.active {
-    @apply text-white;
+    @apply text-black underline;
 }
 
 #active-view {
