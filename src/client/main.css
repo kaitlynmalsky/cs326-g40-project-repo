@@ -39,7 +39,7 @@ main {
     @apply h-full;
 }
 
-#map,
+#map-view,
 #leaflet {
     height: 100%;
     width: 100%;
