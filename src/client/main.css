@@ -1,6 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 #root {
     @apply h-full flex flex-col;
 }
@@ -47,6 +48,7 @@ main {
 }
 
 .pin-label-text {
+<<<<<<< Updated upstream
     color: #451a03;
     margin-bottom: 10px;
     padding-top: 5px;
@@ -56,6 +58,15 @@ main {
 .leaflet-popup-content-wrapper {
     background: #fff7ed;
     /* orange 50 */
+=======
+  color: #451a03;
+
+}
+
+.leaflet-popup-content-wrapper {
+  background: #fff7ed;
+
+>>>>>>> Stashed changes
 }
 
 #post-button {
@@ -69,6 +80,7 @@ main {
 }
 
 .button-action {
+<<<<<<< Updated upstream
     background: black;
     height: 40px;
     width: 200px;
@@ -79,3 +91,61 @@ main {
     padding-top: 6px;
     margin-bottom: 40px;
 }
+=======
+  background: black;
+  height: 40px;
+  width: 200px;
+  text-decoration: none;
+  text-align: center;
+  color: white;
+  line-height: 26px;
+  padding-top: 6px;
+  margin-bottom: 40px;
+}
+
+#village-view {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.user {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.user img {
+  width: 100px; 
+  height: 100px; 
+  border-radius: 50%;
+  border: 2px solid #fff; 
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3); 
+}
+
+.user p {
+  margin-top: 10px;
+  font-size: 16px;
+}
+
+.user_connections {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); 
+  gap: 20px; 
+  justify-content: center;
+  text-align: center;
+}
+
+.user_connections img {
+  width: 100px; 
+  height: 100px; 
+  border-radius: 50%; 
+  border: 2px solid #fff; 
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+
+.user_connections p {
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+>>>>>>> Stashed changes

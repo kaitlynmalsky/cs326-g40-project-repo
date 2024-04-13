@@ -12,7 +12,9 @@ class Database {
 
   async initialize() {
     this.#local_storage = window.localStorage;
-    this.#local_storage.set('pins', []);
+    console.log(this.#local_storage);
+    this.set('pins', []);
+    this.set('villageGraph', {});
   }
 
   async has(key) {
@@ -67,6 +69,23 @@ class Database {
     const pinsData = await this.#local_storage.getItem('pins');
     return pinsData ? JSON.parse(pinsData) : [];
   }
+
+
+  async getAllPeople() {
+    const peopleData = await this.#local_storage.getItem('villageGraph');
+    return peopleData ? JSON.parse(peopleData) : [];
+  }
+
+  async addPerson(personData) {
+    const people = await this.getAllPeople();
+    people.push(peopleData);
+    await this.#local_storage.setItem('villageGraph', people);
+  }
+
+  async getPersonID() {
+    return await this.#local_storage.getAllPeople().length();
+  }
+
 }
 
 const localStorageInstance = await Database.db();
