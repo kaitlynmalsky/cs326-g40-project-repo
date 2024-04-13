@@ -3,11 +3,25 @@ import View from '../View.js';
 export default class MapView extends View {
   #map = null;
 
+  startTimeInput = 'start-time-input';
+  endTimeInput = 'end-time-input';
+  detailInput = 'detail-input';
+  postButton = 'post-button';
+
+  startTimeInputElm = null;
+  endTimeInputElm = null;
+  detailInputElm = null;
+  postButtonElm = null;
+  
+
   constructor() {
     super();
   }
 
   async render() {
+
+    this.renderPopup();
+
     const elm = document.createElement('div');
     elm.id = 'map';
 
@@ -21,7 +35,11 @@ export default class MapView extends View {
     btnDiv.innerHTML = `
     <button class="button-action">Add Pin</button>
     `;
-    btnDiv.onclick = () => console.log('Clicked FAB');
+    btnDiv.onclick = () => {
+      console.log('Clicked FAB');
+      this.placeMarker('./images/placeholder_avatar.png');
+    }
+    
 
     elm.appendChild(leafletElm);
     elm.appendChild(btnDiv);
@@ -31,8 +49,56 @@ export default class MapView extends View {
 
   async onLoad() {
     await this.setView(42.3868, -72.5293, 17);
-    this.placeTestMarker();
+    //this.placeTestMarker();
   }
+
+  renderPopup() {
+    const timeClass = `bg-gray-50 border leading-none border-gray-300 text-gray-900 text-sm rounded-lg  block w-full p-2.5`;
+    const detailClass =
+      'bg-gray-50 border border-gray-300 block mb-2 text-sm font-medium text-gray-900 dark:text-white rounded-lg';
+    const buttonClass =
+      'bg-orange-700 hover:bg-orange-600 text-white font-bold py-2 px-4 border-b-4 border-orange-800 hover:border-orange-900 rounded';
+    this.startTimeInputElm = document.createElement('input');
+    this.startTimeInputElm.className = timeClass;
+    this.startTimeInputElm.id = this.startTimeInput;
+    this.startTimeInputElm.type = 'time';
+    this.endTimeInputElm = document.createElement('input');
+    this.endTimeInputElm.className = timeClass;
+    this.endTimeInputElm.id = this.endTimeInput;
+    this.endTimeInputElm.type = 'time';
+    this.detailInputElm = document.createElement('textarea');
+    this.detailInputElm.id = this.detailInput;
+    this.detailInputElm.rows = 4;
+    this.detailInputElm.cols = 30;
+    this.detailInputElm.className = detailClass;
+    this.postButtonElm = document.createElement('input');
+    this.postButtonElm.type = 'button';
+    this.postButtonElm.id = this.postButton;
+    this.postButtonElm.value = 'Post';
+    this.postButtonElm.className = buttonClass;
+  }
+
+  placeMarker(imageLink) {
+    const mark = this.createMarker(
+      './images/placeholder_avatar.png',
+      './images/shadowcircletemp.png',
+      this.#map.getCenter().lat,
+      this.#map.getCenter().lng
+    );
+    this.bindPopupTemplate(mark);
+    this.showPopup(mark);
+
+    // this.startTimeInputElm = document.getElementById(this.startTimeInput);
+    // this.endTimeInputElm = document.getElementById(this.endTimeInput);
+    // this.detailInput = document.getElementById(this.detailInput);
+    // this.postButtonElm = document.getElementById(this.postButton);
+    console.log(this.postButtonElm);
+    this.postButtonElm.addEventListener("click", () => {
+      console.log("hi");
+    })
+
+  }
+
 
   placeTestMarker() {
     const testMarker = this.createMarker(
@@ -41,17 +107,9 @@ export default class MapView extends View {
       42.3868,
       -72.5293,
     );
-    this.bindPopup(testMarker, `<p>This is some <strong>text</strong></p>`);
-    let startTimeInput = 'start-time-input-1';
-    let endTimeInput = 'end-time-input-1';
-    let detailInput = 'detail-input-1';
-    let postButton = 'post-button-1';
+
     this.bindPopupTemplate(
-      testMarker,
-      startTimeInput,
-      endTimeInput,
-      detailInput,
-      postButton,
+      testMarker
     );
     this.showPopup(testMarker);
   }
@@ -66,6 +124,7 @@ export default class MapView extends View {
   }
 
   createMarker = (imageLink, shadowLink, x, y) => {
+    // use marker.option to change options in the future
     const newIcon = L.icon({
       iconUrl: imageLink,
       //   shadowUrl: shadowLink,
@@ -76,33 +135,61 @@ export default class MapView extends View {
       //   shadowAnchor: [4, 92], // the same for the shadow
       popupAnchor: [0, -50], // point from which the popup should open relative to the iconAnchor
     });
-    return L.marker([x, y], { icon: newIcon }).addTo(this.#map);
+    return L.marker([x, y], { icon: newIcon, draggable: true }).addTo(this.#map);
   };
 
   bindPopup(marker, content) {
     marker.bindPopup(content);
   }
-  bindPopupTemplate(marker, start, end, detail, post) {
-    const timeClass = `bg-gray-50 border leading-none border-gray-300 text-gray-900 text-sm rounded-lg  block w-full p-2.5`;
-    const detailClass =
-      'bg-gray-50 border border-gray-300 block mb-2 text-sm font-medium text-gray-900 dark:text-white rounded-lg';
-    const buttonClass =
-      'bg-orange-700 hover:bg-orange-600 text-white font-bold py-2 px-4 border-b-4 border-orange-800 hover:border-orange-900 rounded';
-    marker.bindPopup(
-      `<div class="pin-label-text"><strong>New Pin</strong></div><br><br>
-            <label for="${start}" class="pin-label-text">Start time:</label>
-            <input type="time" id="${start}" class="${timeClass}"/><br>
-            <label for="${end}" class="pin-label-text">End time:</label>
-            <input type="time" id="${end}" class="${timeClass}"/><br>
-            <label for="${detail}" class="pin-label-text">Details:</label><br>
-            <textarea id="${detail}" rows="4" cols="30" class="${detailClass}"></textarea><br>
-            <input type="button" id="${post}" class="${buttonClass}" value="Post"/>
-            `,
-      { className: 'customPopup' },
-    );
+  bindPopupTemplate(marker) {
+    let popupHTML = document.createElement('div');
+
+    let pinTitle = document.createElement('div');
+    let br = document.createElement('br');
+    pinTitle.classList.add("pin-label-text");
+    pinTitle.innerHTML = "<strong>New Pin\n</strong>"
+
+    let startLabel = document.createElement('label');
+    startLabel.for = this.startTimeInput;
+    startLabel.classList.add("pin-label-text");
+    startLabel.innerHTML = "Start time:"
+
+    let endLabel = document.createElement('label');
+    endLabel.for = this.endTimeInput;
+    endLabel.classList.add("pin-label-text");
+    endLabel.innerHTML = "End time:";
+
+    let detailsLabel = document.createElement('label');
+    detailsLabel.for = this.detailInput;
+    detailsLabel.classList.add("pin-label-text");
+    detailsLabel.innerHTML = "Details: ";
+
+    popupHTML.appendChild(pinTitle);
+    popupHTML.appendChild(br);
+    popupHTML.appendChild(br);
+    popupHTML.appendChild(startLabel);
+    popupHTML.appendChild(this.startTimeInputElm);
+    popupHTML.appendChild(br);
+    popupHTML.append(endLabel);
+    popupHTML.appendChild(this.endTimeInputElm);
+    popupHTML.appendChild(br);
+    popupHTML.appendChild(detailsLabel);
+    popupHTML.appendChild(this.detailInputElm);
+    popupHTML.appendChild(br);
+
+    popupHTML.appendChild(this.postButtonElm);
+
+    console.log(popupHTML);
+    
+    marker.bindPopup(popupHTML, {className: 'customPopup'});
+
   }
 
   showPopup(marker) {
     marker.openPopup();
   }
+  hidePopup(marker) {
+    marker.closePopup();
+  }
+
 }

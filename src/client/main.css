@@ -2,72 +2,78 @@
 @tailwind components;
 @tailwind utilities;
 #root {
-  @apply h-full flex flex-col;
+    @apply h-full flex flex-col;
 }
 
 #navbar {
-  @apply sticky top-0 h-10 flex flex-row items-center justify-center align-middle gap-5;
-  @apply p-6 lg:px-8;
-  background: #f3c659;
+    @apply sticky top-0 text-center pb-2 flex flex-row gap-10 justify-center;
+    @apply bg-blue-500;
 }
 
 #navbar a {
-  @apply font-mono;
+    @apply font-mono;
 }
 
 #navbar a:hover {
-  cursor: pointer;
+    cursor: pointer;
 }
 
 #navbar a.active {
-  @apply text-black underline;
+    @apply text-white;
 }
 
 #active-view {
-  @apply w-full h-full;
+    @apply w-full h-full;
 }
 
 html {
-  @apply h-full;
+    @apply h-full;
 }
 
 body {
-  @apply h-full;
+    @apply h-full;
 }
 
 main {
-  @apply h-full;
+    @apply h-full;
 }
 
 #map,
 #leaflet {
-  height: 100%;
-  width: 100%;
+    height: 100%;
+    width: 100%;
 }
 
 .pin-label-text {
-  color: #451a03;
-  /* amber 950 */
+    color: #451a03;
+    margin-bottom: 10px;
+    padding-top: 5px;
+    /* amber 950 */
 }
 
 .leaflet-popup-content-wrapper {
-  background: #fff7ed;
-  /* orange 50 */
+    background: #fff7ed;
+    /* orange 50 */
 }
 
-#post-button-1 {
-  margin-top: 10px;
-  cursor: pointer;
+#post-button {
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+#end-time-input,
+#start-time-input {
+    margin-bottom: 10px;
 }
 
 .button-action {
-  background: black;
-  height: 40px;
-  width: 200px;
-  text-decoration: none;
-  text-align: center;
-  color: white;
-  line-height: 26px;
-  padding-top: 6px;
-  margin-bottom: 40px;
+    background: black;
+    height: 40px;
+    width: 200px;
+    text-decoration: none;
+    text-align: center;
+    color: white;
+    line-height: 26px;
+    padding-top: 6px;
+    margin-bottom: 40px;
 }
