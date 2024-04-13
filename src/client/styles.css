@@ -750,15 +750,14 @@ main {
 
 .pin-label-text {
   color: #451a03;
-<<<<<<< Updated upstream
   margin-bottom: 10px;
   padding-top: 5px;
   /* amber 950 */
-=======
->>>>>>> Stashed changes
 }
 
 .leaflet-popup-content-wrapper {
+  /* orange 50 */
+  color: #451a03;
   background: #fff7ed;
 }
 
@@ -844,9 +843,4 @@ main {
     --tw-text-opacity: 1;
     color: rgb(255 255 255 / var(--tw-text-opacity));
   }
-<<<<<<< Updated upstream
 }
-=======
-}
-
->>>>>>> Stashed changes
