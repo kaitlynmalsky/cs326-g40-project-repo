@@ -16,10 +16,12 @@ export default class MapView extends View {
 
     const btnDiv = document.createElement('div');
     btnDiv.id = 'create-pin';
-    btnDiv.className = 'leaflet-bottom leaflet-right ';
+    btnDiv.className = 'leaflet-bottom leaflet-right';
+    btnDiv.style.pointerEvents = 'auto';
     btnDiv.innerHTML = `
     <button class="button-action">Action!</button>
     `;
+    btnDiv.onclick = () => console.log('Clicked FAB');
 
     elm.appendChild(leafletElm);
     elm.appendChild(btnDiv);
