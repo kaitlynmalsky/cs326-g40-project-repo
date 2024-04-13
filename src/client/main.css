@@ -7,7 +7,7 @@
 
 #navbar {
     @apply sticky top-0 h-10 flex flex-row items-center justify-center align-middle gap-5;
-    @apply p-6 lg: px-8;
+    @apply p-6 px-8;
     background: #f3c659;
 }
 
