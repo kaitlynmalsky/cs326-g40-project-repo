@@ -19,7 +19,7 @@ export default class MapView extends View {
     btnDiv.className = 'leaflet-bottom leaflet-right';
     btnDiv.style.pointerEvents = 'auto';
     btnDiv.innerHTML = `
-    <button class="button-action">Action!</button>
+    <button class="button-action">Add Pin</button>
     `;
     btnDiv.onclick = () => console.log('Clicked FAB');
 
