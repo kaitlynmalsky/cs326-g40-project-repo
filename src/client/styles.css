@@ -691,13 +691,24 @@ video {
   position: sticky;
   top: 0px;
   display: flex;
+  height: 2.5rem;
   flex-direction: row;
+  align-items: center;
   justify-content: center;
-  gap: 2.5rem;
-  padding-bottom: 0.5rem;
-  text-align: center;
-  --tw-bg-opacity: 1;
-  background-color: rgb(59 130 246 / var(--tw-bg-opacity));
+  gap: 1.25rem;
+  vertical-align: middle;
+  padding: 1.5rem;
+}
+
+@media (min-width: 1024px) {
+  #navbar {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+#navbar {
+  background: #f3c659;
 }
 
 #navbar a {
@@ -710,7 +721,8 @@ video {
 
 #navbar a.active {
   --tw-text-opacity: 1;
-  color: rgb(255 255 255 / var(--tw-text-opacity));
+  color: rgb(0 0 0 / var(--tw-text-opacity));
+  text-decoration-line: underline;
 }
 
 #active-view {

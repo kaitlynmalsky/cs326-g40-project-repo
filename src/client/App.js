@@ -30,11 +30,17 @@ export class App {
     const villageView = new VillageView();
     this.#addRoute('village', villageView);
 
+    history.replaceState('map', '', '#map');
     this.#navigateTo('map');
 
     GlobalEvents.addEventListener('navigate', (navEvent) =>
       this.#navigateTo(navEvent.navTarget),
     );
+    window.addEventListener('popstate', (e) => {
+      if (e.state) {
+        this.#navigateTo(e.state);
+      }
+    });
   }
 
   #addRoute(routeKey, view) {
@@ -59,7 +65,6 @@ export class App {
       route.loaded = true;
     }
 
-    window.location.hash = routeKey;
     this.#navbar.setActive(routeKey);
   }
 }

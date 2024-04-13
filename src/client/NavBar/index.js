@@ -24,8 +24,9 @@ export default class NavBar {
       navBarElm.appendChild(navLink);
 
       navLink.addEventListener('click', (e) => {
-        e.preventDefault();
         GlobalEvents.navigate(route.target);
+        history.pushState(route.target, '', `#${route.target}`);
+        e.preventDefault();
       });
     });
 
