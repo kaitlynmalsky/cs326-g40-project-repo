@@ -3,7 +3,8 @@ import View from '../View.js';
 export default class MessagesView extends View {
     #messageList;
     #curr_id;
-    #chatListElm;
+    #col1;
+    #col2;
     
     constructor() {
         super();
@@ -17,22 +18,29 @@ export default class MessagesView extends View {
         elm.id = 'messages-view';
         elm.className = "h-full flex justify-start items-start";
 
-        const col1 = document.createElement('div');
+        this.#col1 = document.createElement('div');
 
-        col1.className = "max-h-screen overflow-y-auto w-1/5 h-100 message-view-col bg-amber-500";
+        this.#col1.className = "max-h-screen overflow-y-scroll w-1/5 h-100 message-view-col bg-amber-500";
 
 
-        const col2 = document.createElement('div');
-        col2.className = "max-h-screen overflow-y-auto message-view-col overflow-y-auto flex-grow";
-        col2.innerHTML = "bye";
+        this.#col2 = document.createElement('div');
+        this.#col2.className = "max-h-screen overflow-y-scroll message-view-col overflow-y-auto flex-grow";
+        this.#col2.innerHTML = "bye";
+
+        const remainingBar = document.createElement('div');
+        remainingBar.style = "flex: 1 1 auto;"
+        //remainingBar.classList.add()
 
         //peopleElm = document.createElement()
 
-        elm.appendChild(col1);
-        elm.appendChild(col2);
+        elm.appendChild(this.#col1);
+        elm.appendChild(this.#col2);
+
 
         this.demoMessages();
         console.log(this.#curr_id);
+
+        
 
 
         return elm;
@@ -56,6 +64,27 @@ export default class MessagesView extends View {
         this.addGroupChat([spiderman, scoob]);
         this.addGroupChat([nemo]);
         this.addGroupChat([spiderman, nemo, scoob]);
+        this.addGroupChat([spiderman, scoob]);
+        this.addGroupChat([nemo]);
+        this.addGroupChat([spiderman, nemo, scoob]);
+        this.addGroupChat([spiderman, scoob]);
+        this.addGroupChat([nemo]);
+        this.addGroupChat([spiderman, nemo, scoob]);
+        this.addGroupChat([spiderman, scoob]);
+        this.addGroupChat([nemo]);
+        this.addGroupChat([spiderman, nemo, scoob]);
+        this.addGroupChat([spiderman, scoob]);
+        this.addGroupChat([nemo]);
+        this.addGroupChat([spiderman, nemo, scoob]);
+        this.addGroupChat([spiderman, scoob]);
+        this.addGroupChat([nemo]);
+        this.addGroupChat([spiderman, nemo, scoob]);
+        this.addGroupChat([spiderman, scoob]);
+        this.addGroupChat([nemo]);
+        this.addGroupChat([spiderman, nemo, scoob]);
+        this.addGroupChat([spiderman, scoob]);
+        this.addGroupChat([nemo]);
+        this.addGroupChat([spiderman, nemo, scoob]);
 
         
     }
@@ -72,6 +101,26 @@ export default class MessagesView extends View {
             people: people
         });
         this.curr_id++;
+
+        const gcElm = document.createElement('div');
+        gcElm.className = "flex -space-x-4 rtl:space-x-reverse hover:bg-amber-400 hover:cursor-pointer";
+        gcElm.classList.add("py-5");
+        gcElm.classList.add("pl-2");
+        gcElm.classList.add("gc-stack");
+        
+        
+        people.forEach(person => {
+            const avatarElm = document.createElement('img');
+            avatarElm.className = "w-10 h-10 border-2 border-white rounded-full dark:border-gray-800 ";
+
+            avatarElm.src = person.avatar; // TEMPORARY PERSON OBJECT
+            gcElm.appendChild(avatarElm);
+        })
+
+        this.#col1.appendChild(gcElm);
+        
+        
+
     }
 
 
