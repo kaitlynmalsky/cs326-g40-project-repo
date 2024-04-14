@@ -22,8 +22,8 @@ export default class MessagesView extends View {
     }
 
     /**
-     * 
-     * @returns 
+     * Returns a promise containing HTML element containing the message view.
+     * @returns {Promise<HTMLElement>} 
      */
     async render() {
         const elm = document.createElement('header');
@@ -68,12 +68,12 @@ export default class MessagesView extends View {
         this.#col1.appendChild(orangeBox);
         console.log(this.#curr_id);
 
-        
-
-
         return elm;
     }
 
+    /**
+     * Adds dummy group chats and messages.
+     */
     demoMessages() {
         this.#currUser = {
             name: "Cool Cat",
@@ -140,6 +140,11 @@ export default class MessagesView extends View {
 
     }
 
+    /**
+     * (people IS A TEMPORARY PARAM!) Adds a group chat to the left panel and to the user's internal messageList.
+     * @param {} people 
+     */
+
     addGroupChat(people) {
         // https://flowbite.com/docs/components/avatar/
         this.#curr_id = this.#messageList.length;
@@ -167,6 +172,13 @@ export default class MessagesView extends View {
         this.#col1.appendChild(gcElm);
     }
 
+    /**
+     * Adds a message to a chat.
+     * @param {{avatar: string}} person 
+     * @param {Date} timestamp 
+     * @param {string} message 
+     * @param {boolean} fromMe 
+     */
     addMessage(person, timestamp, message, fromMe) {
         const messageElm = document.createElement('div');
         messageElm.className = "flex";
@@ -200,6 +212,9 @@ export default class MessagesView extends View {
         this.#chatView.appendChild(messageElm);
     }
 
+    /**
+     * Renders the send-message texarea.
+     */
     initializeSendView() {
         const messageForm = document.createElement('form');
         messageForm.className = "h-auto";

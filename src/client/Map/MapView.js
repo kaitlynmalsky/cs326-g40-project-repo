@@ -12,6 +12,10 @@ export default class MapView extends View {
     super();
   }
 
+  /**
+   * Returns a promise containing an HTML element containing the map view.
+   * @returns {Promise<HTMLElement>}
+   */
   async render() {
     // Create component root
     const elm = document.createElement('div');
@@ -42,6 +46,9 @@ export default class MapView extends View {
     return elm;
   }
 
+  /**
+   * Initializes map view on load.
+   */
   async onLoad() {
     this.setView(42.3868, -72.5293, 17);
 
@@ -52,6 +59,9 @@ export default class MapView extends View {
     }
   }
 
+  /**
+   * 
+   */
   createNewPin() {
     this.editingPin = new EditingPin(this);
     this.editingPin.render();
@@ -79,11 +89,18 @@ export default class MapView extends View {
     }).addTo(this.#map);
   }
 
-  createMarker = (imageLink, shadowLink, x, y, options) => {
+  /**
+   * 
+   * @param {string} imageLink 
+   * @param {number} x 
+   * @param {number} y 
+   * @param {Object} options 
+   * @returns 
+   */
+  createMarker = (imageLink, x, y, options) => {
     // use marker.option to change options in the future
     const newIcon = L.icon({
       iconUrl: imageLink,
-      //   shadowUrl: shadowLink,
 
       iconSize: [50, 50], // size of the icon
       //   shadowSize: [50, 50], // size of the shadow
@@ -98,6 +115,13 @@ export default class MapView extends View {
     }).addTo(this.#map);
   };
 
+  /**
+   * Creates a marker in the center of the map, determined by the current map display.
+   * @param {string} imageLink 
+   * @param {string} shadowLink 
+   * @param {Object} options 
+   * @returns 
+   */
   createCenterMarker(imageLink, shadowLink, options) {
     return this.createMarker(
       imageLink,
