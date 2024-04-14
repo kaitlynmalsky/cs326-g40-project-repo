@@ -13,6 +13,8 @@
 
 #navbar a {
     @apply font-mono;
+    @apply p-1;
+    @apply px-2;
 }
 
 #navbar a:hover {
@@ -20,7 +22,9 @@
 }
 
 #navbar a.active {
-    @apply text-black underline;
+    /* @apply text-black underline; */
+    @apply bg-rose-400;
+    
 }
 
 #active-view {
