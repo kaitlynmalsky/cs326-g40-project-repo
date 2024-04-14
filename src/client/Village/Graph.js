@@ -1,31 +1,74 @@
+import localStorageInstance from "../database.js";
+
 class Node {
   id;
   name;
-  personalVillage;
+  personalVillage = [];
   avatar;
 
-  //Params : user -> Person
   constructor(user) {
     this.id = user.id;
-    this.name = user.name;
-    this.personalVillage = {};
-    this.avatar = user.avatar;
+    const { promise, resolve } = Promise.withResolvers();
+    this.ready = promise;
+    this.loadFromStorage(user, resolve);
   }
 
-  addConnection(user) {
-    if (!this.personalVillage[user.id]) {
-      this.personalVillage[user.id] = user;
+  get storageKey() {
+    return `users_${this.id}`;
+  }
+
+  async loadFromStorage(user, setReady) {
+    if (await localStorageInstance.has(this.storageKey)) {
+      const data = await localStorageInstance.get(this.storageKey);
+      this.id = data.id;
+      this.name = data.name;
+      this.personalVillage = data.personalVillage;
+      this.avatar = data.avatar;
+    } else {
+      this.id = user.id;
+      this.name = user.name;
+      this.personalVillage = [];
+      this.avatar = user.avatar;
+      await this.saveToStorage();
+    }
+
+    setReady();
+  }
+
+  async saveToStorage() {
+    const data = {
+      id: this.id,
+      name: this.name,
+      personalVillage: this.personalVillage,
+      avatar: this.avatar
+    }
+    await localStorageInstance.set(this.storageKey, data);
+  }
+
+  async addConnection(user) {
+    if (!this.personalVillage.includes(user.id)) {
+      this.personalVillage.push(user.id);
+      //await this.addUser(user);
+
+      const otherUser = new Node(user);
+
+      otherUser.ready.then(() => {
+        otherUser.personalVillage.push(this.id);
+        otherUser.saveToStorage();
+      });
+
+      await this.saveToStorage();
     }
   }
 
-  deleteConnection(user) {
-    if (this.personalVillage[user.id]) {
-      delete this.personalVillage[user.id];
-      delete user.village[this.id];
+  async deleteConnection(userId) {
+    if (this.personalVillage[userId]) {
+      delete this.personalVillage[userId];
+      await this.saveToStorage();
     }
   }
 
-  getName(){
+  getName() {
     return this.name;
   }
 
@@ -33,46 +76,25 @@ class Node {
     return this.avatar;
   }
 
-  getVillage() {
-    return this.personalVillage;
+  async getVillage() {
+    const village = {};
+    console.log('apple', this.personalVillage);
+
+    for (const userId of this.personalVillage) {
+      village[userId] = new Node({ id: userId });
+    }
+
+    await Promise.all(Object.keys(village).map(u => u.ready));
+
+    console.log('orange', village);
+    return village;
+  }
+
+  async updateVillage(village) {
+    this.personalVillage = village;
+    await this.saveToStorage();
   }
 }
 
-class Graph {
-  nodes = {};
 
-  constructor() {
-    this.nodes = {};
-  }
-
-  addNode(user) {
-    if (!this.nodes[user.id]) {
-      this.nodes[user.id] = user;
-    }
-  }
-
-  addConnection(user1, user2) {
-    if (this.nodes[user1.id] && this.nodes[user2.id]) {
-      console.log('addConnection', this.nodes[user1.id]);
-      console.log('addConnection', this.nodes[user2.id]);
-      this.nodes[user1.id].addConnection(user2);
-      this.nodes[user2.id].addConnection(user1);
-    }
-  }
-
-  deleteConnection(user1, user2) {
-    if (this.nodes[user1] && this.nodes[user2]) {
-      this.nodes[user1.id].deleteConnection(user2);
-      this.nodes[user2.id].deleteConnection(user1);
-    }
-  }
-
-  getConnections(user) {
-    if (this.nodes[user.id]) {
-      return this.nodes[user.id].getVillage();
-    }
-    return {};
-  }
-}
-
-export { Graph, Node };
+export { Node };

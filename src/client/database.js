@@ -39,7 +39,7 @@ class Database {
     const pins = await this.getAllPins();
     pinData.id = pins.length;
     pins.push(pinData);
-    await this.#local_storage.setItem('pins', JSON.stringify(pins));
+    await this.set('pins', JSON.stringify(pins));
     return pinData;
   }
 
@@ -56,33 +56,33 @@ class Database {
       }
       return pin;
     });
-    await this.#local_storage.setItem('pins', JSON.stringify(updatedPins));
+    await this.set('pins', JSON.stringify(updatedPins));
   }
 
   async deletePin(pinID) {
     const pins = await this.getAllPins();
     const filteredPins = pins.filter((pin) => pin.pinID !== pinID);
-    await this.#local_storage.setItem('pins', JSON.stringify(filteredPins));
+    await this.set('pins', JSON.stringify(filteredPins));
   }
 
   async getAllPins() {
-    const pinsData = await this.#local_storage.getItem('pins');
+    const pinsData = await this.get('pins');
     return pinsData ? JSON.parse(pinsData) : [];
   }
 
-  async getAllPeople() {
-    const peopleData = await this.#local_storage.getItem('villageGraph');
-    return peopleData ? JSON.parse(peopleData) : [];
+  async getAllNodes() {
+    const peopleData = await this.get('villageGraph');
+    return peopleData ? JSON.parse(peopleData) : {};
   }
 
   async addPerson(personData) {
     const people = await this.getAllPeople();
     people.push(peopleData);
-    await this.#local_storage.setItem('villageGraph', people);
+    await this.set('villageGraph', people);
   }
 
   async getPersonID() {
-    return await this.#local_storage.getAllPeople().length();
+    return await this.getAllPeople().length();
   }
 }
 

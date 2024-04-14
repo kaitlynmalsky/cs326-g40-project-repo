@@ -1,47 +1,33 @@
 import View from '../View.js';
-import Person from './Person.js';
-import { Graph, Node } from './Graph.js';
-import localStorageInstance from '../database.js';
+import { Node } from './Graph.js';
 
 export default class VillageView extends View {
   constructor() {
     super();
-    this.graph = new Graph();
-    const user = {
+    const currentUser = {
       id: 1,
-      name: 'Scoob',
-      avatar: '../images/Sooby_doo.png'
-    }
-    this.currentUser = new Node(user);                          // Change this to get currentUser info from login 
-    this.graph.addNode(this.currentUser);
-
-    const user2 = {
-      id: 2,
-      name: 'Cat',
+      name: 'cat',
       avatar: '../images/placeholder_avatar.png'
     }
 
-    const user3 = {
-      id: 3,
-      name: 'nemo',
-      avatar: '../images/nemo.png'
+    this.graph = new Node(currentUser);         // replace currentUser data from login
+
+    const newUser = {
+      id: 2,
+      name: 'scooby doo',
+      avatar: '../images/Sooby_doo.png'
     }
 
-    const newUser = new Node(user2);
-    const newUser2 = new Node(user3);
-    this.graph.addNode(newUser);
-    this.graph.addNode(newUser2);
-
-    this.graph.addConnection(user, newUser);
-    this.graph.addConnection(user, newUser2);
-    console.log(this.graph);
+    this.graph.ready.then(() => {
+      this.graph.addConnection(newUser);
+    })
   }
 
-  render() {
+  async render() {
     const villageViewElm = document.createElement('div');
     villageViewElm.id = 'village-view';
 
-    const connections = this.graph.getConnections(this.currentUser);
+    const connections = await this.graph.getVillage();
 
     console.log('connections', connections);
 
@@ -63,7 +49,6 @@ export default class VillageView extends View {
       text.innerHTML = `${connection.getName()}`;
       overlayElm.appendChild(text);
       connectionElm.appendChild(overlayElm);
-
     }
 
     return villageViewElm;
