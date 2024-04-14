@@ -15,7 +15,7 @@ export default class ExistingPin extends Pin {
 
     const marker = this.map.createMarker(
       './images/placeholder_avatar.png',
-      './images/shadowcircletemp.png',
+      false,
       x,
       y,
       {
@@ -30,7 +30,7 @@ export default class ExistingPin extends Pin {
   bindPopupTemplate(marker) {
     const timeClass = `bg-gray-50 border leading-none border-gray-300 text-gray-900 text-sm rounded-lg  block w-full p-2.5`;
     const detailClass =
-      'bg-gray-50 border border-gray-300 block mb-2 text-sm font-medium text-gray-900 text-black rounded-lg p-2';
+      'bg-gray-50 border border-gray-300 block mb-2 text-sm text-gray-900 text-black rounded-lg p-2';
     const buttonClass =
       'bg-orange-700 hover:bg-orange-600 text-white font-bold py-2 px-4 border-b-4 border-orange-800 hover:border-orange-900 rounded';
 

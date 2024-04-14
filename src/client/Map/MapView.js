@@ -6,6 +6,7 @@ import localStorageInstance from '../database.js';
 export default class MapView extends View {
   #map;
   #pins = {};
+  #fabElm;
   editingPin = null;
 
   constructor() {
@@ -26,22 +27,24 @@ export default class MapView extends View {
     leafletElm.id = 'leaflet';
 
     // Create pin FAB
-    const btnDiv = document.createElement('div');
-    btnDiv.id = 'create-pin';
-    btnDiv.className = 'leaflet-bottom leaflet-right';
-    btnDiv.style.pointerEvents = 'auto';
-    btnDiv.innerHTML = `
-    <button class="button-action">Add Pin</button>
-    `;
-    btnDiv.onclick = () => {
-      console.log('Clicked FAB');
+    const fabElm = document.createElement('button');
+    const fabClass = `leaflet-bottom leaflet-right bg-red-700 hover:bg-red-600 text-white font-bold py-2 px-4 border-b-4 border-red-800 hover:border-red-900 rounded`;
+    fabElm.id = 'map-fab';
+    fabElm.className = fabClass;
+    fabElm.style.pointerEvents = 'auto';
+    fabElm.innerText = 'Add Pin';
+
+    fabElm.onclick = () => {
       if (!this.editingPin) {
         this.createNewPin();
+      } else {
+        this.cancelPin();
       }
     };
+    this.#fabElm = fabElm;
 
     elm.appendChild(leafletElm);
-    elm.appendChild(btnDiv);
+    elm.appendChild(fabElm);
 
     return elm;
   }
@@ -64,12 +67,20 @@ export default class MapView extends View {
    */
   createNewPin() {
     this.editingPin = new EditingPin(this);
+    this.#fabElm.innerText = 'Cancel';
     this.editingPin.render();
   }
 
   async savePin(pinInfo) {
     const pinData = await localStorageInstance.addPin(pinInfo);
     this.addPin(pinData);
+    this.editingPin.removeMarker();
+    this.editingPin = null;
+  }
+
+  cancelPin() {
+    this.editingPin.cancel();
+    this.#fabElm.innerText = 'Add Pin';
     this.editingPin = null;
   }
 
@@ -97,16 +108,14 @@ export default class MapView extends View {
    * @param {Object} options 
    * @returns 
    */
-  createMarker = (imageLink, x, y, options) => {
+  createMarker = (imageLink, editing, x, y, options) => {
     // use marker.option to change options in the future
     const newIcon = L.icon({
       iconUrl: imageLink,
-
-      iconSize: [50, 50], // size of the icon
-      //   shadowSize: [50, 50], // size of the shadow
+       iconSize: [50, 50], // size of the icon
       iconAnchor: [25, 50], // point of the icon which will correspond to marker's location
-      //   shadowAnchor: [4, 92], // the same for the shadow
       popupAnchor: [0, -50], // point from which the popup should open relative to the iconAnchor
+      className: editing ?'border-green-700 border-2 rounded-full border-dashed' : undefined
     });
     return L.marker([x, y], {
       icon: newIcon,
@@ -122,10 +131,10 @@ export default class MapView extends View {
    * @param {Object} options 
    * @returns 
    */
-  createCenterMarker(imageLink, shadowLink, options) {
+  createCenterMarker(imageLink, editing, options) {
     return this.createMarker(
       imageLink,
-      shadowLink,
+      editing,
       this.#map.getCenter().lat,
       this.#map.getCenter().lng,
       options,

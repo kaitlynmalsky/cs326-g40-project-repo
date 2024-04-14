@@ -1,12 +1,12 @@
 import Pin from './Pin.js';
 
 export default class EditingPin extends Pin {
+  #type; // new or existing
   #pinInfo;
 
   startTimeInputName = 'start-time-input';
   endTimeInputName = 'end-time-input';
   detailInputName = 'detail-input';
-  postButtonName = 'post-button';
 
   marker;
   startTimeInputElm;
@@ -14,8 +14,9 @@ export default class EditingPin extends Pin {
   detailInputElm;
   postButtonElm;
 
-  constructor(map, pinInfo) {
+  constructor(map, type = 'new', pinInfo) {
     super(map);
+    this.#type = type;
     this.#pinInfo = pinInfo;
   }
 
@@ -29,7 +30,7 @@ export default class EditingPin extends Pin {
 
       marker = this.map.createMarker(
         './images/placeholder_avatar.png',
-        './images/shadowcircletemp.png',
+        true,
         x,
         y,
         {
@@ -40,7 +41,7 @@ export default class EditingPin extends Pin {
     } else {
       marker = this.map.createCenterMarker(
         './images/placeholder_avatar.png',
-        './images/shadowcircletemp.png',
+        true,
         {
           draggable: true,
           autoPan: true,
@@ -56,7 +57,7 @@ export default class EditingPin extends Pin {
     marker.on('dragend', () => this.showPopup(marker));
   }
 
-  async submitPin() {
+  async savePin() {
     const startTime = this.startTimeInputElm.value;
     const endTime = this.endTimeInputElm.value;
     const details = this.detailInputElm.value;
@@ -71,16 +72,22 @@ export default class EditingPin extends Pin {
     };
 
     await this.map.savePin(pinInfo);
+    this.removeMarker();
+  }
+
+  cancel() {
+    if (this.#type === 'new') {
+      this.removeMarker();
+    } else {
+      this.savePin();
+    }
+  }
+
+  removeMarker() {
     this.marker.remove();
   }
 
   bindPopupTemplate(marker) {
-    const timeClass = `bg-gray-50 border leading-none border-gray-300 text-gray-900 text-sm rounded-lg  block w-full p-2.5`;
-    const detailClass =
-      'bg-gray-50 border border-gray-300 block mb-2 text-sm font-medium text-gray-900 text-black rounded-lg p-2';
-    const buttonClass =
-      'bg-orange-700 hover:bg-orange-600 text-white font-bold py-2 px-4 border-b-4 border-orange-800 hover:border-orange-900 rounded';
-
     const popupHTML = document.createElement('div');
 
     // ******************************************
@@ -112,7 +119,7 @@ export default class EditingPin extends Pin {
 
     const startTimeInputElm = document.createElement('input');
     startTimeInputElm.required = true;
-    startTimeInputElm.className = timeClass;
+    startTimeInputElm.className = this.timeClass;
     startTimeInputElm.id = this.startTimeInputName;
     startTimeInputElm.type = 'time';
     this.startTimeInputElm = startTimeInputElm;
@@ -126,7 +133,7 @@ export default class EditingPin extends Pin {
 
     const endTimeInputElm = document.createElement('input');
     endTimeInputElm.required = true;
-    endTimeInputElm.className = timeClass;
+    endTimeInputElm.className = this.timeClass;
     endTimeInputElm.id = this.endTimeInputName;
     endTimeInputElm.type = 'time';
     this.endTimeInputElm = endTimeInputElm;
@@ -143,7 +150,7 @@ export default class EditingPin extends Pin {
     detailInputElm.id = this.detailInputName;
     detailInputElm.rows = 4;
     detailInputElm.cols = 30;
-    detailInputElm.className = detailClass;
+    detailInputElm.className = this.detailsClass;
     this.detailInputElm = detailInputElm;
 
     if (this.#pinInfo) {
@@ -157,12 +164,11 @@ export default class EditingPin extends Pin {
     postButtonElm.type = 'submit';
     postButtonElm.id = this.postButtonName;
     postButtonElm.value = 'Post';
-    postButtonElm.className = buttonClass;
-    this.postButtonElm = postButtonElm;
+    postButtonElm.className = this.buttonClass;
     form.appendChild(postButtonElm);
 
     // Handle form submit
-    form.onsubmit = () => this.submitPin();
+    form.onsubmit = () => this.savePin();
 
     popupHTML.appendChild(form);
 
