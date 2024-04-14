@@ -969,36 +969,47 @@ main {
   margin-top: 20px;
   margin-left: 20px;
   margin-right: 20px;
-  display: flex;
   display: grid;
   grid-template-columns: repeat(10, 1fr);
-  flex-direction: column;
+  grid-gap: 20px;
+}
+
+.header {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: space-between;
   align-items: center;
+  margin-bottom: 10px;
+  background-color: #333;
+  padding: 10px;
+  border-radius: 5px;
 }
 
-.user {
-  margin-bottom: 20px;
+.header h2 {
+  color: #fff;
+  font-size: 18px;
+  margin: 0;
+  font-weight: bold;
+  text-align: center;
+  flex-grow: 1;
 }
 
-.user img {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  border: 2px solid #fff;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-  margin-top: 20px;
+.delete-btn {
+  background-color: #ff4d4d;
+  color: #fff;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
-.user p {
-  margin-top: 10px;
-  font-size: 16px;
+.delete-btn:hover {
+  background-color: #cc0000;
 }
 
 .user_connections {
   position: relative;
-  display: inline-block;
-  gap: 20px;
-  justify-content: left;
 }
 
 .overlay {
@@ -1115,3 +1126,4 @@ main {
     --tw-ring-color: rgb(59 130 246 / var(--tw-ring-opacity));
   }
 }
+  

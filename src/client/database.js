@@ -71,18 +71,12 @@ class Database {
   }
 
   async getAllNodes() {
-    const peopleData = await this.get('villageGraph');
+    const peopleData = await this.get('Nodes').personalVillage;
     return peopleData ? JSON.parse(peopleData) : {};
   }
 
-  async addPerson(personData) {
-    const people = await this.getAllPeople();
-    people.push(peopleData);
-    await this.set('villageGraph', people);
-  }
-
-  async getPersonID() {
-    return await this.getAllPeople().length();
+  async getNodeID() {
+    return Object.keys(await this.getAllNodes()).length;
   }
 }
 

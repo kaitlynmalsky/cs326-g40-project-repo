@@ -48,7 +48,6 @@ class Node {
   async addConnection(user) {
     if (!this.personalVillage.includes(user.id)) {
       this.personalVillage.push(user.id);
-      //await this.addUser(user);
 
       const otherUser = new Node(user);
 
@@ -61,9 +60,17 @@ class Node {
     }
   }
 
-  async deleteConnection(userId) {
-    if (this.personalVillage[userId]) {
-      delete this.personalVillage[userId];
+  async deleteConnection(user) {
+    if (this.personalVillage[user.id]) {
+      this.personalVillage = this.personalVillage.filter(node => node != user.id);
+
+      const otherUser = new Node(user);
+
+      otherUser.ready.then(() => {
+        otherUser.personalVillage = otherUser.personalVillage.filter(node => node != this.id);
+        otherUser.saveToStorage();
+      });
+
       await this.saveToStorage();
     }
   }
