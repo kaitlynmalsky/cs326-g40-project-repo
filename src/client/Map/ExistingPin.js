@@ -1,11 +1,16 @@
 import Pin from './Pin.js';
 
+/**
+ * @class
+ */
 export default class ExistingPin extends Pin {
+  id;
   #pinInfo;
 
   constructor(map, pinInfo) {
     super(map);
     this.#pinInfo = pinInfo;
+    this.id = pinInfo.pinID;
   }
 
   render() {
@@ -39,17 +44,17 @@ export default class ExistingPin extends Pin {
     // ******************************************
     // Labels
     const startLabel = document.createElement('label');
-    startLabel.for = this.startTimeInput;
+    startLabel.htmlFor = this.startTimeInput;
     startLabel.classList.add('pin-label-text');
     startLabel.innerHTML = 'Start time:';
 
     const endLabel = document.createElement('label');
-    endLabel.for = this.endTimeInput;
+    endLabel.htmlFor = this.endTimeInput;
     endLabel.classList.add('pin-label-text');
     endLabel.innerHTML = 'End time:';
 
     const detailsLabel = document.createElement('label');
-    detailsLabel.for = this.detailInput;
+    detailsLabel.htmlFor = this.detailInput;
     detailsLabel.classList.add('pin-label-text');
     detailsLabel.innerHTML = 'Details: ';
 

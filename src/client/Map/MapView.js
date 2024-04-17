@@ -1,9 +1,30 @@
 import View from '../View.js';
 import ExistingPin from './ExistingPin.js';
 import EditingPin from './EditingPin.js';
-import localStorageInstance from '../database.js';
+import database from '../database.js';
 
+/**
+ * @typedef {import('leaflet')} Leaflet
+ */
+
+/**
+ * @typedef {import('leaflet').Map} LeafletMap
+ */
+
+/**
+ * @typedef {import('leaflet').Marker} LeafletMarker
+ */
+
+const L = /** @type {Leaflet} */ window.L;
+
+/**
+ * The MapView view
+ * @extends View
+ */
 export default class MapView extends View {
+  /**
+   * @type {LeafletMap} map
+   */
   #map;
   #pins = {};
   #fabElm;
@@ -55,7 +76,7 @@ export default class MapView extends View {
   async onLoad() {
     this.setView(42.3868, -72.5293, 17);
 
-    const pins = await localStorageInstance.getAllPins();
+    const pins = await database.getAllPins();
 
     for (const pin of pins) {
       this.addPin(pin);
@@ -63,7 +84,7 @@ export default class MapView extends View {
   }
 
   /**
-   * 
+   * Sets up the MapView for new pin creation
    */
   createNewPin() {
     this.editingPin = new EditingPin(this);
@@ -71,12 +92,18 @@ export default class MapView extends View {
     this.editingPin.render();
   }
 
+  /**
+   *
+   * @param { import('../database.js').CreatePinInput} pinInfo
+   */
   async savePin(pinInfo) {
-    const pinData = await localStorageInstance.addPin(pinInfo);
+    const pinData = await database.createPin(pinInfo);
     this.addPin(pinData);
     this.editingPin.removeMarker();
     this.editingPin = null;
   }
+
+  async updatePin(pin) {}
 
   cancelPin() {
     this.editingPin.cancel();
@@ -91,8 +118,15 @@ export default class MapView extends View {
     pin.render();
   }
 
-  setView(x, y, zoom) {
-    this.#map = L.map('leaflet').setView([x, y], zoom);
+  /**
+   * Sets up the Leaflet view
+   * @param {number} lat
+   * @param {number} lng
+   * @param {number} zoom
+   */
+  setView(lat, lng, zoom) {
+    this.#map = L.map('leaflet').setView([lat, lng], zoom);
+
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
       attribution:
@@ -101,23 +135,27 @@ export default class MapView extends View {
   }
 
   /**
-   * 
-   * @param {string} imageLink 
-   * @param {number} x 
-   * @param {number} y 
-   * @param {Object} options 
-   * @returns 
+   *
+   * @param {string} imageLink
+   * @param {number} lat
+   * @param {number} lng
+   * @param {boolean} editing
+   * @param {Object} options
+   * @returns {LeafletMarker}
    */
-  createMarker = (imageLink, editing, x, y, options) => {
+  createMarker = (imageLink, editing, lat, lng, options) => {
     // use marker.option to change options in the future
     const newIcon = L.icon({
       iconUrl: imageLink,
-       iconSize: [50, 50], // size of the icon
+      iconSize: [50, 50], // size of the icon
       iconAnchor: [25, 50], // point of the icon which will correspond to marker's location
       popupAnchor: [0, -50], // point from which the popup should open relative to the iconAnchor
-      className: editing ?'border-green-700 border-2 rounded-full border-dashed' : undefined
+      className: editing
+        ? 'border-green-700 border-2 rounded-full border-dashed'
+        : undefined,
     });
-    return L.marker([x, y], {
+
+    return L.marker([lat, lng], {
       icon: newIcon,
       riseOnHover: true,
       ...options,
@@ -126,10 +164,10 @@ export default class MapView extends View {
 
   /**
    * Creates a marker in the center of the map, determined by the current map display.
-   * @param {string} imageLink 
-   * @param {string} shadowLink 
-   * @param {Object} options 
-   * @returns 
+   * @param {string} imageLink
+   * @param {boolean} editing
+   * @param {Object} options
+   * @returns
    */
   createCenterMarker(imageLink, editing, options) {
     return this.createMarker(

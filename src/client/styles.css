@@ -558,10 +558,6 @@ video {
   visibility: visible;
 }
 
-.static {
-  position: static;
-}
-
 .relative {
   position: relative;
 }

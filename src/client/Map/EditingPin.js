@@ -1,19 +1,48 @@
+import MapView from './MapView.js';
 import Pin from './Pin.js';
 
+/**
+ * @typedef {'new' | 'existing'} PinEditType
+ */
+
+/**
+ * @typedef {import('leaflet').Marker} LeafletMarker
+ */
+
+/**
+ * @class
+ */
 export default class EditingPin extends Pin {
-  #type; // new or existing
+  /**
+   * @type {PinEditType}
+   */
+  #type;
+  /**
+   * @type {import('../database.js').Pin}
+   */
   #pinInfo;
 
   startTimeInputName = 'start-time-input';
   endTimeInputName = 'end-time-input';
   detailInputName = 'detail-input';
+  postButtonName = 'post-button';
 
+  /**
+   * @type {LeafletMarker}
+   */
   marker;
   startTimeInputElm;
   endTimeInputElm;
+
   detailInputElm;
   postButtonElm;
 
+  /**
+   * Constructor for EditingPin
+   * @param {MapView} map
+   * @param {PinEditType} type
+   * @param {import('../database.js').Pin} [pinInfo]
+   */
   constructor(map, type = 'new', pinInfo) {
     super(map);
     this.#type = type;
@@ -25,14 +54,14 @@ export default class EditingPin extends Pin {
 
     if (this.#pinInfo) {
       const {
-        coords: [x, y],
+        coords: [lat, lng],
       } = this.#pinInfo;
 
       marker = this.map.createMarker(
         './images/placeholder_avatar.png',
         true,
-        x,
-        y,
+        lat,
+        lng,
         {
           draggable: true,
           autoPan: true,
@@ -62,13 +91,16 @@ export default class EditingPin extends Pin {
     const endTime = this.endTimeInputElm.value;
     const details = this.detailInputElm.value;
 
+    const [startHour, startMinutes] = startTime.split(':');
+    const [endHour, endMinutes] = endTime.split(':');
+
     const { lat, lng } = this.marker.getLatLng();
 
     const pinInfo = {
       startTime,
       endTime,
       details,
-      coords: [lat, lng],
+      coords: /** @type {[number, number]} */ ([lat, lng]),
     };
 
     await this.map.savePin(pinInfo);
@@ -93,17 +125,17 @@ export default class EditingPin extends Pin {
     // ******************************************
     // Labels
     const startLabel = document.createElement('label');
-    startLabel.for = this.startTimeInput;
+    startLabel.htmlFor = this.startTimeInputName;
     startLabel.classList.add('pin-label-text');
     startLabel.innerHTML = 'Start time:';
 
     const endLabel = document.createElement('label');
-    endLabel.for = this.endTimeInput;
+    endLabel.htmlFor = this.endTimeInputName;
     endLabel.classList.add('pin-label-text');
     endLabel.innerHTML = 'End time:';
 
     const detailsLabel = document.createElement('label');
-    detailsLabel.for = this.detailInput;
+    detailsLabel.htmlFor = this.detailInputName;
     detailsLabel.classList.add('pin-label-text');
     detailsLabel.innerHTML = 'Details: ';
 

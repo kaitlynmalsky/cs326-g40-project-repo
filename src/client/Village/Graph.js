@@ -1,4 +1,11 @@
-import localStorageInstance from "../database.js";
+//import localStorageInstance from "../database.js";
+
+// Quick mock to allow it to continue working while porting to PouchDB
+const localStorageInstance = {
+  set: async (key, val) => localStorage.setItem(key, JSON.stringify(val)),
+  has: async (key) => !!localStorage.getItem(key),
+  get: async (key) => JSON.parse(localStorage.getItem(key)),
+};
 
 class Node {
   id;
@@ -40,8 +47,8 @@ class Node {
       id: this.id,
       name: this.name,
       personalVillage: this.personalVillage,
-      avatar: this.avatar
-    }
+      avatar: this.avatar,
+    };
     await localStorageInstance.set(this.storageKey, data);
   }
 
@@ -62,12 +69,16 @@ class Node {
 
   async deleteConnection(user) {
     if (this.personalVillage[user.id]) {
-      this.personalVillage = this.personalVillage.filter(node => node != user.id);
+      this.personalVillage = this.personalVillage.filter(
+        (node) => node != user.id,
+      );
 
       const otherUser = new Node(user);
 
       otherUser.ready.then(() => {
-        otherUser.personalVillage = otherUser.personalVillage.filter(node => node != this.id);
+        otherUser.personalVillage = otherUser.personalVillage.filter(
+          (node) => node != this.id,
+        );
         otherUser.saveToStorage();
       });
 
@@ -91,7 +102,7 @@ class Node {
       village[userId] = new Node({ id: userId });
     }
 
-    await Promise.all(Object.keys(village).map(u => u.ready));
+    await Promise.all(Object.keys(village).map((u) => village[u].ready));
 
     console.log('orange', village);
     return village;
@@ -102,6 +113,5 @@ class Node {
     await this.saveToStorage();
   }
 }
-
 
 export { Node };

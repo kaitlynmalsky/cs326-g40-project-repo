@@ -1,0 +1,9 @@
+{
+    "compilerOptions": {
+      "allowJs": true,
+      "checkJs": true,
+      "target": "ESNext",
+      "module": "ESNext"
+    },
+    "exclude": ["node_modules"]
+  }
