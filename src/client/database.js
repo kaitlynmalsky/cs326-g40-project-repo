@@ -10,6 +10,7 @@
  * @typedef {Object} User
  * @property {string} userID The ID of the user
  * @property {string} name The user's name
+ * @property {string} password The user's password
  * @property {string} avatar The user's avatar
  * @property {string} _id PouchDB ID
  * @property {string} _rev PouchDB revision
@@ -254,6 +255,40 @@ class Database {
    */
   async deleteConnection(connection) {
     return this.#db.remove(connection);
+  }
+
+  /**
+   * Retrieves user by email
+   * @param {string} email The email of the user to retrieve
+   * @returns {Promise<User>}
+   */
+   async getUserByEmail(email) {
+    const users = await this.#db.allDocs({
+      include_docs: true,
+      startkey: 'user',
+      endkey: `user\ufff0`,
+    });
+
+    const user = users.rows.find((row) => row.doc.email === email)?.doc;
+    return user || null;
+  }
+
+
+  /**
+   * Adds a new user
+   * @param {Object} userData User data to create a new user
+   * @returns {Promise<User>} The created user
+   */
+   async addUser(userData) {
+    const userID = self.crypto.randomUUID();
+    const userDoc = {
+      _id: this.#formatUserKey(userID),
+      ...userData,
+    };
+
+    await this.#db.put(userDoc);
+
+    return userDoc;
   }
 }
 

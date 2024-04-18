@@ -3,6 +3,8 @@ import MapView from './Map/MapView.js';
 import MessagesView from './Messages/Messages.js';
 import NavBar from './NavBar/index.js';
 import VillageView from './Village/index.js';
+import LoginView from './Login/login.js';
+import SignupView from './Signup/signup.js'
 
 export class App {
   #activeViewElm;
@@ -30,6 +32,12 @@ export class App {
 
     const villageView = new VillageView();
     this.#addRoute('village', villageView);
+
+    const loginView = new LoginView();
+    this.#addRoute('login', loginView);
+
+    const signupview = new SignupView();
+    this.#addRoute('signup', signupview);
 
     const messagesView = new MessagesView();
     this.#addRoute('messages', messagesView);
