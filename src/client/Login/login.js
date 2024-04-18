@@ -40,7 +40,6 @@ export default class LoginView extends View {
       const password = document.getElementById('password').value;
       try {
         const user = await Database.getUserByEmail(email);
-        console.log(user);
         if (user && user.password === password) {
           // Open dashboard
           console.log('Authentication successful');
@@ -65,9 +64,11 @@ export default class LoginView extends View {
     signupText.textContent = 'Not a member?';
     
     const signupLink = document.createElement('a');
-    signupLink.href = '#';
+    signupLink.href = '';
     signupLink.className = 'font-semibold leading-6 text-black-600 hover:text-black-500';
     signupLink.textContent = 'Join now!';
+    //Join now to signup
+    
     
     signupText.appendChild(signupLink);
 

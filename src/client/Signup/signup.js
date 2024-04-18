@@ -21,7 +21,7 @@ export default class SignupView extends View {
     formSection.className = 'w-full lg:w-1/2 py-16 px-12';
 
     const registerTitle = document.createElement('h2');
-    registerTitle.className = 'text-3xl mb-4';
+    registerTitle.className = 'text-4xl font-bold mb-4';
     registerTitle.textContent = 'Welcome to VillageLink';
 
     const registerText = document.createElement('p');
@@ -76,6 +76,17 @@ export default class SignupView extends View {
         const password = document.getElementById('password').value;
         const confirmPassword = document.getElementById('confirmPassword').value;
 
+        if (!firstName || !username || !email || !password || !confirmPassword) {
+          alert('No field can be left empty');
+          return;
+      }
+  
+      // Confirm passwords match
+      if (password !== confirmPassword) {
+          alert('Passwords do not match.');
+          return;
+      }
+
       
   
         // Create user object
@@ -87,6 +98,11 @@ export default class SignupView extends View {
         };
 
         try {
+            if(await Database.getUserByEmail(email)){
+              alert('User with this Email already exists!')
+              return;
+            }
+
             await Database.addUser(userData);
     
             // maybe redirect the user to the login page after successful signup
