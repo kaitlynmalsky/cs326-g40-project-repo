@@ -76,10 +76,10 @@ export default class SignupView extends View {
         const password = document.getElementById('password').value;
         const confirmPassword = document.getElementById('confirmPassword').value;
 
-        if (!firstName || !username || !email || !password || !confirmPassword) {
-          alert('No field can be left empty');
-          return;
-      }
+      //   if (!firstName || !username || !email || !password || !confirmPassword) {
+      //     alert('No field can be left empty');
+      //     return;
+      // }
   
       // Confirm passwords match
       if (password !== confirmPassword) {
