@@ -51,7 +51,7 @@ export default class MessagesView extends View {
         this.#col2.appendChild(this.#chatView);
 
         const col1Title = document.createElement('h1');
-        col1Title.className = "message-text text-xl m-2";
+        col1Title.className = "message-text text-xl p-2 bg-slate-100";
         col1Title.innerText = 'My Groups';
         this.#col1.appendChild(col1Title);
 
@@ -69,10 +69,12 @@ export default class MessagesView extends View {
         this.demoMessages();
 
 
-        const orangeBox = document.createElement('div');
-        orangeBox.className = "h-full max-h-full"
-        this.#col1.appendChild(orangeBox);
+        const fillerBox = document.createElement('div');
+        fillerBox.className = "h-full max-h-full bg-slate-100";
+        this.#col1.appendChild(fillerBox);
         console.log(this.#curr_id);
+
+        this.changeChat(0);
 
         return elm;
     }
@@ -152,6 +154,9 @@ export default class MessagesView extends View {
         this.#groupChats[id].messages.forEach(messageElm => {
             this.#chatView.appendChild(messageElm);
         })
+        this.#groupChats[this.#active_id].gcElm.classList.remove("active-group-chat");
+        this.#groupChats[id].gcElm.classList.add("active-group-chat");
+        this.#active_id = id;
     }
 
     renderAvatars() {
@@ -173,7 +178,7 @@ export default class MessagesView extends View {
         
 
         const gcElm = document.createElement('div');
-        gcElm.className = "flex -space-x-4 rtl:space-x-reverse hover:bg-amber-400 hover:cursor-pointer";
+        gcElm.className = "flex -space-x-4 rtl:space-x-reverse bg-slate-100 hover:cursor-pointer";
         gcElm.classList.add("py-5");
         gcElm.classList.add("pl-2");
         gcElm.classList.add("gc-stack");
@@ -181,7 +186,7 @@ export default class MessagesView extends View {
         
         people.forEach(person => {
             const avatarElm = document.createElement('img');
-            avatarElm.className = "w-10 h-10 border-2 border-white rounded-full dark:border-gray-800 ";
+            avatarElm.className = "w-10 h-10 border-2 border-white rounded-full";
 
             avatarElm.src = person.avatar; // TEMPORARY PERSON OBJECT
             gcElm.appendChild(avatarElm);
@@ -194,7 +199,7 @@ export default class MessagesView extends View {
         });
 
         this.#col1.appendChild(gcElm);
-        this.#groupChats[this.curr_id] = {id: this.curr_id, messages: []};
+        this.#groupChats[this.curr_id] = {id: this.curr_id, messages: [], gcElm: gcElm};
         console.log(this.#groupChats);
         this.curr_id++;
     }
@@ -247,7 +252,7 @@ export default class MessagesView extends View {
         messageForm.className = "overscroll-contain h-auto";
         messageForm.name = "message";
         const messageArea = document.createElement('textarea');
-        messageArea.className = "overscroll-contain mx-5 resize-y text-lg block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500";
+        messageArea.className = "overscroll-contain mx-5 resize-y text-lg block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500";
         messageArea.id="message-area";
         messageArea.addEventListener("keyup", e => {
             e.preventDefault();

@@ -54,6 +54,10 @@ main {
     width: 100%;
 }
 
+.active-group-chat {
+  background-color: #f7c566;
+}
+
 .message-text {
   @apply font-mono;
 }
