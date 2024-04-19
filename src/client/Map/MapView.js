@@ -2,6 +2,7 @@ import View from '../View.js';
 import ExistingPin from './ExistingPin.js';
 import EditingPin from './EditingPin.js';
 import database from '../database.js';
+import Pin from './Pin.js';
 
 /**
  * @typedef {import('leaflet')} Leaflet
@@ -23,11 +24,21 @@ const L = /** @type {Leaflet} */ window.L;
  */
 export default class MapView extends View {
   /**
-   * @type {LeafletMap} map
+   * @type {LeafletMap}
    */
   #map;
+  /**
+   * @type {Object.<string, Pin>}
+   */
   #pins = {};
+  /**
+   * @type {HTMLButtonElement}
+   */
   #fabElm;
+  /**
+   * The pin currently being edited
+   * @type {?EditingPin}
+   */
   editingPin = null;
 
   constructor() {
@@ -93,7 +104,7 @@ export default class MapView extends View {
   }
 
   /**
-   *
+   * Saves a new pin to the database and calls addPin to add it to map
    * @param { import('../database.js').CreatePinInput} pinInfo
    */
   async savePin(pinInfo) {
@@ -103,6 +114,10 @@ export default class MapView extends View {
     this.editingPin = null;
   }
 
+  /**
+   * 
+   * @param {import('../database.js').Pin} pin 
+   */
   async updatePin(pin) {}
 
   cancelPin() {
@@ -111,6 +126,10 @@ export default class MapView extends View {
     this.editingPin = null;
   }
 
+  /**
+   * Adds an existing or created pin to the map
+   * @param {import('../database.js').Pin} pinInfo
+   */
   addPin(pinInfo) {
     console.log('Adding pin', pinInfo);
     const pin = new ExistingPin(this, pinInfo);
