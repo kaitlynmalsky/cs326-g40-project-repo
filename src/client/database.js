@@ -2,7 +2,10 @@
  * Input data to create a VillageLink User
  * @typedef {Object} CreateUserInput
  * @property {string} name The user's name
+ * @property {string} username The user's username
+ * @property {string} email The user's email
  * @property {string} avatar The user's avatar
+ * @property {string} password The user's password
  */
 
 /**
@@ -262,7 +265,7 @@ class Database {
    * @param {string} email The email of the user to retrieve
    * @returns {Promise<User>}
    */
-   async getUserByEmail(email) {
+  async getUserByEmail(email) {
     const users = await this.#db.allDocs({
       include_docs: true,
       startkey: 'user',
@@ -273,22 +276,25 @@ class Database {
     return user || null;
   }
 
-
   /**
    * Adds a new user
-   * @param {Object} userData User data to create a new user
+   * @param {CreateUserInput} userData User data to create a new user
    * @returns {Promise<User>} The created user
    */
-   async addUser(userData) {
+  async addUser(userData) {
     const userID = self.crypto.randomUUID();
     const userDoc = {
       _id: this.#formatUserKey(userID),
+      userID,
       ...userData,
     };
 
-    await this.#db.put(userDoc);
+    const { rev } = await this.#db.put(userDoc);
 
-    return userDoc;
+    return {
+      ...userDoc,
+      _rev: rev,
+    };
   }
 }
 
