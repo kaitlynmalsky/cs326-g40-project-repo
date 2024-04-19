@@ -38,7 +38,8 @@ export class App {
     this.#navigateTo('map');
 
     GlobalEvents.addEventListener('navigate', (navEvent) =>
-      this.#navigateTo(navEvent.navTarget),
+      // @ts-ignore
+      this.#navigateTo(navEvent.navTarget), // don't change this to target that breaks it???
     );
     window.addEventListener('popstate', (e) => {
       if (e.state) {

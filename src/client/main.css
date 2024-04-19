@@ -23,7 +23,7 @@
 
 #navbar a.active {
     /* @apply text-black underline; */
-    @apply bg-rose-400;
+    @apply bg-green-500;
     
 }
 

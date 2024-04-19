@@ -578,12 +578,14 @@ video {
   grid-row: span 4 / span 4;
 }
 
-.m-3 {
-  margin: 0.75rem;
+.mx-3 {
+  margin-left: 0.75rem;
+  margin-right: 0.75rem;
 }
 
-.m-5 {
-  margin: 1.25rem;
+.mx-5 {
+  margin-left: 1.25rem;
+  margin-right: 1.25rem;
 }
 
 .mb-2 {
@@ -912,7 +914,7 @@ video {
 #navbar a.active {
   /* @apply text-black underline; */
   --tw-bg-opacity: 1;
-  background-color: rgb(251 113 133 / var(--tw-bg-opacity));
+  background-color: rgb(34 197 94 / var(--tw-bg-opacity));
 }
 
 #active-view {
