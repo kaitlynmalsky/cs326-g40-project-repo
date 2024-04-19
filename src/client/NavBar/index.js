@@ -17,6 +17,7 @@ export default class NavBar {
   async render() {
     const navBarElm = document.createElement('nav');
     this.#navBarElm = navBarElm;
+    this.#navBarElm.classList.add('z-50');
     navBarElm.id = 'navbar';
 
     this.#routes.forEach((route) => {

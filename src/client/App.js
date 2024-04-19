@@ -22,6 +22,7 @@ export class App {
     const navbarElm = await navbar.render();
 
     this.#activeViewElm = document.createElement('div');
+    this.#activeViewElm.classList.add('overscroll-contain');
     this.#activeViewElm.id = 'active-view';
 
     rootElm.appendChild(navbarElm);

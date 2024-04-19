@@ -39,15 +39,15 @@ export default class MessagesView extends View {
         this.#col1 = document.createElement('div');
 
         //this.#col1.className = "max-h-screen overflow-y-scroll w-1/5 h-100 message-view-col bg-amber-500";
-        this.#col1.className = "overflow-y-scroll col-span-1";
+        this.#col1.className = "overscroll-contain overflow-y-scroll col-span-1";
         this.#col1.id = "col1";
 
         this.#col2 = document.createElement('div');
-        this.#col2.className = "grid grid-rows-5 col-span-4 overflow-y-scroll"
+        this.#col2.className = "overscroll-contain grid grid-rows-5 col-span-4 overflow-y-scroll"
         this.#col2.id = "col2";
         this.#chatView = document.createElement('div');
         this.#chatView.id = "chat-container"
-        this.#chatView.className = "overflow-y-scroll gap-2.5 grid grid-flow-row auto-rows-max row-span-4";
+        this.#chatView.className = "overscroll-contain overflow-y-scroll gap-2.5 grid grid-flow-row auto-rows-max row-span-4 align-bottom";
         this.#col2.appendChild(this.#chatView);
 
         const col1Title = document.createElement('h1');
@@ -244,10 +244,10 @@ export default class MessagesView extends View {
      */
     initializeSendView() {
         const messageForm = document.createElement('form');
-        messageForm.className = "h-auto";
+        messageForm.className = "overscroll-contain h-auto";
         messageForm.name = "message";
         const messageArea = document.createElement('textarea');
-        messageArea.className = "mx-5 resize-y text-lg block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500";
+        messageArea.className = "overscroll-contain mx-5 resize-y text-lg block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500";
         messageArea.id="message-area";
         messageArea.addEventListener("keyup", e => {
             e.preventDefault();
