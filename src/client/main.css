@@ -5,10 +5,14 @@
     @apply h-full flex flex-col;
 }
 
+#col1 { /*in message view*/
+  background: white
+}
+
 #navbar {
     @apply sticky top-0 h-10 flex flex-row items-center justify-center align-middle gap-5;
     @apply p-6 px-8;
-    background: #f3c659;
+    background: #F7C566; /* old: #f3c559*/
 }
 
 #navbar a {
@@ -23,7 +27,8 @@
 
 #navbar a.active {
     /* @apply text-black underline; */
-    @apply bg-green-500;
+    /* @apply bg-green-500; */
+    background: #FFF8DC;
     
 }
 
@@ -47,6 +52,10 @@ main {
 #leaflet {
     height: 100%;
     width: 100%;
+}
+
+.message-text {
+  @apply font-mono;
 }
 
 .pin-label-text {
