@@ -45,11 +45,12 @@ export default class MessagesView extends View {
         this.#col1.id = "col1";
 
         this.#col2 = document.createElement('div');
-        this.#col2.className = "overscroll-contain grid grid-rows-5 col-span-4"
+        this.#col2.className = "overscroll-contain col-span-4"
         this.#col2.id = "col2";
         this.#chatView = document.createElement('div');
         this.#chatView.id = "chat-container"
-        this.#chatView.className = "overscroll-contain gap-2.5 grid grid-flow-row auto-rows-max row-span-4 content-end";
+        // overscroll-contain overflow-y-scroll gap-2.5 grid grid-flow-row auto-rows-max row-span-4 align-bottom content-end
+        this.#chatView.className = "overscroll-auto chatrow1 h-min overflow-y-auto gap-2.5 grid auto-rows-max content-end";
         this.#col2.appendChild(this.#chatView);
 
         const col1Title = document.createElement('h1');
@@ -58,7 +59,7 @@ export default class MessagesView extends View {
         this.#col1.appendChild(col1Title);
 
         this.#sendView = document.createElement('div');
-        this.#sendView.className = "p-5";
+        this.#sendView.className = "chatrow2 p-5";
         this.#sendView.id = "send-message";
         this.#col2.appendChild(this.#sendView);
 
@@ -78,6 +79,8 @@ export default class MessagesView extends View {
 
         this.changeChat(0);
 
+        console.log(elm.outerHTML);
+        console.log(this.#col2.outerHTML);
         return elm;
     }
 
@@ -106,27 +109,6 @@ export default class MessagesView extends View {
         this.addGroupChat([spiderman, scoob]);
         this.addGroupChat([nemo]);
         this.addGroupChat([spiderman, nemo, scoob]);
-        // this.addGroupChat([spiderman, scoob]);
-        // this.addGroupChat([nemo]);
-        // this.addGroupChat([spiderman, nemo, scoob]);
-        // this.addGroupChat([spiderman, scoob]);
-        // this.addGroupChat([nemo]);
-        // this.addGroupChat([spiderman, nemo, scoob]);
-        // this.addGroupChat([spiderman, scoob]);
-        // this.addGroupChat([nemo]);
-        // this.addGroupChat([spiderman, nemo, scoob]);
-        // this.addGroupChat([spiderman, scoob]);
-        // this.addGroupChat([nemo]);
-        // this.addGroupChat([spiderman, nemo, scoob]);
-        // this.addGroupChat([spiderman, scoob]);
-        // this.addGroupChat([nemo]);
-        // this.addGroupChat([spiderman, nemo, scoob]);
-        // this.addGroupChat([spiderman, scoob]);
-        // this.addGroupChat([nemo]);
-        // this.addGroupChat([spiderman, nemo, scoob]);
-        // this.addGroupChat([spiderman, scoob]);
-        // this.addGroupChat([nemo]);
-        // this.addGroupChat([spiderman, nemo, scoob]);
 
         // this.addMessage(scoob, new Date, "i eat kids", false, 0);
         // this.addMessage(spiderman,new Date, "dude what", false, 0);

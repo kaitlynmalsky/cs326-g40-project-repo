@@ -48,6 +48,17 @@ main {
     @apply h-full;
 }
 
+.chatrow1 {
+  height: 85vh;
+  max-height: 85vh;
+  overflow-y: scroll;
+  overflow: auto;
+}
+
+.chatrow2 {
+  height: 15vh;
+}
+
 #map-view,
 #leaflet {
     height: 100%;
