@@ -13,6 +13,7 @@ export default class MessagesView extends View {
     #chatView;
     #sendView;
     #currUser;
+    #lastMessageAuthor;
 
     /**
      * Creates the message view (no parameters).
@@ -25,6 +26,7 @@ export default class MessagesView extends View {
         this.#active_id = 0;
         this.#messageList = [];
         this.#groupChats = [];
+        this.#lastMessageAuthor = null;
     }
 
     /**
@@ -43,11 +45,11 @@ export default class MessagesView extends View {
         this.#col1.id = "col1";
 
         this.#col2 = document.createElement('div');
-        this.#col2.className = "overscroll-contain grid grid-rows-5 col-span-4 overflow-y-scroll"
+        this.#col2.className = "overscroll-contain grid grid-rows-5 col-span-4"
         this.#col2.id = "col2";
         this.#chatView = document.createElement('div');
         this.#chatView.id = "chat-container"
-        this.#chatView.className = "overscroll-contain overflow-y-scroll gap-2.5 grid grid-flow-row auto-rows-max row-span-4 align-bottom content-end";
+        this.#chatView.className = "overscroll-contain gap-2.5 grid grid-flow-row auto-rows-max row-span-4 content-end";
         this.#col2.appendChild(this.#chatView);
 
         const col1Title = document.createElement('h1');
@@ -134,7 +136,7 @@ export default class MessagesView extends View {
         // My daughter, if you can hear me, I knew you would return as well. It's in your nature to protect the innocent. I'm sorry that on that day, the day you were shut out and left to die, no one was there to lift you up into their arms the way you lifted others into yours, and then, what became of you. I should have known you wouldn't be content to disappear, not my daughter. I couldn't save you then, so let me save you now. It's time to rest - for you, and for those you have carried in your arms.
         // This ends for all of us.
         // End communication.`, false, 0);
-        // this.addMessage(spiderman, new Date, `Today when I walked into my economics class I saw something I dread every time I close my eyes. Someone had brought their new gaming laptop to class. The Forklift he used to bring it was still running idle at the back. I started sweating as I sat down and gazed over at the 700lb beast that was his laptop. He had already reinforced his desk with steel support beams and was in the process of finding an outlet for a power cable thicker than Amy Schumer's thigh. I start shaking. I keep telling myself I'm going to be alright and that there's nothing to worry about. He somehow finds a fucking outlet. Tears are running down my cheeks as I send my last texts to my family saying I love them. The teacher starts the lecture, and the student turns his laptop on. The colored lights on his RGB Backlit keyboard flare to life like a nuclear flash, and a deep humming fills my ears and shakes my very soul. The entire city power grid goes dark. The classroom begins to shake as the massive fans begin to spin. In mere seconds my world has gone from vibrant life, to a dark, earth shattering void where my body is getting torn apart by the 150mph gale force winds and the 500 decibel groan of the cooling fans. As my body finally surrenders, I weep, as my school and my city go under. I fucking hate gaming laptops. `, false);
+        this.addMessage(nemo, new Date, `Today when I walked into my economics class I saw something I dread every time I close my eyes. Someone had brought their new gaming laptop to class. The Forklift he used to bring it was still running idle at the back. I started sweating as I sat down and gazed over at the 700lb beast that was his laptop. He had already reinforced his desk with steel support beams and was in the process of finding an outlet for a power cable thicker than Amy Schumer's thigh. I start shaking. I keep telling myself I'm going to be alright and that there's nothing to worry about. He somehow finds a fucking outlet. Tears are running down my cheeks as I send my last texts to my family saying I love them. The teacher starts the lecture, and the student turns his laptop on. The colored lights on his RGB Backlit keyboard flare to life like a nuclear flash, and a deep humming fills my ears and shakes my very soul. The entire city power grid goes dark. The classroom begins to shake as the massive fans begin to spin. In mere seconds my world has gone from vibrant life, to a dark, earth shattering void where my body is getting torn apart by the 150mph gale force winds and the 500 decibel groan of the cooling fans. As my body finally surrenders, I weep, as my school and my city go under. I fucking hate gaming laptops. `, false, 1);
         
         this.addMessage(scoob, new Date, "hey i heard that they have therapy dogs visiting in the campus center today!", false, 0);
         this.addMessage(spiderman, new Date, "Wait really?", false, 0);
@@ -217,7 +219,7 @@ export default class MessagesView extends View {
         messageElm.className = "flex";
 
         const messageAvatar = document.createElement('img');
-        messageAvatar.className = " w-20 h-20 mx-3 flex-none border-2 border-white rounded-full"
+        messageAvatar.className = " w-11 h-11 mx-3 flex-none border-2 border-white rounded-full"
         messageAvatar.src = person.avatar;
         
 
@@ -228,14 +230,14 @@ export default class MessagesView extends View {
         
 
         if (fromMe) {
-            messageContent.className = "bg-stone-200 h-min w-auto p-4 mx-3 rounded-l-lg rounded-br-lg z-0";
+            messageContent.className = "max-w-prose text-base bg-stone-200 h-min w-auto p-2 mx-3 rounded-l-lg rounded-br-lg z-0";
             messageElm.classList.add("justify-end");
             messageContainer.appendChild(messageContent);
             messageElm.appendChild(messageContent);
             messageElm.appendChild(messageAvatar);
             
         } else {
-            messageContent.className = "bg-green-200 h-min w-auto p-4 mx-3 rounded-r-lg rounded-bl-lg z-0";
+            messageContent.className = "max-w-prose text-base bg-green-200 h-min w-auto p-2 mx-3 rounded-r-lg rounded-bl-lg z-0";
             messageContainer.appendChild(messageContent);
             messageElm.appendChild(messageAvatar);
             messageElm.appendChild(messageContent);
@@ -252,7 +254,7 @@ export default class MessagesView extends View {
         messageForm.className = "overscroll-contain h-auto";
         messageForm.name = "message";
         const messageArea = document.createElement('textarea');
-        messageArea.className = "overscroll-contain mx-5 resize-y text-lg block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500";
+        messageArea.className = "message-text overscroll-contain resize-y text-lg block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500";
         messageArea.id="message-area";
         messageArea.addEventListener("keyup", e => {
             e.preventDefault();
