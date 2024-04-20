@@ -104,21 +104,45 @@ export default class MapView extends View {
   }
 
   /**
+   *  Sets up the MpaView to edit a pin
+   * @param {string} pinID
+   */
+  async editPin(pinID) {
+    const pin = await database.getPin(pinID);
+    this.editingPin = new EditingPin(this, 'existing', pin);
+    this.#fabElm.innerText = 'Cancel';
+    this.editingPin.render();
+  }
+
+  /**
+   *
+   * @param {import('../database.js').Pin} pin
+   */
+  async deletePin(pin) {
+    await database.deletePin(pin);
+    this.#pins[pin.pinID].removeMarker();
+    delete this.#pins[pin.pinID];
+  }
+
+  /**
    * Saves a new pin to the database and calls addPin to add it to map
    * @param { import('../database.js').CreatePinInput} pinInfo
    */
   async savePin(pinInfo) {
     const pinData = await database.createPin(pinInfo);
     this.addPin(pinData);
-    this.editingPin.removeMarker();
     this.editingPin = null;
   }
 
   /**
-   * 
-   * @param {import('../database.js').Pin} pin 
+   *
+   * @param {import('../database.js').Pin} pin
    */
-  async updatePin(pin) {}
+  async updatePin(pin) {
+    const pinData = await database.updatePin(pin);
+    this.addPin(pinData);
+    this.editingPin = null;
+  }
 
   cancelPin() {
     this.editingPin.cancel();

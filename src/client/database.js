@@ -127,6 +127,7 @@ class Database {
 
     const pinDoc = {
       _id: this.#formatPinKey(pinID),
+      pinID,
       ...pinData,
     };
 
@@ -137,8 +138,7 @@ class Database {
     }
 
     return {
-      ...pinData,
-      pinID,
+      ...pinDoc,
       _id: id,
       _rev: rev,
     };

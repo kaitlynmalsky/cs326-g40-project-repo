@@ -6,10 +6,6 @@ import Pin from './Pin.js';
  */
 
 /**
- * @typedef {import('leaflet').Marker} LeafletMarker
- */
-
-/**
  * @class
  */
 export default class EditingPin extends Pin {
@@ -22,15 +18,11 @@ export default class EditingPin extends Pin {
    */
   #pinInfo;
 
-  startTimeInputName = 'start-time-input';
-  endTimeInputName = 'end-time-input';
-  detailInputName = 'detail-input';
-  postButtonName = 'post-button';
+  startTimeInputName = 'edit-start-time-input';
+  endTimeInputName = 'edit-end-time-input';
+  detailInputName = 'edit-detail-input';
+  postButtonName = 'edit-post-button';
 
-  /**
-   * @type {LeafletMarker}
-   */
-  marker;
   startTimeInputElm;
   endTimeInputElm;
 
@@ -97,13 +89,19 @@ export default class EditingPin extends Pin {
     const { lat, lng } = this.marker.getLatLng();
 
     const pinInfo = {
+      ...this.#pinInfo,
       startTime,
       endTime,
       details,
       coords: /** @type {[number, number]} */ ([lat, lng]),
     };
 
-    await this.map.savePin(pinInfo);
+    if (this.#type === 'new') {
+      await this.map.savePin(pinInfo);
+    } else {
+      await this.map.updatePin(pinInfo);
+    }
+
     this.removeMarker();
   }
 
@@ -111,14 +109,14 @@ export default class EditingPin extends Pin {
     if (this.#type === 'new') {
       this.removeMarker();
     } else {
-      this.savePin();
+      this.map.addPin(this.#pinInfo);
     }
   }
 
-  removeMarker() {
-    this.marker.remove();
-  }
-
+  /**
+   *
+   * @param {import('./MapView.js').LeafletMarker} marker
+   */
   bindPopupTemplate(marker) {
     const popupHTML = document.createElement('div');
 
@@ -207,10 +205,11 @@ export default class EditingPin extends Pin {
     marker.bindPopup(popupHTML, { className: 'customPopup' });
   }
 
+  /**
+   *
+   * @param {import('./MapView.js').LeafletMarker} marker
+   */
   showPopup(marker) {
     marker.openPopup();
-  }
-  hidePopup(marker) {
-    marker.closePopup();
   }
 }
