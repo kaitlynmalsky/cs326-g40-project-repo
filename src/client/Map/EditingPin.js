@@ -106,9 +106,9 @@ export default class EditingPin extends Pin {
   }
 
   cancel() {
-    if (this.#type === 'new') {
-      this.removeMarker();
-    } else {
+    this.removeMarker();
+
+    if (this.#type !== 'new') {
       this.map.addPin(this.#pinInfo);
     }
   }

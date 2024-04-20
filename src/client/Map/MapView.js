@@ -109,6 +109,11 @@ export default class MapView extends View {
    */
   async editPin(pinID) {
     const pin = await database.getPin(pinID);
+    
+    if (this.editingPin) {
+      this.editingPin.cancel();
+    }
+
     this.editingPin = new EditingPin(this, 'existing', pin);
     this.#fabElm.innerText = 'Cancel';
     this.editingPin.render();
