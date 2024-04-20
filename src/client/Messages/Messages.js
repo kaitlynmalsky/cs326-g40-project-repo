@@ -47,7 +47,7 @@ export default class MessagesView extends View {
         this.#col2.id = "col2";
         this.#chatView = document.createElement('div');
         this.#chatView.id = "chat-container"
-        this.#chatView.className = "overscroll-contain overflow-y-scroll gap-2.5 grid grid-flow-row auto-rows-max row-span-4 align-bottom";
+        this.#chatView.className = "overscroll-contain overflow-y-scroll gap-2.5 grid grid-flow-row auto-rows-max row-span-4 align-bottom content-end";
         this.#col2.appendChild(this.#chatView);
 
         const col1Title = document.createElement('h1');

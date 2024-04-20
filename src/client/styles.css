@@ -592,8 +592,21 @@ video {
   visibility: visible;
 }
 
+.absolute {
+  position: absolute;
+}
+
 .relative {
   position: relative;
+}
+
+.inset-x-0 {
+  left: 0px;
+  right: 0px;
+}
+
+.bottom-0 {
+  bottom: 0px;
 }
 
 .z-0 {
@@ -761,6 +774,10 @@ video {
 
 .flex-col {
   flex-direction: column;
+}
+
+.content-end {
+  align-content: flex-end;
 }
 
 .items-center {
