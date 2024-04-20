@@ -1,4 +1,4 @@
-//import localStorageInstance from "../database.js";
+import database from "../database.js";
 
 // Quick mock to allow it to continue working while porting to PouchDB
 const localStorageInstance = {
@@ -21,7 +21,7 @@ class Node {
   }
 
   get storageKey() {
-    return `users_${this.id}`;
+    return database.getUser()
   }
 
   async loadFromStorage(user, setReady) {
