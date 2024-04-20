@@ -130,6 +130,7 @@ export default class MapView extends View {
    */
   async savePin(pinInfo) {
     const pinData = await database.createPin(pinInfo);
+    this.#fabElm.innerText = 'Add Pin';
     this.addPin(pinData);
     this.editingPin = null;
   }
@@ -140,6 +141,7 @@ export default class MapView extends View {
    */
   async updatePin(pin) {
     const pinData = await database.updatePin(pin);
+    this.#fabElm.innerText = 'Add Pin';
     this.addPin(pinData);
     this.editingPin = null;
   }
