@@ -632,6 +632,10 @@ video {
   margin: 0.5rem;
 }
 
+.m-1 {
+  margin: 0.25rem;
+}
+
 .mx-3 {
   margin-left: 0.75rem;
   margin-right: 0.75rem;
@@ -675,6 +679,41 @@ video {
 
 .grid {
   display: grid;
+}
+
+.size-24 {
+  width: 6rem;
+  height: 6rem;
+}
+
+.size-1\/6 {
+  width: 16.666667%;
+  height: 16.666667%;
+}
+
+.size-\[32rem\] {
+  width: 32rem;
+  height: 32rem;
+}
+
+.size-\[2rem\] {
+  width: 2rem;
+  height: 2rem;
+}
+
+.size-\[10\%\] {
+  width: 10%;
+  height: 10%;
+}
+
+.size-\[1\/12\] {
+  width: 1/12;
+  height: 1/12;
+}
+
+.size-20 {
+  width: 5rem;
+  height: 5rem;
 }
 
 .h-10 {
@@ -1344,8 +1383,6 @@ main {
 .chatrow1 {
   height: 85vh;
   max-height: 85vh;
-  overflow-y: scroll;
-  overflow: auto;
 }
 
 .chatrow2 {

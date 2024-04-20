@@ -51,8 +51,6 @@ main {
 .chatrow1 {
   height: 85vh;
   max-height: 85vh;
-  overflow-y: scroll;
-  overflow: auto;
 }
 
 .chatrow2 {
