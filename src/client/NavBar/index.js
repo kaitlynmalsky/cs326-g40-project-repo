@@ -7,9 +7,6 @@ export default class NavBar {
   constructor() {
     this.#routes = [
       { name: 'Messages', target: 'messages' },
-      { name: 'Login', target: 'login' },
-      { name: 'Sign-Up', target: 'signup' },
-      { name: 'Messages', target: 'messages' },
       { name: 'Map', target: 'map' },
       { name: 'Village', target: 'village' },
       { name: 'Profile', target: 'profile' },
@@ -39,6 +36,10 @@ export default class NavBar {
     return navBarElm;
   }
 
+  /**
+   * 
+   * @param {string} routeKey 
+   */
   setActive(routeKey) {
     const activeNavLinks = this.#navBarElm.querySelectorAll(`a.active`);
 

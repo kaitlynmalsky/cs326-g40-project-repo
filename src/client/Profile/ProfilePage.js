@@ -20,7 +20,7 @@ export default class ProfileView extends View {
     super();
   }
 
-  render() {
+  async render() {
     //static html
 
     const profilePageDiv = document.createElement('div');
