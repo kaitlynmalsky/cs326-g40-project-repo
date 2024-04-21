@@ -84,13 +84,13 @@ class Database {
     return `user_${userID}`;
   }
 
-  /**
-   * Formats `userID` and `targetID` into a database key
-   * @param {string} userID
-   * @param {string} targetID
-   * @returns {string}
-   */
-  #formatConnectionKey(userID, targetID) {
+    /**
+     * Formats `userID` and `targetID` into a database key
+     * @param {string} userID
+     * @param {string} targetID
+     * @returns {string}
+     */
+    #formatConnectionKey(userID, targetID) {
     return `connection_${userID}_${targetID}`;
   }
 

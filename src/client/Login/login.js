@@ -45,6 +45,7 @@ export default class LoginView extends View {
                 if (user && user.password === password) {
                     // Open dashboard
                     console.log('Authentication successful');
+                    Database.setCurrentUserId(user.userID);
                 } else if (user && user.password !== password) {
                     console.log('Authentication failed: Wrong Password!');
                 } else if (!user) {
