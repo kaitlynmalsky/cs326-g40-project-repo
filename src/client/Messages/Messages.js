@@ -13,7 +13,6 @@ export default class MessagesView extends View {
     #chatView;
     #sendView;
     #currUser;
-    #lastMessageAuthor;
 
     /**
      * Creates the message view (no parameters).
@@ -26,7 +25,6 @@ export default class MessagesView extends View {
         this.#active_id = 0;
         this.#messageList = [];
         this.#groupChats = [];
-        this.#lastMessageAuthor = null;
     }
 
     /**
@@ -45,12 +43,11 @@ export default class MessagesView extends View {
         this.#col1.id = "col1";
 
         this.#col2 = document.createElement('div');
-        this.#col2.className = "overscroll-contain col-span-4"
+        this.#col2.className = "overscroll-contain grid grid-rows-5 col-span-4 overflow-y-scroll"
         this.#col2.id = "col2";
         this.#chatView = document.createElement('div');
         this.#chatView.id = "chat-container"
-        // overscroll-contain overflow-y-scroll gap-2.5 grid grid-flow-row auto-rows-max row-span-4 align-bottom content-end
-        this.#chatView.className = "overscroll-auto chatrow1 h-min overflow-y-auto gap-2.5 grid auto-rows-max content-end";
+        this.#chatView.className = "overscroll-contain overflow-y-scroll gap-2.5 grid grid-flow-row auto-rows-max row-span-4"; // content-end breaks scrolling for some reason???
         this.#col2.appendChild(this.#chatView);
 
         const col1Title = document.createElement('h1');
@@ -59,7 +56,7 @@ export default class MessagesView extends View {
         this.#col1.appendChild(col1Title);
 
         this.#sendView = document.createElement('div');
-        this.#sendView.className = "chatrow2 p-5";
+        this.#sendView.className = "p-5";
         this.#sendView.id = "send-message";
         this.#col2.appendChild(this.#sendView);
 
@@ -79,8 +76,6 @@ export default class MessagesView extends View {
 
         this.changeChat(0);
 
-        console.log(elm.outerHTML);
-        console.log(this.#col2.outerHTML);
         return elm;
     }
 
@@ -109,8 +104,37 @@ export default class MessagesView extends View {
         this.addGroupChat([spiderman, scoob]);
         this.addGroupChat([nemo]);
         this.addGroupChat([spiderman, nemo, scoob]);
+        // this.addGroupChat([spiderman, scoob]);
+        // this.addGroupChat([nemo]);
+        // this.addGroupChat([spiderman, nemo, scoob]);
+        // this.addGroupChat([spiderman, scoob]);
+        // this.addGroupChat([nemo]);
+        // this.addGroupChat([spiderman, nemo, scoob]);
+        // this.addGroupChat([spiderman, scoob]);
+        // this.addGroupChat([nemo]);
+        // this.addGroupChat([spiderman, nemo, scoob]);
+        // this.addGroupChat([spiderman, scoob]);
+        // this.addGroupChat([nemo]);
+        // this.addGroupChat([spiderman, nemo, scoob]);
+        // this.addGroupChat([spiderman, scoob]);
+        // this.addGroupChat([nemo]);
+        // this.addGroupChat([spiderman, nemo, scoob]);
+        // this.addGroupChat([spiderman, scoob]);
+        // this.addGroupChat([nemo]);
+        // this.addGroupChat([spiderman, nemo, scoob]);
+        // this.addGroupChat([spiderman, scoob]);
+        // this.addGroupChat([nemo]);
+        // this.addGroupChat([spiderman, nemo, scoob]);
 
-        this.addMessage(nemo, new Date, `Today when I walked into my economics class I saw something I dread every time I close my eyes. Someone had brought their new gaming laptop to class. The Forklift he used to bring it was still running idle at the back. I started sweating as I sat down and gazed over at the 700lb beast that was his laptop. He had already reinforced his desk with steel support beams and was in the process of finding an outlet for a power cable thicker than Amy Schumer's thigh. I start shaking. I keep telling myself I'm going to be alright and that there's nothing to worry about. He somehow finds a fucking outlet. Tears are running down my cheeks as I send my last texts to my family saying I love them. The teacher starts the lecture, and the student turns his laptop on. The colored lights on his RGB Backlit keyboard flare to life like a nuclear flash, and a deep humming fills my ears and shakes my very soul. The entire city power grid goes dark. The classroom begins to shake as the massive fans begin to spin. In mere seconds my world has gone from vibrant life, to a dark, earth shattering void where my body is getting torn apart by the 150mph gale force winds and the 500 decibel groan of the cooling fans. As my body finally surrenders, I weep, as my school and my city go under. I fucking hate gaming laptops. `, false, 1);
+        // this.addMessage(scoob, new Date, "i eat kids", false, 0);
+        // this.addMessage(spiderman,new Date, "dude what", false, 0);
+        // this.addMessage(scoob, new Date, `Connection terminated. I'm sorry to interrupt you, Elizabeth, if you still even remember that name, But I'm afraid you've been misinformed. You are not here to receive a gift, nor have you been called here by the individual you assume, although, you have indeed been called. You have all been called here, into a labyrinth of sounds and smells, misdirection and misfortune. A labyrinth with no exit, a maze with no prize. You don't even realize that you are trapped. Your lust for blood has driven you in endless circles, chasing the cries of children in some unseen chamber, always seeming so near, yet somehow out of reach, but you will never find them. None of you will. This is where your story ends.
+        // And to you, my brave volunteer, who somehow found this job listing not intended for you, although there was a way out planned for you, I have a feeling that's not what you want. I have a feeling that you are right where you want to be. I am remaining as well. I am nearby. This place will not be remembered, and the memory of everything that started this can finally begin to fade away. As the agony of every tragedy should.
+        // And to you monsters trapped in the corridors, be still and give up your spirits. They don't belong to you. For most of you, I believe there is peace and perhaps more waiting for you after the smoke clears. Although, for one of you, the darkest pit of Hell has opened to swallow you whole, so don't keep the devil waiting, old friend.
+        // My daughter, if you can hear me, I knew you would return as well. It's in your nature to protect the innocent. I'm sorry that on that day, the day you were shut out and left to die, no one was there to lift you up into their arms the way you lifted others into yours, and then, what became of you. I should have known you wouldn't be content to disappear, not my daughter. I couldn't save you then, so let me save you now. It's time to rest - for you, and for those you have carried in your arms.
+        // This ends for all of us.
+        // End communication.`, false, 0);
+        // this.addMessage(spiderman, new Date, `Today when I walked into my economics class I saw something I dread every time I close my eyes. Someone had brought their new gaming laptop to class. The Forklift he used to bring it was still running idle at the back. I started sweating as I sat down and gazed over at the 700lb beast that was his laptop. He had already reinforced his desk with steel support beams and was in the process of finding an outlet for a power cable thicker than Amy Schumer's thigh. I start shaking. I keep telling myself I'm going to be alright and that there's nothing to worry about. He somehow finds a fucking outlet. Tears are running down my cheeks as I send my last texts to my family saying I love them. The teacher starts the lecture, and the student turns his laptop on. The colored lights on his RGB Backlit keyboard flare to life like a nuclear flash, and a deep humming fills my ears and shakes my very soul. The entire city power grid goes dark. The classroom begins to shake as the massive fans begin to spin. In mere seconds my world has gone from vibrant life, to a dark, earth shattering void where my body is getting torn apart by the 150mph gale force winds and the 500 decibel groan of the cooling fans. As my body finally surrenders, I weep, as my school and my city go under. I fucking hate gaming laptops. `, false);
         
         this.addMessage(scoob, new Date, "hey i heard that they have therapy dogs visiting in the campus center today!", false, 0);
         this.addMessage(spiderman, new Date, "Wait really?", false, 0);
@@ -193,7 +217,7 @@ export default class MessagesView extends View {
         messageElm.className = "flex";
 
         const messageAvatar = document.createElement('img');
-        messageAvatar.className = " w-11 h-11 mx-3 flex-none border-2 border-white rounded-full"
+        messageAvatar.className = " w-20 h-20 mx-3 flex-none border-2 border-white rounded-full"
         messageAvatar.src = person.avatar;
         
 
@@ -204,14 +228,14 @@ export default class MessagesView extends View {
         
 
         if (fromMe) {
-            messageContent.className = "max-w-prose text-base bg-stone-200 h-min w-auto p-2 mx-3 rounded-l-lg rounded-br-lg z-0";
+            messageContent.className = "bg-stone-200 h-min w-auto p-4 mx-3 rounded-l-lg rounded-br-lg z-0";
             messageElm.classList.add("justify-end");
             messageContainer.appendChild(messageContent);
             messageElm.appendChild(messageContent);
             messageElm.appendChild(messageAvatar);
             
         } else {
-            messageContent.className = "max-w-prose text-base bg-green-200 h-min w-auto p-2 mx-3 rounded-r-lg rounded-bl-lg z-0";
+            messageContent.className = "bg-green-200 h-min w-auto p-4 mx-3 rounded-r-lg rounded-bl-lg z-0";
             messageContainer.appendChild(messageContent);
             messageElm.appendChild(messageAvatar);
             messageElm.appendChild(messageContent);
@@ -221,14 +245,14 @@ export default class MessagesView extends View {
     }
 
     /**
-     * Renders the send-message textarea.
+     * Renders the send-message texarea.
      */
     initializeSendView() {
         const messageForm = document.createElement('form');
         messageForm.className = "overscroll-contain h-auto";
         messageForm.name = "message";
         const messageArea = document.createElement('textarea');
-        messageArea.className = "message-text overscroll-contain resize-y text-lg block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500";
+        messageArea.className = "overscroll-contain resize-y text-lg block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500";
         messageArea.id="message-area";
         messageArea.addEventListener("keyup", e => {
             e.preventDefault();
