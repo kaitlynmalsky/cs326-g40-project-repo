@@ -84,13 +84,13 @@ class Database {
     return `user_${userID}`;
   }
 
-    /**
-     * Formats `userID` and `targetID` into a database key
-     * @param {string} userID
-     * @param {string} targetID
-     * @returns {string}
-     */
-    #formatConnectionKey(userID, targetID) {
+  /**
+   * Formats `userID` and `targetID` into a database key
+   * @param {string} userID
+   * @param {string} targetID
+   * @returns {string}
+   */
+  #formatConnectionKey(userID, targetID) {
     return `connection_${userID}_${targetID}`;
   }
 
@@ -276,25 +276,41 @@ class Database {
     return user || null;
   }
 
+  async getUserByName(name) {
+    const users = await this.#db.allDocs({
+      include_docs: true,
+      startkey: 'user',
+      endkey: 'user\ufff0',
+    });
+
+    console.log(users);
+    const user = users.rows.filter((row) => row.doc.name === name);
+    return user;
+  }
+
   /**
    * Adds a new user
    * @param {CreateUserInput} userData User data to create a new user
    * @returns {Promise<User>} The created user
    */
   async addUser(userData) {
-    const userID = self.crypto.randomUUID();
-    const userDoc = {
-      _id: this.#formatUserKey(userID),
-      userID,
-      ...userData,
-    };
+    if (await this.getUserByEmail(userData.email)) {
+      console.error(`An account with ${userData.email} already exists`);
+    } else {
+      const userID = self.crypto.randomUUID();
+      const userDoc = {
+        _id: this.#formatUserKey(userID),
+        userID,
+        ...userData,
+      };
 
-    const { rev } = await this.#db.put(userDoc);
+      const { rev } = await this.#db.put(userDoc);
 
-    return {
-      ...userDoc,
-      _rev: rev,
-    };
+      return {
+        ...userDoc,
+        _rev: rev,
+      };
+    }
   }
 }
 

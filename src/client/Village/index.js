@@ -1,17 +1,11 @@
 import View from '../View.js';
-import { Node } from './Graph.js';
 import dbInstance from '../database.js';
 
 export default class VillageView extends View {
   constructor() {
     super();
-    const currentUser = {
-      id: 1,
-      name: 'cat',
-      avatar: '../images/placeholder_avatar.png',
-    };
 
-    this.graph = new Node(currentUser);
+    const currentUserID = dbInstance.getCurrentUserID();
 
     const newUser = {
       id: 2,
@@ -25,10 +19,26 @@ export default class VillageView extends View {
       avatar: '../images/nemo.png',
     };
 
-    this.graph.ready.then(() => {
-      this.graph.addConnection(newUser);
-      this.graph.addConnection(newUser2);
-    });
+    const mockUser = {
+      name: "Cat",
+      username: "cat123",
+      email: "cat123@example.com",
+      avatar: './images/placeholder_avatar.png',
+      password: 'dontdr'
+    }
+
+    const userList = [newUser, newUser2, mockUser];
+    this.init(userList);
+
+    console.log(dbInstance.getUserByName("Cat"));
+
+  }
+
+  async init(userList) {
+    const currentUserID = dbInstance.getCurrentUserID();
+    for (const user of userList) {
+      dbInstance.createConnection({userID: currentUserID, targetID: (await dbInstance.addUser(user)).userID});
+    }
   }
 
   async render() {
@@ -69,6 +79,10 @@ export default class VillageView extends View {
       villageViewElm.appendChild(connectionElm);
     }
 
+
     return villageViewElm;
+
+
+
   }
 }

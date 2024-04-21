@@ -624,12 +624,12 @@ video {
   grid-row: span 4 / span 4;
 }
 
-.m-0 {
-  margin: 0px;
-}
-
 .m-2 {
   margin: 0.5rem;
+}
+
+.m-0 {
+  margin: 0px;
 }
 
 .mx-3 {
