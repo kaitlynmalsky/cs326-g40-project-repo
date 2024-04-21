@@ -180,13 +180,6 @@ export default class ProfileView extends View {
       });
     };
 
-    document.getElementById('Bg-forward').addEventListener('mouseover', () => {
-      icnsDynamic[0].split(' ').forEach(c => {
-        document.getElementById('Bg-icn').classList.remove(c);
-        icnsStatic[0].split(' ').forEach(z => document.getElementById('Bg-icn').classList.add(z));
-      });
-    });
-
     // document.getElementById("save").addEventListener("click", () => {
     //   document.getElementById("final").src = (/**@type {HTMLCanvasElement} */ (document.getElementById("myIcon"))).toDataURL("image/jpeg", 1);
     // });

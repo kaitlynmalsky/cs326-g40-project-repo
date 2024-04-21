@@ -1533,6 +1533,8 @@ main {
 /* Profile Style */
 
 #profilePage-view {
+  /* @apply h-full; */
+  width: 100%;
   height: 100%;
   background: #FDF3A2;
   padding-top: 8px;
@@ -1543,10 +1545,9 @@ main {
   border: 6px solid #8e4e01;
   border-radius: 5px;
   display: block;
-  margin-left: auto;
-  margin-right: auto;
-  width: 45%;
-  height: 98%;
+  margin: 0 auto;
+  width: 680px;
+  height: 630px;
   padding-left: 10px;
   padding-right: 10px;
 }
@@ -1615,7 +1616,6 @@ main {
   --tw-text-opacity: 1;
   color: rgb(0 0 0 / var(--tw-text-opacity));
   float: right;
-  /* background: #BC6700; */
   background: #24BA73;
   color: white;
   border: solid #412003;
