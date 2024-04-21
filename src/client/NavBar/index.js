@@ -7,8 +7,12 @@ export default class NavBar {
   constructor() {
     this.#routes = [
       { name: 'Messages', target: 'messages' },
+      { name: 'Login', target: 'login' },
+      { name: 'Sign-Up', target: 'signup' },
+      { name: 'Messages', target: 'messages' },
       { name: 'Map', target: 'map' },
       { name: 'Village', target: 'village' },
+      { name: 'Profile', target: 'profile' },
     ];
   }
 

@@ -2,6 +2,7 @@ import GlobalEvents from './Events/index.js';
 import MapView from './Map/MapView.js';
 import MessagesView from './Messages/Messages.js';
 import NavBar from './NavBar/index.js';
+import ProfileView from './Profile/ProfilePage.js';
 import VillageView from './Village/index.js';
 import LoginView from './Login/login.js';
 import SignupView from './Signup/signup.js';
@@ -72,6 +73,9 @@ export class App {
 
     const messagesView = new MessagesView();
     this.#addRoute('messages', { view: messagesView });
+
+    const profileView = new ProfileView();
+    this.#addRoute('profile', { view: profileView });
 
     if (dbInstance.getCurrentUserID()) {
       history.replaceState('map', '', '#map');
