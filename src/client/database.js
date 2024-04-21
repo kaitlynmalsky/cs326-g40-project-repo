@@ -33,6 +33,7 @@
 /**
  * Input data to create a VillageLink Pin
  * @typedef {Object} CreatePinInput
+ * @property {string} hostID The pin host user ID
  * @property {string} startTime The start time of the pin's event (in ISO-8601 format)
  * @property {string} endTime The end time of the pin's event (in  ISO-8601 format)
  * @property {string} details The pin details
@@ -43,10 +44,19 @@
  * Represents a VillageLink pin object
  * @typedef {Object} Pin
  * @property {string} pinID The ID of the pin
+ * @property {string} hostID The pin host user ID
  * @property {string} startTime The start time of the pin's event (in ISO-8601 format)
  * @property {string} endTime The end time of the pin's event (in  ISO-8601 format)
  * @property {string} details The pin details
  * @property {[number, number]} coords The [lat,long] coordinates representing the pin's location
+ * @property {string} _id PouchDB ID
+ * @property {string} _rev PouchDB revision
+ */
+
+/**
+ * @typedef {Object} PinAttendee
+ * @property {string} pinID
+ * @property {string} userID
  * @property {string} _id PouchDB ID
  * @property {string} _rev PouchDB revision
  */
@@ -102,7 +112,6 @@
  * @property {string} _rev PouchDB revision
  */
 
-
 /**
  * @class
  */
@@ -140,6 +149,15 @@ class Database {
    */
   #formatConnectionKey(userID, targetID) {
     return `connection_${userID}_${targetID}`;
+  }
+
+  /**
+   * Format `pinId` and `userId` into a pin attendee database key
+   * @param {string} pinID
+   * @param {string} userID
+   */
+  #formatPinAttendeeKey(pinID, userID) {
+    return `pat_${pinID}_${userID}`;
   }
 
   /**
@@ -240,6 +258,55 @@ class Database {
     });
 
     return pinsResult.rows.map((row) => row.doc);
+  }
+
+  /**
+   * Add an attendee to a pin
+   * @param {string} pinID
+   * @param {string} userID
+   * @returns {Promise<PinAttendee>}
+   */
+  async addPinAttendee(pinID, userID) {
+    const doc = {
+      _id: this.#formatPinAttendeeKey(pinID, userID),
+      pinID,
+      userID,
+    };
+
+    const { ok, id, rev } = await this.#db.put(doc);
+
+    if (!ok) {
+      console.error(
+        `Could not add userId=${userID} as attendee for pin pinI=${pinID}`,
+      );
+    }
+
+    return {
+      ...doc,
+      _rev: rev,
+    };
+  }
+
+  /**
+   * Get the attendees of a pin
+   * @param {string} pinID
+   */
+  async getPinAttendees(pinID) {
+    const pinAttendeesResult = await this.#db.allDocs({
+      include_docs: true,
+      startkey: `pat_${pinID}`,
+      endkey: `pat_${pinID}\ufff0`,
+    });
+
+    return pinAttendeesResult.rows.map((row) => row.doc);
+  }
+
+  /**
+   * Removes an attendee from a pin
+   * @param {PinAttendee} attendee
+   */
+  async removePinAttendee(attendee) {
+    return this.#db.remove(attendee);
   }
 
   /**
@@ -364,195 +431,215 @@ class Database {
   }
 
   /**
-   * 
-   * @param {User} user 
+   *
+   * @param {User} user
    * @returns {Promise<User>}
    */
   async updateUser(user) {
-    const {rev} = await this.#db.put(user);
+    const { rev } = await this.#db.put(user);
 
     user._rev = rev;
 
     return user;
   }
 
+  /**
+   * Formats `gcID` into a database key
+   * @param {number} gcID The ID of the group chat
+   * @returns {string}
+   */
+  #formatGroupKey(gcID) {
+    return 'groupchat_' + gcID;
+  }
 
-    /**
-     * Formats `gcID` into a database key
-     * @param {number} gcID The ID of the group chat
-     * @returns {string}
-     */
-    #formatGroupKey(gcID) {
-      return "groupchat_" + gcID;
-    }
+  /**
+   * Formats message db key
+   * @param {string} gcID
+   * @param {string} msgID
+   * @returns
+   */
+  #formatGroupMessageKey(gcID, msgID) {
+    return `message_${gcID}_${msgID}`;
+  }
 
-    /**
-     * Retrieves group chat with given ID.
-     * @param {*} gcID 
-     * @returns 
-     */
-    async getGroupById(gcID) {
-      const groups = await this.#db.allDocs({
-        include_docs: true,
-        startkey: 'groupchat',
-        endkey: `groupchat\ufff0`,
-     });
+  /**
+   * Retrieves group chat with given ID.
+   * @param {*} gcID
+   * @returns
+   */
+  async getGroupById(gcID) {
+    const groups = await this.#db.allDocs({
+      include_docs: true,
+      startkey: 'groupchat',
+      endkey: `groupchat\ufff0`,
+    });
 
-      const group = groups.rows.find((row) => row.doc.GroupChatID === gcID) ?.doc;
-      return group || null;
-    }
+    const group = groups.rows.find((row) => row.doc.GroupChatID === gcID)?.doc;
+    return group || null;
+  }
 
-    
+  /**
+   * Adds a group chat with the given ID to the database.
+   * @param {number} gcID
+   */
+  async addGroupChat(gcID) {
+    const existingGC = await this.getGroupById(gcID);
 
-    /**
-     * Adds a group chat with the given ID to the database.
-     * @param {number} gcID 
-     */
-    async addGroupChat(gcID) {
-      const existingGC = await this.getGroupById(gcID);
-      if (existingGC) {
-        console.error(`Group chat with ID ${gcID} already exists.`);
-        return existingGC;
-      } else {
-        const gcDoc = {
-          _id: this.#formatGroupKey(gcID), // ??
-          GroupChatID: gcID
-        }
-  
-        const { id, rev, ok } = await this.#db.put(gcDoc);
-  
-        if (!ok) {
-          console.error(`Failed to create ${gcID} (id=${id} , rev=${rev})`);
-        }
-  
-        return {
-          _id: id,
-          _rev: rev,
-          ...gcDoc
-        }
-      }
-    }
-
-
-    /**
-     * Adds a message with the given group chat ID, author ID, content, and time sent to the database
-     * @param {number} gcID 
-     * @param {number} pID 
-     * @param {string} content 
-     * @param {Date} time
-     */
-    async addMessage(gcID, pID, content, time) {
-      const messageID = self.crypto.randomUUID();
-      const messageDoc = {
-        _id: "message_" + messageID,
-        messageID: messageID,
+    if (existingGC) {
+      console.error(`Group chat with ID ${gcID} already exists.`);
+      return existingGC;
+    } else {
+      const gcDoc = {
+        _id: this.#formatGroupKey(gcID),
         GroupChatID: gcID,
-        PersonID: pID,
-        messageContent: content,
-        time: time
-      }
-      const {id, rev, ok} = await this.#db.put(messageDoc);
+      };
+
+      const { id, rev, ok } = await this.#db.put(gcDoc);
 
       if (!ok) {
-        console.error(`Failed to create ${messageID} (id=${id} , rev=${rev})`);
+        console.error(`Failed to create ${gcID} (id=${id} , rev=${rev})`);
       }
 
       return {
         _id: id,
         _rev: rev,
-        ...messageDoc
+        ...gcDoc,
       };
-      
+    }
+  }
+
+  /**
+   * Adds a message with the given group chat ID, author ID, content, and time sent to the database
+   * @param {number} gcID
+   * @param {number} pID
+   * @param {string} content
+   * @param {Date} time
+   */
+  async addMessage(gcID, pID, content, time) {
+    const messageID = self.crypto.randomUUID();
+    const messageDoc = {
+      _id: this.#formatGroupMessageKey(`${gcID}`, messageID),
+      messageID: messageID,
+      GroupChatID: gcID,
+      PersonID: pID,
+      messageContent: content,
+      time: time,
+    };
+    const { id, rev, ok } = await this.#db.put(messageDoc);
+
+    if (!ok) {
+      console.error(`Failed to create ${messageID} (id=${id} , rev=${rev})`);
     }
 
-    /**
-     * Adds a person with the given ID, name, and avatar to the database.
-     * @param {number} pID
-     * @param {string} name
-     * @param {string} avatar
-     */
-    async addPerson(pID, name, avatar) {
-      const personDoc = {
-        _id : "person_" + pID,
-        name: name,
-        avatar: avatar
-      };
-      const {id, rev, ok} = await this.#db.put(personDoc);
-      if (!ok) {
-        console.error(`Failed to create ${pID} (id=${id}, rev=${rev})`);
-      }
-      return {
-        _id: id,
-        _rev: rev,
-        ...personDoc
-      }
+    return {
+      _id: id,
+      _rev: rev,
+      ...messageDoc,
+    };
+  }
+
+  /**
+   * Adds a person with the given ID, name, and avatar to the database.
+   * @param {number} pID
+   * @param {string} name
+   * @param {string} avatar
+   */
+  async addPerson(pID, name, avatar) {
+    const personDoc = {
+      _id: 'person_' + pID,
+      name: name,
+      avatar: avatar,
+    };
+
+    const { id, rev, ok } = await this.#db.put(personDoc);
+
+    if (!ok) {
+      console.error(`Failed to create ${pID} (id=${id}, rev=${rev})`);
+    }
+    return {
+      _id: id,
+      _rev: rev,
+      ...personDoc,
+    };
+  }
+
+  /**
+   *
+   * @param {string} gcId
+   * @param {string} pID
+   */
+  #formatGroupChatMemberKey(gcId, pID) {
+    return `groupchatmember_${gcId}_${pID}`;
+  }
+
+  /**
+   * Adds a group chat member with the given person ID and group chat ID.
+   * @param {number} pID
+   * @param {number} gcID
+   * @returns
+   */
+  async addGroupChatMember(pID, gcID) {
+    const gcmDoc = {
+      _id: this.#formatGroupChatMemberKey(`${gcID}`, `${pID}`),
+      PersonID: pID,
+      GroupChatID: gcID,
+    };
+
+    const { id, rev, ok } = await this.#db.put(gcmDoc);
+
+    if (!ok) {
+      console.error(`Failed to create ${gcID}_${pID} (id=${id}, rev=${rev})`);
     }
 
+    return {
+      _id: id,
+      _rev: rev,
+      ...gcmDoc,
+    };
+  }
 
-    /**
-     * Adds a group chat member with the given person ID and group chat ID.
-     * @param {number} pID 
-     * @param {number} gcID 
-     * @returns 
-     */
-    async addGroupChatMember(pID, gcID) {
-      const gcmDoc = {
-        _id: "groupchatmember_" + pID + "_" + gcID,
-        PersonID: pID,
-        GroupChatID: gcID
-      };
-      const {id, rev, ok} = await this.#db.put(gcmDoc);
-      if (!ok) {
-        console.error(`Failed to create ${pID}_${gcID} (id=${id}, rev=${rev})`);
-      }
-      return {
-        _id: id,
-        _rev: rev,
-        ...gcmDoc
-      }
-    }
+  /**
+   * Retrieves all group chats for the current user.
+   * @returns {Promise<Array<GroupChat>>}
+   */
+  async getAllGroupChats() {
+    const gcsResult = await this.#db.allDocs({
+      include_docs: true,
+      startkey: 'groupchat_',
+      endkey: `groupchat_\ufff0`,
+    });
 
-    /**
-     * Retrieves all group chats for the current user.
-     * @returns {Promise<Array<GroupChat>>}
-     */
-    async getAllGroupChats() {
-      const gcsResult = await this.#db.allDocs({
-        include_docs: true,
-        startkey: 'groupchat',
-        endkey: `pin\ufff0`,
-      });
+    return gcsResult.rows.map((row) => row.doc);
+  }
 
-      return gcsResult.rows.map((row) => row.doc);
-    }
+  /**
+   * Retrieves all messages given a group chat's ID.
+   * @param {number} gcID
+   * @returns {Promise<Array<GroupChatMessage>>}
+   */
+  async getMessagesByGroupChatID(gcID) {
+    const messageResult = await this.#db.allDocs({
+      include_docs: true,
+      startkey: `message_${gcID}`,
+      endkey: `message_${gcID}\ufff0`,
+    });
 
-    /**
-     * Retrieves all messages given a group chat's ID.
-     * @param {number} id 
-     * @returns {Promise<Array<GroupChatMessage>>}
-     */
-    async getMessagesByGroupChatID(id) {
-      const messageResult = await this.#db.allDocs({
-        include_docs: true,
-        startkey: 'message',
-        endkey: `message\ufff0`,
-      });
-      return messageResult.rows.map((row) => row.doc).filter(doc => doc.GroupChatID === id);
-    }
+    return messageResult.rows.map((row) => row.doc);
+  }
 
-    /**
-     * Retrieves all members 
-     * @param {number} id 
-     * @returns {Promise<Array<GroupChatMember>>}
-     */
-    async getMembersByGroupChatID(id) {
-      const memberResult = await this.#db.allDocs({
-        include_docs: true,
-        startkey: 'groupchatmember',
-        endkey: `groupchatmember\ufff0`
-      });
-      return memberResult.rows.map((row) => row.doc).filter(doc => doc.GroupChatID === id);
-    }
+  /**
+   * Retrieves all members
+   * @param {number} gcID
+   * @returns {Promise<Array<GroupChatMember>>}
+   */
+  async getMembersByGroupChatID(gcID) {
+    const memberResult = await this.#db.allDocs({
+      include_docs: true,
+      startkey: `groupchatmember_${gcID}`,
+      endkey: `groupchatmember_${gcID}\ufff0`,
+    });
+    return memberResult.rows.map((row) => row.doc);
+  }
 }
 
 const dbInstance = new Database();
