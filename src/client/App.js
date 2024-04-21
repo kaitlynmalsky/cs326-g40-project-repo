@@ -1,4 +1,4 @@
-import GlobalEvents, { EVENTS } from './Events/index.js';
+import GlobalEvents from './Events/index.js';
 import MapView from './Map/MapView.js';
 import MessagesView from './Messages/Messages.js';
 import NavBar from './NavBar/index.js';
@@ -65,10 +65,10 @@ export class App {
     this.#addRoute('village', { view: villageView });
 
     const loginView = new LoginView();
-    this.#addRoute('login', { view: loginView });
+    this.#addRoute('login', { view: loginView, authRequired: false });
 
     const signupView = new SignupView();
-    this.#addRoute('signup', { view: signupView });
+    this.#addRoute('signup', { view: signupView, authRequired: false });
 
     const messagesView = new MessagesView();
     this.#addRoute('messages', { view: messagesView });
@@ -110,7 +110,7 @@ export class App {
    * @param {string} routeKey
    */
   async #navigateTo(routeKey) {
-    if (!dbInstance.getCurrentUserID()) {
+    if (this.#routes[routeKey].authRequired && !dbInstance.getCurrentUserID()) {
       return GlobalEvents.navigate('login');
     }
 

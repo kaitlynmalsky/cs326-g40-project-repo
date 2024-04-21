@@ -1,4 +1,4 @@
-import GlobalEvents, { EVENTS } from '../Events/index.js';
+import GlobalEvents from '../Events/index.js';
 import View from '../View.js';
 import dbInstance from '../database.js';
 import Database from '../database.js';
@@ -51,7 +51,7 @@ export default class LoginView extends View {
           // Open dashboard
           console.log('Authentication successful');
           dbInstance.setCurrentUserId(user.userID);
-          GlobalEvents.navigate('login');
+          GlobalEvents.navigate('map');
         } else if (user && user.password !== password) {
           console.log('Authentication failed: Wrong Password!');
         } else if (!user) {
@@ -71,11 +71,14 @@ export default class LoginView extends View {
     signupText.textContent = 'Not a member? ';
 
     const signupLink = document.createElement('a');
-    signupLink.href = '';
+    signupLink.href = '#signup';
     signupLink.className =
       'font-semibold leading-6 text-black-600 hover:text-black-500';
     signupLink.textContent = 'Join now!';
     //Join now to signup
+    signupLink.addEventListener('click', () => {
+      GlobalEvents.navigate('signup');
+    });
 
     signupText.appendChild(signupLink);
 

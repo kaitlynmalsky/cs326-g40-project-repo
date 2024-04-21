@@ -1,4 +1,6 @@
+import GlobalEvents from '../Events/index.js';
 import View from '../View.js';
+import dbInstance from '../database.js';
 import Database from '../database.js';
 
 export default class SignupView extends View {
@@ -109,10 +111,12 @@ export default class SignupView extends View {
           return;
         }
 
-        await Database.addUser(userData);
+        const user = await Database.addUser(userData);
 
         // maybe redirect the user to the login page after successful signup
         console.log('User created successfully');
+        dbInstance.setCurrentUserId(user.userID);
+        GlobalEvents.navigate('map');
       } catch (error) {
         console.error('Error creating user:', error);
       }
