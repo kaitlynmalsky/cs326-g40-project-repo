@@ -302,6 +302,15 @@ class Database {
   }
 
   /**
+   * Gets the attendee for a pin
+   * @param {string} pinId
+   * @param {string} userID
+   */
+  async getPinAttendee(pinId, userID) {
+    return this.#db.get(this.#formatPinAttendeeKey(pinId, userID));
+  }
+
+  /**
    * Removes an attendee from a pin
    * @param {PinAttendee} attendee
    */
@@ -468,14 +477,7 @@ class Database {
    * @returns
    */
   async getGroupById(gcID) {
-    const groups = await this.#db.allDocs({
-      include_docs: true,
-      startkey: 'groupchat',
-      endkey: `groupchat\ufff0`,
-    });
-
-    const group = groups.rows.find((row) => row.doc.GroupChatID === gcID)?.doc;
-    return group || null;
+    return this.#db.get(this.#formatGroupKey(gcID));
   }
 
   /**
