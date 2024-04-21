@@ -294,8 +294,10 @@ class Database {
    * @returns {Promise<User>} The created user
    */
   async addUser(userData) {
-    if (await this.getUserByEmail(userData.email)) {
+    const existingUser = await this.getUserByEmail(userData.email)
+    if (existingUser) {
       console.error(`An account with ${userData.email} already exists`);
+      return existingUser;
     } else {
       const userID = self.crypto.randomUUID();
       const userDoc = {
