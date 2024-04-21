@@ -1,11 +1,12 @@
 import View from '../View.js';
+import database from '../database.js';
 
 /**
  * 
  */
 export default class MessagesView extends View {
-    #messageList;
-    #groupChats;
+    groupList;
+    groupChats;
     #curr_id;
     #active_id;
     #col1;
@@ -23,8 +24,8 @@ export default class MessagesView extends View {
         super();
         this.curr_id = 0;
         this.#active_id = 0;
-        this.#messageList = [];
-        this.#groupChats = [];
+        this.groupList = [];
+        this.groupChats = [];
     }
 
     /**
@@ -110,6 +111,8 @@ export default class MessagesView extends View {
         this.addMessage(spiderman, new Date, "We actually have to go right now", false, 0);
         this.addMessage(spiderman, new Date, "I am running there", false, 0);
         this.addMessage(scoob, new Date, "please don't go too fast or you'll scare the dogs", false, 0);
+        console.log('this.groupChats', this.groupChats);
+        console.log('this.groupList',this.groupList);
 
     }
 
@@ -119,12 +122,12 @@ export default class MessagesView extends View {
      */
     changeChat(id) {
         this.#chatView.innerHTML = "";
-        console.log(this.#groupChats);
-        this.#groupChats[id].messages.forEach(messageElm => {
+        console.log(this.groupChats);
+        this.groupChats[id].messages.forEach(messageElm => {
             this.#chatView.appendChild(messageElm);
         })
-        this.#groupChats[this.#active_id].gcElm.classList.remove("active-group-chat");
-        this.#groupChats[id].gcElm.classList.add("active-group-chat");
+        this.groupChats[this.#active_id].gcElm.classList.remove("active-group-chat");
+        this.groupChats[id].gcElm.classList.add("active-group-chat");
         this.#active_id = id;
     }
 
@@ -139,12 +142,11 @@ export default class MessagesView extends View {
 
     addGroupChat(people) {
         // https://flowbite.com/docs/components/avatar/
-        this.#curr_id = this.#messageList.length;
-        this.#messageList.push({
+        this.#curr_id = this.groupList.length;
+        this.groupList.push({
             id: this.curr_id,
             people: people
         });
-        
 
         const gcElm = document.createElement('div');
         gcElm.className = "flex -space-x-4 rtl:space-x-reverse bg-slate-100 hover:cursor-pointer";
@@ -168,8 +170,8 @@ export default class MessagesView extends View {
         });
 
         this.#col1.appendChild(gcElm);
-        this.#groupChats[this.curr_id] = {id: this.curr_id, messages: [], gcElm: gcElm};
-        console.log(this.#groupChats);
+        this.groupChats[this.curr_id] = {id: this.curr_id, messages: [], gcElm: gcElm};
+        console.log(this.groupChats);
         this.curr_id++;
     }
 
@@ -194,22 +196,46 @@ export default class MessagesView extends View {
         messageContainer.className = "flex-grow";
         const messageContent = document.createElement('div');
         messageContent.innerText = message;
+
+        const messageTimestamp = document.createElement('div');
+        messageTimestamp.className = "text-xs";
+        const today = new Date();
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        let dayText;
+        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        if (timestamp.getDate() === today.getDate() && timestamp.getMonth() === today.getMonth() && timestamp.getFullYear() === today.getFullYear()) {
+            dayText = "Today";
+        } else if (timestamp.getDate() === yesterday.getDate() && timestamp.getMonth() === yesterday.getMonth() && timestamp.getFullYear() === yesterday.getFullYear()) {
+            dayText = "Yesterday";
+        } else {
+            dayText = monthNames[timestamp.getMonth()] + " " + timestamp.getDate();
+        }
+        const pm = timestamp.getHours() >= 12 ? true : false
+        if (pm) {
+            let h = timestamp.getHours();
+            if (h !== 12) {h -= 12};
+            messageTimestamp.innerText = dayText + " at " + h + ":" + timestamp.getMinutes() + " PM";
+        } else {
+            messageTimestamp.innerText = dayText + " at " + timestamp.getHours() + ":" + timestamp.getMinutes() + " AM";
+        }
         
+        messageContent.appendChild(messageTimestamp);
 
         if (fromMe) {
-            messageContent.className = "max-w-prose bg-stone-200 h-min w-auto p-3 mx-3 rounded-l-lg rounded-br-lg z-0";
+            messageContent.className = "text-end max-w-prose bg-stone-200 h-min w-auto p-3 mx-3 rounded-l-lg rounded-br-lg z-0";
             messageElm.classList.add("justify-end");
             messageContainer.appendChild(messageContent);
             messageElm.appendChild(messageContent);
             messageElm.appendChild(messageAvatar);
             
         } else {
-            messageContent.className = "max-w-prose bg-green-200 h-min w-auto p-3 mx-3 rounded-r-lg rounded-bl-lg z-0";
+            messageContent.className = "justify-right max-w-prose bg-green-200 h-min w-auto p-3 mx-3 rounded-r-lg rounded-bl-lg z-0";
             messageContainer.appendChild(messageContent);
             messageElm.appendChild(messageAvatar);
             messageElm.appendChild(messageContent);
         }
-        this.#groupChats[gcID].messages.push(messageElm);
+        this.groupChats[gcID].messages.push(messageElm);
         this.#chatView.appendChild(messageElm);
     }
 
@@ -226,7 +252,6 @@ export default class MessagesView extends View {
         messageArea.addEventListener("keyup", e => {
             e.preventDefault();
             if (e.key === "Enter") {
-                console.log("enter");
                 this.addMessage(this.#currUser, new Date, messageArea.value, true, this.#active_id);
                 this.#chatView.scrollTop = this.#chatView.scrollHeight;
                 messageForm.submit();
@@ -235,9 +260,7 @@ export default class MessagesView extends View {
             }
         })
         messageForm.appendChild(messageArea);
-        
-
-
+    
         this.#sendView.appendChild(messageForm);
     }
 
