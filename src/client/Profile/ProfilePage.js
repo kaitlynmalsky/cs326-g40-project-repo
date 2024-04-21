@@ -1,4 +1,5 @@
 import View from '../View.js';
+import dbInstance from '../database.js';
 import localStorageInstance from '../database.js';
 
 
@@ -97,13 +98,14 @@ export default class ProfileView extends View {
     return profilePageDiv;
   }
 
-  onLoad() {
+  async onLoad() {
     //event listeners
     const ctx = /**@type {HTMLCanvasElement} */ (
       document.getElementById('myIcon')
     ).getContext('2d');
 
     const body = {
+      name: 'body',
       imgs: [
         '../icons/options/ketchupRaccoon.png',
         '../icons/options/limeRaccoon.png',
@@ -114,6 +116,7 @@ export default class ProfileView extends View {
     };
 
     const ears = {
+      name: 'ears',
       imgs: [
         '../icons/options/ketchupRaccoonEars.png',
         '../icons/options/limeRaccoonEars.png',
@@ -124,12 +127,14 @@ export default class ProfileView extends View {
     };
 
     const hat = {
+      name: 'hat',
       imgs: ['', '../icons/options/sombrero.png'],
       img: new Image(),
       i: 0,
     };
 
     const bg = {
+      name: 'bg',
       imgs: [
         '../icons/options/theStarryNight.png',
         '../icons/options/sunflowers.png',
@@ -141,6 +146,10 @@ export default class ProfileView extends View {
 
     const layers = [bg, ears, body, hat];
 
+    const user = await dbInstance.getUser(dbInstance.getCurrentUserID());
+
+    layers.forEach(l => l.i = user.avatarConfig[l.name]);
+
     const render2 = (x) => {
       if (x === layers.length) return;
       layers[x].img.onload = () => {
@@ -149,6 +158,8 @@ export default class ProfileView extends View {
       };
       layers[x].img.src = layers[x].imgs[layers[x].i];
     };
+
+    render2(0);
 
     const init = (obj, option, pos) => {
       const icn = document.getElementById(`${option}-icn`);
@@ -180,9 +191,15 @@ export default class ProfileView extends View {
       });
     };
 
-    // document.getElementById("save").addEventListener("click", () => {
-    //   document.getElementById("final").src = (/**@type {HTMLCanvasElement} */ (document.getElementById("myIcon"))).toDataURL("image/jpeg", 1);
-    // });
+    document.getElementById("save").addEventListener("click", async () => {
+      user.avatar = (/**@type {HTMLCanvasElement} */ (document.getElementById("myIcon"))).toDataURL("image/jpeg", 1);
+      layers.forEach(l => user.avatarConfig[l.name] = l.i);
+      if (document.getElementById('userName').value !== "") {
+        user.name = document.getElementById('userName').value;
+        document.getElementById('userName').value = "";
+      }
+      await dbInstance.updateUser(user);
+    });
 
     init(bg, 'Bg', 0);
     init(body, 'Body', 1);

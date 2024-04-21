@@ -1,4 +1,5 @@
 import GlobalEvents from '../Events/index.js';
+import defaultAvatar from '../Profile/defaultAvatar.js';
 import View from '../View.js';
 import dbInstance from '../database.js';
 import Database from '../database.js';
@@ -98,9 +99,18 @@ export default class SignupView extends View {
       }
 
       // Create user object
+      /**
+       * @type {import('../database.js').CreateUserInput}
+       */
       const userData = {
         name,
-        avatar: '',
+        avatar: defaultAvatar,
+        avatarConfig: {
+          'bg': 0,
+          'body': 0,
+          'ears': 0,
+          'hat': 0
+        },
         username,
         email,
         password,

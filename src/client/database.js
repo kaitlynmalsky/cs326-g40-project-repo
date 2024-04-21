@@ -334,6 +334,19 @@ class Database {
   }
 
   /**
+   * 
+   * @param {User} user 
+   * @returns {Promise<User>}
+   */
+  async updateUser(user) {
+    const {rev} = await this.#db.put(user);
+
+    user._rev = rev;
+
+    return user;
+  }
+
+  /**
    * Adds a group chat.
    * @param {number} id
    */
