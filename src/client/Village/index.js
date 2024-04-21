@@ -2,49 +2,51 @@ import View from '../View.js';
 import dbInstance from '../database.js';
 
 export default class VillageView extends View {
+  #showButton;
+  #currentUserID;
   constructor() {
     super();
+    this.#showButton = false;
 
-    const currentUserID = dbInstance.getCurrentUserID();
+    this.initSampleData();
+    this.initEventHandlers();
+  }
 
-    const newUser = {
-      name: 'scooby doo',
-      username: 'sooby_doo',
-      email: 'food@scooby.org',
-      avatar: '../images/Sooby_doo.png',
-      password: 'woof'
-    };
+  async initSampleData() {
+    const userList = [
+      { name: 'scooby doo', username: 'sooby_doo', email: 'food@scooby.org', avatar: '../images/Sooby_doo.png', password: 'woof' },
+      { name: 'nemo', username: 'nemo123', email: 'fish@ocean.org', avatar: '../images/nemo.png', password: 'WhereIsNemo' },
+      { name: 'Cat', username: 'cat123', email: 'cat123@example.com', avatar: './images/placeholder_avatar.png', password: 'dontdr' },
+    ];
 
-    const newUser2 = {
-      name: 'nemo',
-      username: 'nemo123',
-      email: 'fish@ocean.org', 
-      avatar: '../images/nemo.png',
-      password: 'WhereIsNemo'
-    };
-
-    const mockUser = {
-      name: 'Cat',
-      username: 'cat123',
-      email: 'cat123@example.com',
-      avatar: './images/placeholder_avatar.png',
-      password: 'dontdr',
-    };
-
-    const userList = [newUser, newUser2, mockUser];
-    this.init(userList);
-
-    console.log(dbInstance.getUserByName('Cat'));
+    await this.init(userList);
   }
 
   async init(userList) {
-    const currentUserID = dbInstance.getCurrentUserID();
+    this.#currentUserID = await dbInstance.getCurrentUserID();
     for (const user of userList) {
-      dbInstance.createConnection({
-        userID: currentUserID,
+      await dbInstance.createConnection({
+        userID: this.#currentUserID,
         targetID: (await dbInstance.addUser(user)).userID,
       });
     }
+  }
+
+  initEventHandlers() {
+    document.addEventListener('toggleDelete', this.toggleDeleteButton.bind(this));
+  }
+
+  toggleDeleteButton() {
+    this.#showButton = !this.#showButton;
+    this.updateDeleteButtonsVisibility();
+  }
+
+  updateDeleteButtonsVisibility() {
+    const deleteButtons = document.querySelectorAll('.delete-button');
+    deleteButtons.forEach(btn => {
+      // @ts-ignore
+      btn.style.display = this.#showButton ? 'block' : 'none';
+    });
   }
 
   async render() {
@@ -61,21 +63,33 @@ export default class VillageView extends View {
     const header1Elm = document.createElement('div');
     header1Elm.className =
       'col-span-full flex justify-between items-center bg-gray-800 p-2 rounded-lg';
-    header1Elm.innerHTML = `<h2 class="text-white text-lg font-bold flex-grow">CONNECTIONS</h2><button class="bg-red-500 hover:bg-red-700 text-white px-3 py-1 rounded">Delete</button>`;
+    header1Elm.innerHTML = `<h2 class="text-white text-lg font-bold flex-grow">CONNECTIONS</h2><button onclick="document.dispatchEvent(new CustomEvent('toggleDelete'))" class="bg-red-500 hover:bg-red-700 text-white px-3 py-1 rounded">Toggle Delete</button>`;
     villageViewElm.appendChild(header1Elm);
+
+    const connectionsDiv = document.createElement('div');
+    this.connectionsDiv = connectionsDiv;
+    villageViewElm.appendChild(connectionsDiv);
+
+    return villageViewElm;
+  }
+
+  async onLoad() {
+    await this.loadConnections();
+  }
+
+  async loadConnections() {
+    this.connectionsDiv.innerHTML = '';
 
     const connections = await dbInstance.getConnections();
     console.log('connections', connections);
 
     const elSize = 12;
-    const connectionUsers = await Promise.all(
-      connections.map((conn) => dbInstance.getUser(conn.targetID)),
-    );
-    for (const user of connectionUsers) {
+    for (const connection of connections) {
+      const user = await dbInstance.getUser(connection.targetID);
       console.log(`userID : ${user.userID}`, user);
       const connectionElm = document.createElement('div');
       connectionElm.className = `size-${elSize} relative p-1 m-2`;
-      
+
       connectionElm.innerHTML = `
       <div class="group cursor-pointer">
         <img src="${user.avatar}" alt="${user.name}" class="w-24 h-24 rounded-full border-2 border-white shadow">
@@ -83,11 +97,22 @@ export default class VillageView extends View {
           ${user.name}
         </div>
       </div>
-    `;
-    
-      villageViewElm.appendChild(connectionElm);
+      `;
+
+      const delBtn = document.createElement('button');
+      delBtn.className = 'delete-button';
+      delBtn.style.display = 'none';
+      delBtn.innerText = 'Delete';
+      delBtn.addEventListener('click', () => {
+        dbInstance.deleteConnection(connection)
+        this.loadConnections();
+      });
+
+      connectionElm.appendChild(delBtn);
+
+      this.connectionsDiv.appendChild(connectionElm);
     }
 
-    return villageViewElm;
+    this.updateDeleteButtonsVisibility()
   }
 }
