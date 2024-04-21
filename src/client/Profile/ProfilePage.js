@@ -68,7 +68,7 @@ export default class ProfileView extends View {
       backArrow.classList.add('arrow');
       backArrow.classList.add('col-span-1');
       backArrow.classList.add(`back${option}`);
-      backArrow.innerText = '⮜';
+      backArrow.innerText = "\u2B9C";
       optionDiv.appendChild(backArrow);
 
       const icon = document.createElement('i');
@@ -82,7 +82,7 @@ export default class ProfileView extends View {
       forwardArrow.classList.add('arrow');
       forwardArrow.classList.add('col-span-1');
       forwardArrow.classList.add(`forward${option}`);
-      forwardArrow.innerText = '⮞';
+      forwardArrow.innerText = '\u2B9E';
       optionDiv.appendChild(forwardArrow);
       
 
