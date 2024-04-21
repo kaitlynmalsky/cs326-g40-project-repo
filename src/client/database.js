@@ -305,6 +305,7 @@ class Database {
    * Gets the attendee for a pin
    * @param {string} pinId
    * @param {string} userID
+   * @returns {Promise<PinAttendee>}
    */
   async getPinAttendee(pinId, userID) {
     return this.#db.get(this.#formatPinAttendeeKey(pinId, userID));
@@ -474,10 +475,14 @@ class Database {
   /**
    * Retrieves group chat with given ID.
    * @param {number} gcID
-   * @returns {Promise<GroupChat>}
+   * @returns {Promise<GroupChat | null>}
    */
   async getGroupById(gcID) {
-    return this.#db.get(this.#formatGroupKey(gcID));
+    try {
+      const groupChat = this.#db.get(this.#formatGroupKey(gcID));
+    } catch (err) {
+      return null;
+    }
   }
 
   /**
