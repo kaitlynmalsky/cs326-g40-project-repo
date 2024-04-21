@@ -67,13 +67,23 @@ export default class MessagesView extends View {
         elm.appendChild(this.#col2);
 
         // Demo messages
-        this.demoMessages();
+        await this.demoMessages();
 
 
         const fillerBox = document.createElement('div');
         fillerBox.className = "h-full max-h-full bg-slate-100";
         this.#col1.appendChild(fillerBox);
         console.log(this.#curr_id);
+
+        const groupChats = await database.getAllGroupChats();
+        const messages = [];
+        for (let gc of groupChats) {
+            let gcMessages = await (database.getMessagesByGroupChatID(gc.id));
+            for (let message of gcMessages) {
+                messages.push(message);
+            }
+        }
+        console.log("messages", messages);
 
         this.changeChat(0);
 
@@ -83,20 +93,24 @@ export default class MessagesView extends View {
     /**
      * Adds dummy group chats and messages.
      */
-    demoMessages() {
+    async demoMessages() {
         this.#currUser = {
+            id: 0,
             name: "Cool Cat",
             avatar: "../images/placeholder_avatar.png"
         }
         const spiderman = {
+            id: 1,
             name: "Spiderman",
             avatar: "../images/spiderman.png"
         }
         const scoob = {
+            id: 2,
             name: "Scoob",
             avatar: '../images/Sooby_doo.png'
         }
         const nemo = {
+            id: 3,
             name: "Nemo",
             avatar: '../images/nemo.png'
         }
@@ -105,6 +119,12 @@ export default class MessagesView extends View {
         this.addGroupChat([spiderman, scoob]);
         this.addGroupChat([nemo]);
         this.addGroupChat([spiderman, nemo, scoob]);
+
+        await database.addGroupChat(0);
+        await database.addGroupChat(1);
+        await database.addGroupChat(2);
+
+        // console.log(await database.getAllGroupChats());
    
         this.addMessage(scoob, new Date, "hey i heard that they have therapy dogs visiting in the campus center today!", false, 0);
         this.addMessage(spiderman, new Date, "Wait really?", false, 0);
@@ -141,7 +161,6 @@ export default class MessagesView extends View {
      */
 
     addGroupChat(people) {
-        // https://flowbite.com/docs/components/avatar/
         this.#curr_id = this.groupList.length;
         this.groupList.push({
             id: this.curr_id,
@@ -177,7 +196,7 @@ export default class MessagesView extends View {
 
     /**
      * Adds a message to a chat.
-     * @param {{avatar: string}} person 
+     * @param {Object} person 
      * @param {Date} timestamp 
      * @param {string} message 
      * @param {boolean} fromMe
@@ -237,6 +256,10 @@ export default class MessagesView extends View {
         }
         this.groupChats[gcID].messages.push(messageElm);
         this.#chatView.appendChild(messageElm);
+
+        const personIDTemp = (fromMe) ? -1 : person.id;
+
+        database.addMessage(gcID, personIDTemp, message, timestamp);
     }
 
     /**
