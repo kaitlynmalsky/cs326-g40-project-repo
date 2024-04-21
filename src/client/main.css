@@ -1,6 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 #root {
   @apply h-full flex flex-col;
 }
@@ -13,7 +14,8 @@
 #navbar {
   @apply sticky top-0 h-10 flex flex-row items-center justify-center align-middle gap-5;
   @apply p-6 px-8;
-  background: #f7c566; /* old: #f3c559*/
+  background: #f7c566;
+  /* old: #f3c559*/
 }
 
 #navbar a {
@@ -75,7 +77,8 @@ main {
   color: #451a03;
   margin-top: 20px;
   @apply font-medium
-    /* amber 950 */;
+  /* amber 950 */
+  ;
 }
 
 .leaflet-popup-content-wrapper {
@@ -99,158 +102,171 @@ main {
 }
 
 #map-fab {
-    height: 40px;
-    text-decoration: none;
-    text-align: center;
-    color: white;
-    line-height: 26px;
-    padding-top: 6px;
-    margin-bottom: 20px;
-    margin-right: 10px;
+  height: 40px;
+  text-decoration: none;
+  text-align: center;
+  color: white;
+  line-height: 26px;
+  padding-top: 6px;
+  margin-bottom: 20px;
+  margin-right: 10px;
 }
 
 #village-view {
-    margin-top: 20px;
-    margin-left: 20px;
-    margin-right: 20px;
-    display: grid;
-    grid-template-columns: repeat(10, 1fr);
-    grid-gap: 20px;
-  }
-  
-  .header {
-    grid-column: 1 / -1;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-    background-color: #333;
-    padding: 10px;
-    border-radius: 5px;
-  }
-
-  .header h2 {
-    color: #fff;
-    font-size: 18px;
-    margin: 0;
-    font-weight: bold;
-    text-align: center;
-    flex-grow: 1;
-  }
-  
-  
-  .delete-btn {
-    background-color: #ff4d4d;
-    color: #fff;
-    border: none;
-    padding: 8px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-
-  .delete-btn:hover {
-    background-color: #cc0000;
-  }
-  
-  .user_connections {
-    position: relative;
-  }
-  
-  .overlay {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 100px;
-    width: 100px;
-    opacity: 0;
-    transition: .5s ease;
-    background-color: rgba(0, 0, 0, 0.5);
-    border-radius: 50%;
-  }
-  
-  .user_connections:hover .overlay {
-    opacity: 1;
-  }
-  
-  .user_connections img {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    border: 2px solid #fff;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-  }
-  
-  .user_connections p {
-    margin-top: 10px;
-    font-size: 14px;
-  }
-  
-  .user_connections .text {
-    color: white;
-    font-size: 16px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+  width: 95%;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f4f4f8;
+  border: 1px solid #ccc;
+  border-radius: 8px;
 }
 
+.grid-dude {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* creates as many 150px min columns as can fit */
+  grid-gap: 20px; 
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background-color: #000000;
+  border: 1px solid #d1d1d1;
+  margin-bottom: 10px;
+  border-radius: 5px;
+}
+
+.header h2 {
+  font-weight: bold;
+  font-size: 1.5em;
+  color: #ffffff;
+  margin: 0;
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 1em;
+  font-weight: bold;
+  color: white;
+  background-color: red;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #c53838;
+}
+
+.user_connections {
+  position: relative;
+  width: 100px;
+  /* Set width according to your layout needs */
+  margin: 20px;
+}
+
+.group {
+  position: relative;
+  width: 100%;
+  cursor: pointer;
+}
+
+.group img {
+  width: 100%;
+  /* Make the image fill the container */
+  height: auto;
+  display: block;
+  /* Remove any space below the image */
+  border-radius: 50%;
+  /* Circular images */
+}
+
+.overlay {
+  position: absolute;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  width: 100%;
+  text-align: center;
+  padding: 5px 0;
+  display: none;
+}
+
+.group:hover .overlay {
+  display: block;
+}
+
+.delete-button {
+  display: none;
+  background-color: #ff4d4d;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 0.9em;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-top: 10px;
+}
+
+.user_connections:hover .delete-button {
+  display: block;
+}
 
 /* Profile Style */
 
 #profilePage-view {
-    /* @apply h-full; */
-    width: 100%;
-    height: 100%;
-    background: #FDF3A2;
-    padding-top: 8px;
+  @apply h-full;
+  background: #FDF3A2;
+  padding-top: 8px;
 }
 
 #creatorContainer {
-    background: #d9b683;
-    border: 6px solid #8e4e01;
-    border-radius: 5px;
-    display: block;
-    margin: 0 auto;
-    width: 680px;
-    height: 630px;
-    padding-left: 10px;
-    padding-right: 10px;
+  background: #d9b683;
+  border: 6px solid #8e4e01;
+  border-radius: 5px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 45%;
+  height: 98%;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 #pageLabel {
-    @apply font-bold;
-    font-size: 30px;
-    color: #412003;
+  @apply font-bold;
+  font-size: 30px;
+  color: #412003;
 }
 
 #userDiv {
-    float: right;
-    margin-right: 50px;
+  float: right;
+  margin-right: 50px;
 }
 
 #userNameLabel {
-    @apply font-bold;
-    color: #412003;
-    float: left;
-    margin-right: 6px;
+  @apply font-bold;
+  color: #412003;
+  float: left;
+  margin-right: 6px;
 }
 
 #userName {
-    background: #d9b683;
-    color: #412003;
-    border: 3px solid #8e4e01;
-    border-radius: 5px;
-    margin-bottom: 3px;
-    float: left;
+  background: #d9b683;
+  color: #412003;
+  border: 3px solid #8e4e01;
+  border-radius: 5px;
+  margin-bottom: 3px;
+  float: left;
 }
 
 #myIcon {
-    border: 3px solid #8e4e01;
-    border-radius: 5px;
-    margin-bottom: 5px;
+  border: 3px solid #8e4e01;
+  border-radius: 5px;
+  margin-bottom: 5px;
 }
 
 .icn {
@@ -259,26 +275,27 @@ main {
 }
 
 .arrow {
-    @apply font-bold py-2 px-4 rounded-full;
-    color: #412003;
-    background: #BC6700;
-    border: solid #412003;
-    @apply border-2 rounded-full;
+  @apply font-bold py-2 px-4 rounded-full;
+  color: #412003;
+  background: #BC6700;
+  border: solid #412003;
+  @apply border-2 rounded-full;
 }
 
 .arrow:hover {
-    background: #8b4d01;
+  background: #8b4d01;
 }
 
 #save {
-    @apply text-black font-bold py-2 px-4 rounded-full;
-    float: right;
-    background: #24BA73;
-    color: white;
-    border: solid #412003;
-    @apply border-2 rounded-full;
+  @apply text-black font-bold py-2 px-4 rounded-full;
+  float: right;
+  /* background: #BC6700; */
+  background: #24BA73;
+  color: white;
+  border: solid #412003;
+  @apply border-2 rounded-full;
 }
 
 #save:hover {
-    background: #1c905a;
+  background: #1c905a;
 }
