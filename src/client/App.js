@@ -1,18 +1,48 @@
-import GlobalEvents from './Events/index.js';
+import GlobalEvents, { EVENTS } from './Events/index.js';
 import MapView from './Map/MapView.js';
 import MessagesView from './Messages/Messages.js';
 import NavBar from './NavBar/index.js';
 import VillageView from './Village/index.js';
 import LoginView from './Login/login.js';
-import SignupView from './Signup/signup.js'
+import SignupView from './Signup/signup.js';
+import dbInstance from './database.js';
+import View from './View.js';
+
+/**
+ * @typedef {Object} RouteOptions
+ * @property  {View} view
+ * @property {boolean} [authRequired]
+ */
+
+/**
+ * @typedef {Object} Route
+ * @property {boolean} rendered
+ * @property {boolean} loaded
+ * @property {boolean} authRequired
+ * @property  {View} view
+ * @property {HTMLElement} [elm]
+ */
 
 export class App {
+  /**
+   * @type {HTMLDivElement}
+   */
   #activeViewElm;
+  /**
+   * @type {NavBar}
+   */
   #navbar;
+  /**
+   * @type {{[routeKey: string]: Route}}
+   */
   #routes = {};
 
   constructor() {}
 
+  /**
+   * Renders the application
+   * @param {string} root
+   */
   async render(root) {
     const rootElm = document.getElementById(root);
     rootElm.innerHTML = '';
@@ -29,22 +59,27 @@ export class App {
     rootElm.appendChild(this.#activeViewElm);
 
     const mapView = new MapView();
-    this.#addRoute('map', mapView);
+    this.#addRoute('map', { view: mapView });
 
     const villageView = new VillageView();
-    this.#addRoute('village', villageView);
+    this.#addRoute('village', { view: villageView });
 
     const loginView = new LoginView();
-    this.#addRoute('login', loginView);
+    this.#addRoute('login', { view: loginView });
 
-    const signupview = new SignupView();
-    this.#addRoute('signup', signupview);
+    const signupView = new SignupView();
+    this.#addRoute('signup', { view: signupView });
 
     const messagesView = new MessagesView();
-    this.#addRoute('messages', messagesView);
+    this.#addRoute('messages', { view: messagesView });
 
-    history.replaceState('map', '', '#map');
-    this.#navigateTo('map');
+    if (dbInstance.getCurrentUserID()) {
+      history.replaceState('map', '', '#map');
+      this.#navigateTo('map');
+    } else {
+      history.replaceState('login', '', '#login');
+      this.#navigateTo('login');
+    }
 
     GlobalEvents.addEventListener('navigate', (navEvent) =>
       this.#navigateTo(navEvent.navTarget),
@@ -56,11 +91,29 @@ export class App {
     });
   }
 
-  #addRoute(routeKey, view) {
-    this.#routes[routeKey] = { view, rendered: false, loaded: false };
+  /**
+   * Adds a route to the routes table
+   * @param {string} routeKey
+   * @param {RouteOptions} routeOptions
+   */
+  #addRoute(routeKey, routeOptions) {
+    this.#routes[routeKey] = {
+      loaded: false,
+      rendered: false,
+      authRequired: true,
+      ...routeOptions,
+    };
   }
 
+  /**
+   * Navigates to a registered `routeKey`
+   * @param {string} routeKey
+   */
   async #navigateTo(routeKey) {
+    if (!dbInstance.getCurrentUserID()) {
+      return GlobalEvents.navigate('login');
+    }
+
     console.log(`Navigating to ${routeKey}`);
     this.#activeViewElm.innerHTML = '';
 

@@ -7,9 +7,15 @@ export default class View {
 
   /**
    * Render the view content
+   * @returns {Promise<HTMLElement>}
    */
-  render() {
+  async render() {
     console.error('Render function should be overloaded!!');
+    const div = document.createElement('div');
+    div.style.background = 'red';
+    div.style.color = 'white';
+    div.innerText = 'Forgot to override';
+    return div;
   }
 
   /**

@@ -109,7 +109,7 @@ export default class MapView extends View {
    */
   async editPin(pinID) {
     const pin = await database.getPin(pinID);
-    
+
     if (this.editingPin) {
       this.editingPin.cancel();
     }
