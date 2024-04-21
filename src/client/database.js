@@ -473,8 +473,8 @@ class Database {
 
   /**
    * Retrieves group chat with given ID.
-   * @param {*} gcID
-   * @returns
+   * @param {number} gcID
+   * @returns {Promise<GroupChat>}
    */
   async getGroupById(gcID) {
     return this.#db.get(this.#formatGroupKey(gcID));
