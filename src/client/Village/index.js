@@ -58,7 +58,7 @@ export default class VillageView extends View {
     header1Elm.innerHTML = `<h2 class="text-white text-lg font-bold flex-grow">CONNECTIONS</h2><button class="bg-red-500 hover:bg-red-700 text-white px-3 py-1 rounded">Delete</button>`;
     villageViewElm.appendChild(header1Elm);
 
-    const connections = await this.graph.getVillage();
+    const connections = await dbInstance.getConnections();
     console.log('connections', connections);
 
     const elSize = 12;
@@ -67,15 +67,16 @@ export default class VillageView extends View {
       console.log(`userID : ${userId}`, connection);
       const connectionElm = document.createElement('div');
       connectionElm.className = `size-${elSize} relative p-1 m-2`;
-
+      /*
       connectionElm.innerHTML = `
       <div class="group cursor-pointer">
-        <img src="${connection}" alt="${connection.getName()}" class="w-24 h-24 rounded-full border-2 border-white shadow">
+        <img src="${connection}" alt="${connection.name}" class="w-24 h-24 rounded-full border-2 border-white shadow">
         <div class="absolute w-full px-2 py-1 text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity text-center" style="top: 100%; left: 50%; transform: translateX(-50%);"> 
           ${connection.getName()}
         </div>
       </div>
     `;
+    */
       villageViewElm.appendChild(connectionElm);
     }
 
