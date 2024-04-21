@@ -1,6 +1,5 @@
 import View from '../View.js';
 import dbInstance from '../database.js';
-import localStorageInstance from '../database.js';
 
 
 const icnsStatic = [
@@ -69,7 +68,7 @@ export default class ProfileView extends View {
       backArrow.classList.add('arrow');
       backArrow.classList.add('col-span-1');
       backArrow.classList.add(`back${option}`);
-      backArrow.innerText = "\u2B9C";
+      backArrow.innerText = "⮜";
       optionDiv.appendChild(backArrow);
 
       const icon = document.createElement('i');
@@ -83,7 +82,7 @@ export default class ProfileView extends View {
       forwardArrow.classList.add('arrow');
       forwardArrow.classList.add('col-span-1');
       forwardArrow.classList.add(`forward${option}`);
-      forwardArrow.innerText = '\u2B9E';
+      forwardArrow.innerText = '⮞';
       optionDiv.appendChild(forwardArrow);
       
 
@@ -199,6 +198,21 @@ export default class ProfileView extends View {
         document.getElementById('userName').value = "";
       }
       await dbInstance.updateUser(user);
+
+      const saveNoti = document.createElement('i');
+      saveNoti.className = "fa-regular fa-circle-check";
+      saveNoti.id = "saveNoti";
+      document.getElementById('profilePage-view').appendChild(saveNoti);
+
+      let op = 1;
+      saveNoti.style.opacity = op;
+      for (let i = 0; i < 500; i++) {
+        setTimeout(() => {
+          op -= 0.002;
+          saveNoti.style.opacity = op;
+        }, i);
+      }
+      setTimeout(() => saveNoti.remove(), 500);
     });
 
     init(bg, 'Bg', 0);

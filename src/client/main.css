@@ -248,7 +248,7 @@ button:hover {
     margin: 0 auto;
     margin-top: 20px;
     width: 680px;
-    height: 630px;
+    height: 640px;
     padding-left: 10px;
     padding-right: 10px;
 }
@@ -315,4 +315,14 @@ button:hover {
 
 #save:hover {
   background: #1c905a;
+}
+
+#saveNoti {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 500px;
+  color: #24BA73;
+  opacity: 0;
 }
