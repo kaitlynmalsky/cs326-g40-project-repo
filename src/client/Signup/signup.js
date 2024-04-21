@@ -39,10 +39,10 @@ export default class SignupView extends View {
     const gridDiv = document.createElement('div');
     gridDiv.className = 'grid grid-cols-2 gap-5';
 
-    const firstNameInput = this.createInput('firstname', 'Name', 'text');
+    const nameInput = this.createInput('name', 'Name', 'text');
     const usernameInput = this.createInput('username', 'username', 'text');
 
-    gridDiv.appendChild(firstNameInput);
+    gridDiv.appendChild(nameInput);
     gridDiv.appendChild(usernameInput);
 
     const emailInput = this.createInput('email', 'Email', 'email');
@@ -80,7 +80,7 @@ export default class SignupView extends View {
     registerButton.addEventListener('click', async () => {
       // console.log(form.elements['firstname']);
 
-      const firstName = document.getElementById('firstname').value;
+      const name = document.getElementById('name').value;
       const username = document.getElementById('username').value;
       const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
@@ -99,7 +99,8 @@ export default class SignupView extends View {
 
       // Create user object
       const userData = {
-        firstName,
+        name,
+        avatar: '',
         username,
         email,
         password,
@@ -116,7 +117,7 @@ export default class SignupView extends View {
         // maybe redirect the user to the login page after successful signup
         console.log('User created successfully');
         dbInstance.setCurrentUserId(user.userID);
-        GlobalEvents.navigate('map');
+        GlobalEvents.navigate('profile');
       } catch (error) {
         console.error('Error creating user:', error);
       }
