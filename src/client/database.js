@@ -173,7 +173,12 @@ class Database {
    * @returns {string | null}
    */
   getCurrentUserID() {
-    return localStorage.getItem('userID');
+    try{
+      return localStorage.getItem('userID');
+    } catch(err){
+      console.error(err);
+      return null;
+    }
   }
 
   /**
@@ -213,11 +218,16 @@ class Database {
   /**
    * Gets pin information
    * @param {string} pinID The ID of the pin to retrieve
-   * @returns {Promise<Pin>}
+   * @returns {Promise<Pin | null>}
    * @throws {Error}
    */
   async getPin(pinID) {
-    return this.#db.get(this.#formatPinKey(pinID));
+    try{
+      return this.#db.get(this.#formatPinKey(pinID));
+    } catch(err){
+      console.error(err);
+      return null;
+    }
   }
 
   /**
@@ -251,13 +261,17 @@ class Database {
    * @returns {Promise<Array<Pin>>}
    */
   async getAllPins() {
-    const pinsResult = await this.#db.allDocs({
-      include_docs: true,
-      startkey: 'pin',
-      endkey: `pin\ufff0`,
-    });
+    try{
+      const pinsResult = await this.#db.allDocs({
+        include_docs: true,
+        startkey: 'pin',
+        endkey: `pin\ufff0`,
+      });
 
-    return pinsResult.rows.map((row) => row.doc);
+      return pinsResult.rows.map((row) => row.doc);
+    } catch(err){
+      return null;
+    }
   }
 
   /**
@@ -308,7 +322,11 @@ class Database {
    * @returns {Promise<PinAttendee>}
    */
   async getPinAttendee(pinId, userID) {
-    return this.#db.get(this.#formatPinAttendeeKey(pinId, userID));
+    try{
+      return this.#db.get(this.#formatPinAttendeeKey(pinId, userID));
+    }catch(err){
+      return null;
+    }
   }
 
   /**
@@ -325,7 +343,11 @@ class Database {
    * @returns {Promise<User>}
    */
   async getUser(userID) {
-    return this.#db.get(this.#formatUserKey(userID));
+    try{
+      return this.#db.get(this.#formatUserKey(userID));
+    }catch(err){
+      return null;
+    }
   }
 
   /**
@@ -480,6 +502,7 @@ class Database {
   async getGroupById(gcID) {
     try {
       const groupChat = this.#db.get(this.#formatGroupKey(gcID));
+      return groupChat;
     } catch (err) {
       return null;
     }
