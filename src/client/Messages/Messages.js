@@ -47,7 +47,7 @@ export default class MessagesView extends View {
         this.#col2.id = "col2";
         this.#chatView = document.createElement('div');
         this.#chatView.id = "chat-container"
-        this.#chatView.className = "overscroll-contain overflow-y-scroll gap-2.5 grid grid-flow-row auto-rows-max row-span-4"; // content-end breaks scrolling for some reason???
+        this.#chatView.className = "pt-1 overscroll-contain overflow-y-scroll overflow-x-hidden gap-2.5 grid grid-flow-row auto-rows-max row-span-4"; // content-end breaks scrolling for some reason???
         this.#col2.appendChild(this.#chatView);
 
         const col1Title = document.createElement('h1');
@@ -217,7 +217,7 @@ export default class MessagesView extends View {
         messageElm.className = "flex";
 
         const messageAvatar = document.createElement('img');
-        messageAvatar.className = " w-20 h-20 mx-3 flex-none border-2 border-white rounded-full"
+        messageAvatar.className = " w-14 h-14 mx-3 flex-none border-2 border-white rounded-full"
         messageAvatar.src = person.avatar;
         
 
@@ -228,14 +228,14 @@ export default class MessagesView extends View {
         
 
         if (fromMe) {
-            messageContent.className = "bg-stone-200 h-min w-auto p-4 mx-3 rounded-l-lg rounded-br-lg z-0";
+            messageContent.className = "max-w-prose bg-stone-200 h-min w-auto p-3 mx-3 rounded-l-lg rounded-br-lg z-0";
             messageElm.classList.add("justify-end");
             messageContainer.appendChild(messageContent);
             messageElm.appendChild(messageContent);
             messageElm.appendChild(messageAvatar);
             
         } else {
-            messageContent.className = "bg-green-200 h-min w-auto p-4 mx-3 rounded-r-lg rounded-bl-lg z-0";
+            messageContent.className = "max-w-prose bg-green-200 h-min w-auto p-3 mx-3 rounded-r-lg rounded-bl-lg z-0";
             messageContainer.appendChild(messageContent);
             messageElm.appendChild(messageAvatar);
             messageElm.appendChild(messageContent);

@@ -706,6 +706,10 @@ video {
   height: min-content;
 }
 
+.h-14 {
+  height: 3.5rem;
+}
+
 .max-h-full {
   max-height: 100%;
 }
@@ -748,6 +752,14 @@ video {
 
 .w-full {
   width: 100%;
+}
+
+.w-14 {
+  width: 3.5rem;
+}
+
+.max-w-prose {
+  max-width: 65ch;
 }
 
 .flex-none {
@@ -856,6 +868,10 @@ video {
 
 .overflow-hidden {
   overflow: hidden;
+}
+
+.overflow-x-hidden {
+  overflow-x: hidden;
 }
 
 .overflow-y-scroll {
@@ -1083,6 +1099,10 @@ video {
   padding: 1.25rem;
 }
 
+.p-3 {
+  padding: 0.75rem;
+}
+
 .px-12 {
   padding-left: 3rem;
   padding-right: 3rem;
@@ -1150,6 +1170,10 @@ video {
 
 .pl-2 {
   padding-left: 0.5rem;
+}
+
+.pt-1 {
+  padding-top: 0.25rem;
 }
 
 .text-center {
