@@ -8,36 +8,42 @@ export default class VillageView extends View {
     const currentUserID = dbInstance.getCurrentUserID();
 
     const newUser = {
-      id: 2,
       name: 'scooby doo',
+      username: 'sooby_doo',
+      email: 'food@scooby.org',
       avatar: '../images/Sooby_doo.png',
+      password: 'woof'
     };
 
     const newUser2 = {
-      id: 3,
       name: 'nemo',
+      username: 'nemo123',
+      email: 'fish@ocean.org', 
       avatar: '../images/nemo.png',
+      password: 'WhereIsNemo'
     };
 
     const mockUser = {
-      name: "Cat",
-      username: "cat123",
-      email: "cat123@example.com",
+      name: 'Cat',
+      username: 'cat123',
+      email: 'cat123@example.com',
       avatar: './images/placeholder_avatar.png',
-      password: 'dontdr'
-    }
+      password: 'dontdr',
+    };
 
     const userList = [newUser, newUser2, mockUser];
     this.init(userList);
 
-    console.log(dbInstance.getUserByName("Cat"));
-
+    console.log(dbInstance.getUserByName('Cat'));
   }
 
   async init(userList) {
     const currentUserID = dbInstance.getCurrentUserID();
     for (const user of userList) {
-      dbInstance.createConnection({userID: currentUserID, targetID: (await dbInstance.addUser(user)).userID});
+      dbInstance.createConnection({
+        userID: currentUserID,
+        targetID: (await dbInstance.addUser(user)).userID,
+      });
     }
   }
 
@@ -62,28 +68,26 @@ export default class VillageView extends View {
     console.log('connections', connections);
 
     const elSize = 12;
-    for (const userId in connections) {
-      const connection = connections[userId];
-      console.log(`userID : ${userId}`, connection);
+    const connectionUsers = await Promise.all(
+      connections.map((conn) => dbInstance.getUser(conn.targetID)),
+    );
+    for (const user of connectionUsers) {
+      console.log(`userID : ${user.userID}`, user);
       const connectionElm = document.createElement('div');
       connectionElm.className = `size-${elSize} relative p-1 m-2`;
-      /*
+      
       connectionElm.innerHTML = `
       <div class="group cursor-pointer">
-        <img src="${connection}" alt="${connection.name}" class="w-24 h-24 rounded-full border-2 border-white shadow">
+        <img src="${user.avatar}" alt="${user.name}" class="w-24 h-24 rounded-full border-2 border-white shadow">
         <div class="absolute w-full px-2 py-1 text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity text-center" style="top: 100%; left: 50%; transform: translateX(-50%);"> 
-          ${connection.getName()}
+          ${user.name}
         </div>
       </div>
     `;
-    */
+    
       villageViewElm.appendChild(connectionElm);
     }
 
-
     return villageViewElm;
-
-
-
   }
 }
