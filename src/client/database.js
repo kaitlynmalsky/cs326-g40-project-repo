@@ -85,6 +85,8 @@
  * @property {number} id
  * @property {string} name
  * @property {string} avatar
+ * @property {string} _id PouchDB ID
+ * @property {string} _rev PouchDB revision
  */
 
 /**
@@ -637,10 +639,12 @@ class Database {
    * @param {number} pID
    * @param {string} name
    * @param {string} avatar
+   * @returns {Promise<Person>}
    */
   async addPerson(pID, name, avatar) {
     const personDoc = {
       _id: this.#formatPersonKey(pID),
+      id: pID,
       name: name,
       avatar: avatar,
     };
@@ -683,23 +687,30 @@ class Database {
    * @returns
    */
   async addGroupChatMember(pID, gcID) {
-    const gcmDoc = {
-      _id: this.#formatGroupChatMemberKey(`${gcID}`, `${pID}`),
-      PersonID: pID,
-      GroupChatID: gcID,
-    };
-
-    const { id, rev, ok } = await this.#db.put(gcmDoc);
-
-    if (!ok) {
-      console.error(`Failed to create ${gcID}_${pID} (id=${id}, rev=${rev})`);
+    const existingGCMember = (await this.getMembersByGroupChatID(gcID)).filter(member => member.PersonID === pID);
+    if (existingGCMember.length !== 0) {
+      console.error(`GroupChatMember with person ID ${pID} and group chat ID ${gcID} already exists.`);
+      return existingGCMember[0];
+    } else {
+      const gcmDoc = {
+        _id: this.#formatGroupChatMemberKey(`${gcID}`, `${pID}`),
+        PersonID: pID,
+        GroupChatID: gcID,
+      };
+  
+      const { id, rev, ok } = await this.#db.put(gcmDoc);
+  
+      if (!ok) {
+        console.error(`Failed to create ${gcID}_${pID} (id=${id}, rev=${rev})`);
+      }
+  
+      return {
+        _id: id,
+        _rev: rev,
+        ...gcmDoc,
+      };
     }
 
-    return {
-      _id: id,
-      _rev: rev,
-      ...gcmDoc,
-    };
   }
 
   /**
