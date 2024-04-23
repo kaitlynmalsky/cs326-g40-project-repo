@@ -124,43 +124,9 @@ class Database {
   constructor() {
     this.#db = new PouchDB('villagelink');
   }
-
-  /**
-   * Formats `pinID` into a database key
-   * @param {string} pinID The ID of the pin
-   * @returns {string}
-   */
-  #formatPinKey(pinID) {
-    return `pin_${pinID}`;
-  }
-
-  /**
-   * Formats `userID` into a database key
-   * @param {string} userID the ID of the user
-   * @returns {string}
-   */
-  #formatUserKey(userID) {
-    return `user_${userID}`;
-  }
-
-  /**
-   * Formats `userID` and `targetID` into a database key
-   * @param {string} userID
-   * @param {string} targetID
-   * @returns {string}
-   */
-  #formatConnectionKey(userID, targetID) {
-    return `connection_${userID}_${targetID}`;
-  }
-
-  /**
-   * Format `pinId` and `userId` into a pin attendee database key
-   * @param {string} pinID
-   * @param {string} userID
-   */
-  #formatPinAttendeeKey(pinID, userID) {
-    return `pat_${pinID}_${userID}`;
-  }
+  // ********************************************
+  // Current User
+  // ********************************************
 
   /**
    * Saves `userID` to `localStorage`
@@ -188,6 +154,19 @@ class Database {
    */
   deleteCurrentUserId() {
     localStorage.removeItem('userID');
+  }
+
+  // ********************************************
+  // Pins
+  // ********************************************
+
+  /**
+   * Formats `pinID` into a database key
+   * @param {string} pinID The ID of the pin
+   * @returns {string}
+   */
+  #formatPinKey(pinID) {
+    return `pin_${pinID}`;
   }
 
   /**
@@ -276,67 +255,17 @@ class Database {
     }
   }
 
-  /**
-   * Add an attendee to a pin
-   * @param {string} pinID
-   * @param {string} userID
-   * @returns {Promise<PinAttendee>}
-   */
-  async addPinAttendee(pinID, userID) {
-    const doc = {
-      _id: this.#formatPinAttendeeKey(pinID, userID),
-      pinID,
-      userID,
-    };
-
-    const { ok, id, rev } = await this.#db.put(doc);
-
-    if (!ok) {
-      console.error(
-        `Could not add userId=${userID} as attendee for pin pinI=${pinID}`,
-      );
-    }
-
-    return {
-      ...doc,
-      _rev: rev,
-    };
-  }
+  // ********************************************
+  // Users
+  // ********************************************
 
   /**
-   * Get the attendees of a pin
-   * @param {string} pinID
+   * Formats `userID` into a database key
+   * @param {string} userID the ID of the user
+   * @returns {string}
    */
-  async getPinAttendees(pinID) {
-    const pinAttendeesResult = await this.#db.allDocs({
-      include_docs: true,
-      startkey: `pat_${pinID}`,
-      endkey: `pat_${pinID}\ufff0`,
-    });
-
-    return pinAttendeesResult.rows.map((row) => row.doc);
-  }
-
-  /**
-   * Gets the attendee for a pin
-   * @param {string} pinId
-   * @param {string} userID
-   * @returns {Promise<PinAttendee>}
-   */
-  async getPinAttendee(pinId, userID) {
-    try {
-      return await this.#db.get(this.#formatPinAttendeeKey(pinId, userID));
-    } catch (err) {
-      return null;
-    }
-  }
-
-  /**
-   * Removes an attendee from a pin
-   * @param {PinAttendee} attendee
-   */
-  async removePinAttendee(attendee) {
-    return this.#db.remove(attendee);
+  #formatUserKey(userID) {
+    return `user_${userID}`;
   }
 
   /**
@@ -350,6 +279,88 @@ class Database {
     } catch (err) {
       return null;
     }
+  }
+
+  /**
+   * Retrieves user by email
+   * @param {string} email The email of the user to retrieve
+   * @returns {Promise<User>}
+   */
+  async getUserByEmail(email) {
+    const users = await this.#db.allDocs({
+      include_docs: true,
+      startkey: 'user',
+      endkey: `user\ufff0`,
+    });
+
+    const user = users.rows.find((row) => row.doc.email === email)?.doc;
+    return user || null;
+  }
+
+  async getUserByName(name) {
+    const users = await this.#db.allDocs({
+      include_docs: true,
+      startkey: 'user',
+      endkey: 'user\ufff0',
+    });
+
+    console.log(users);
+    const user = users.rows.filter((row) => row.doc.name === name);
+    return user;
+  }
+
+  /**
+   * Adds a new user
+   * @param {CreateUserInput} userData User data to create a new user
+   * @returns {Promise<User>} The created user
+   */
+  async addUser(userData) {
+    const existingUser = await this.getUserByEmail(userData.email);
+    if (existingUser) {
+      console.error(`An account with ${userData.email} already exists`);
+      return existingUser;
+    } else {
+      const userID = self.crypto.randomUUID();
+      const userDoc = {
+        _id: this.#formatUserKey(userID),
+        userID,
+        ...userData,
+      };
+
+      const { rev } = await this.#db.put(userDoc);
+
+      return {
+        ...userDoc,
+        _rev: rev,
+      };
+    }
+  }
+
+  /**
+   *
+   * @param {User} user
+   * @returns {Promise<User>}
+   */
+  async updateUser(user) {
+    const { rev } = await this.#db.put(user);
+
+    user._rev = rev;
+
+    return user;
+  }
+
+  // ********************************************
+  // Connections
+  // ********************************************
+
+  /**
+   * Formats `userID` and `targetID` into a database key
+   * @param {string} userID
+   * @param {string} targetID
+   * @returns {string}
+   */
+  #formatConnectionKey(userID, targetID) {
+    return `connection_${userID}_${targetID}`;
   }
 
   /**
@@ -424,73 +435,85 @@ class Database {
     return this.#db.remove(connection);
   }
 
+  // ********************************************
+  // Pin Attendees
+  // ********************************************
+
   /**
-   * Retrieves user by email
-   * @param {string} email The email of the user to retrieve
-   * @returns {Promise<User>}
+   * Format `pinId` and `userId` into a pin attendee database key
+   * @param {string} pinID
+   * @param {string} userID
    */
-  async getUserByEmail(email) {
-    const users = await this.#db.allDocs({
-      include_docs: true,
-      startkey: 'user',
-      endkey: `user\ufff0`,
-    });
-
-    const user = users.rows.find((row) => row.doc.email === email)?.doc;
-    return user || null;
-  }
-
-  async getUserByName(name) {
-    const users = await this.#db.allDocs({
-      include_docs: true,
-      startkey: 'user',
-      endkey: 'user\ufff0',
-    });
-
-    console.log(users);
-    const user = users.rows.filter((row) => row.doc.name === name);
-    return user;
+  #formatPinAttendeeKey(pinID, userID) {
+    return `pat_${pinID}_${userID}`;
   }
 
   /**
-   * Adds a new user
-   * @param {CreateUserInput} userData User data to create a new user
-   * @returns {Promise<User>} The created user
+   * Add an attendee to a pin
+   * @param {string} pinID
+   * @param {string} userID
+   * @returns {Promise<PinAttendee>}
    */
-  async addUser(userData) {
-    const existingUser = await this.getUserByEmail(userData.email);
-    if (existingUser) {
-      console.error(`An account with ${userData.email} already exists`);
-      return existingUser;
-    } else {
-      const userID = self.crypto.randomUUID();
-      const userDoc = {
-        _id: this.#formatUserKey(userID),
-        userID,
-        ...userData,
-      };
+  async addPinAttendee(pinID, userID) {
+    const doc = {
+      _id: this.#formatPinAttendeeKey(pinID, userID),
+      pinID,
+      userID,
+    };
 
-      const { rev } = await this.#db.put(userDoc);
+    const { ok, id, rev } = await this.#db.put(doc);
 
-      return {
-        ...userDoc,
-        _rev: rev,
-      };
+    if (!ok) {
+      console.error(
+        `Could not add userId=${userID} as attendee for pin pinI=${pinID}`,
+      );
+    }
+
+    return {
+      ...doc,
+      _rev: rev,
+    };
+  }
+
+  /**
+   * Get the attendees of a pin
+   * @param {string} pinID
+   */
+  async getPinAttendees(pinID) {
+    const pinAttendeesResult = await this.#db.allDocs({
+      include_docs: true,
+      startkey: `pat_${pinID}`,
+      endkey: `pat_${pinID}\ufff0`,
+    });
+
+    return pinAttendeesResult.rows.map((row) => row.doc);
+  }
+
+  /**
+   * Gets the attendee for a pin
+   * @param {string} pinId
+   * @param {string} userID
+   * @returns {Promise<PinAttendee>}
+   */
+  async getPinAttendee(pinId, userID) {
+    try {
+      return await this.#db.get(this.#formatPinAttendeeKey(pinId, userID));
+    } catch (err) {
+      return null;
     }
   }
 
   /**
-   *
-   * @param {User} user
-   * @returns {Promise<User>}
+   * Removes an attendee from a pin
+   * @param {PinAttendee} attendee
    */
-  async updateUser(user) {
-    const { rev } = await this.#db.put(user);
-
-    user._rev = rev;
-
-    return user;
+  async removePinAttendee(attendee) {
+    return this.#db.remove(attendee);
   }
+
+  // ********************************************
+  // Messaging
+  // ********************************************
 
   /**
    * Formats `gcID` into a database key
@@ -536,7 +559,7 @@ class Database {
 
   /**
    * Retrieves person (temp) with given ID.
-   * @param {number} pID 
+   * @param {number} pID
    * @returns {Promise<Person|null>}
    */
   async getPersonById(pID) {
@@ -553,7 +576,7 @@ class Database {
    * @param {number} gcID
    */
   async addGroupChat(gcID) {
-    console.log("in addGroupChat");
+    console.log('in addGroupChat');
     const existingGC = await this.getGroupById(gcID);
     console.log(`existingGC is ${existingGC}`);
     if (existingGC) {
