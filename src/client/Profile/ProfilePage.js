@@ -21,8 +21,6 @@ export default class ProfileView extends View {
   }
 
   async render() {
-    //static html
-
     const profilePageDiv = document.createElement('div');
     profilePageDiv.id = 'profilePage-view';
 
@@ -47,6 +45,7 @@ export default class ProfileView extends View {
     const userName = document.createElement('input');
     userName.type = 'text';
     userName.id = 'userName';
+    userName.value = (await dbInstance.getUser(dbInstance.getCurrentUserID())).name;
     userDiv.appendChild(userName);
 
     const iconPreview = document.createElement('canvas');
@@ -98,50 +97,29 @@ export default class ProfileView extends View {
   }
 
   async onLoad() {
-    //event listeners
     const ctx = /**@type {HTMLCanvasElement} */ (
       document.getElementById('myIcon')
     ).getContext('2d');
 
-    const body = {
-      name: 'body',
-      imgs: [
-        '../icons/options/ketchupRaccoon.png',
-        '../icons/options/limeRaccoon.png',
-        '../icons/options/cheeseRaccoon.png',
-      ],
-      img: new Image(),
-      i: 0,
-    };
+    /**
+     * Creates a layer object representing a layer on the Profile Canvas.
+     * @param {String} n - name of the layer
+     * @param {String[]} images - array of all the different options in the layer
+     * @returns 
+     */
+    const createLayer = (n, images) => {
+      return {
+        name: n,
+        imgs: images,
+        img: new Image(),
+        i: 0
+      }
+    }
 
-    const ears = {
-      name: 'ears',
-      imgs: [
-        '../icons/options/ketchupRaccoonEars.png',
-        '../icons/options/limeRaccoonEars.png',
-        '../icons/options/cheeseRaccoonEars.png',
-      ],
-      img: new Image(),
-      i: 0,
-    };
-
-    const hat = {
-      name: 'hat',
-      imgs: ['', '../icons/options/sombrero.png'],
-      img: new Image(),
-      i: 0,
-    };
-
-    const bg = {
-      name: 'bg',
-      imgs: [
-        '../icons/options/theStarryNight.png',
-        '../icons/options/sunflowers.png',
-        '../icons/options/kanagawaWave.png',
-      ],
-      img: new Image(),
-      i: 0,
-    };
+    const body = createLayer('body', ['../icons/options/ketchupRaccoon.png', '../icons/options/limeRaccoon.png', '../icons/options/cheeseRaccoon.png']);
+    const ears = createLayer('ears', ['../icons/options/ketchupRaccoonEars.png', '../icons/options/limeRaccoonEars.png', '../icons/options/cheeseRaccoonEars.png']);
+    const hat = createLayer('hat', ['', '../icons/options/sombrero.png']);
+    const bg = createLayer('bg', ['../icons/options/theStarryNight.png', '../icons/options/sunflowers.png', '../icons/options/kanagawaWave.png']);
 
     const layers = [bg, ears, body, hat];
 
@@ -149,6 +127,10 @@ export default class ProfileView extends View {
 
     layers.forEach(l => l.i = user.avatarConfig[l.name]);
 
+    /**
+     * Loads the image field of each object in the layers array in a manner that layers them on top of each other on the Profile Canvas.
+     * @param {number} x - the index of the first layer to be loaded 
+     */
     const render2 = (x) => {
       if (x === layers.length) return;
       layers[x].img.onload = () => {
@@ -160,6 +142,12 @@ export default class ProfileView extends View {
 
     render2(0);
 
+    /**
+     * Initializes the button functionality corresponding to the layer it traverses through.
+     * @param {{name: String, imgs: String[], img: Image, i: number}} obj - Object that represents a layer in the Profile Canvas
+     * @param {String} option - Name of the layer being initialized
+     * @param {number} pos - Current index of the image being utilized in the user's layer
+     */
     const init = (obj, option, pos) => {
       const icn = document.getElementById(`${option}-icn`);
       const f = document.getElementById(`${option}-forward`);
@@ -193,10 +181,7 @@ export default class ProfileView extends View {
     document.getElementById("save").addEventListener("click", async () => {
       user.avatar = (/**@type {HTMLCanvasElement} */ (document.getElementById("myIcon"))).toDataURL("image/jpeg", 1);
       layers.forEach(l => user.avatarConfig[l.name] = l.i);
-      if (document.getElementById('userName').value !== "") {
-        user.name = document.getElementById('userName').value;
-        document.getElementById('userName').value = "";
-      }
+      if (document.getElementById('userName').value !== "" && document.getElementById('userName').value !== user.name) user.name = document.getElementById('userName').value;
       await dbInstance.updateUser(user);
 
       const saveNoti = document.createElement('i');
