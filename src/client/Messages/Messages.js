@@ -117,9 +117,10 @@ export default class MessagesView extends View {
                         name: person.name
                     })
                 }
-                this.addGroupChat(people);
+                this.#currUser = people[0];
+                await this.addGroupChat(people);
                 for (let message of messages) {
-                    this.#chatView.appendChild(this.generateMessageElm(message.PersonID, message.time, message.messageContent, message.GroupChatID));
+                    this.#chatView.appendChild(this.generateMessageElm(message.PersonID, new Date(message.time), message.messageContent, message.GroupChatID));
                 }
             }
         }
@@ -160,9 +161,9 @@ export default class MessagesView extends View {
             
         })
 
-        this.addGroupChat([spiderman, scoob]);
-        this.addGroupChat([nemo]);
-        this.addGroupChat([spiderman, nemo, scoob]);
+        await this.addGroupChat([spiderman, scoob]);
+        await this.addGroupChat([nemo]);
+        await this.addGroupChat([spiderman, nemo, scoob]);
 
 
         const messages = [
@@ -170,18 +171,13 @@ export default class MessagesView extends View {
             {person: spiderman, date: new Date, content: "Wait really?", gcID: 0},
             {person: spiderman, date: new Date, content: "We actually have to go right now", gcID: 0},
             {person: spiderman, date: new Date, content: "I am running there", gcID: 0},
-            {person: scoob, date: new Date, content: "please don't go to fast or you will scare the dogs", gcID: 0},
+            {person: scoob, date: new Date, content: "please don't go too fast or you will scare the dogs", gcID: 0},
         ]
 
         messages.forEach(async message => {
-            this.#chatView.appendChild(this.generateMessageElm(message.person, message.date, message.content, message.gcID));
-            await database.addGroupChatMessage(message.gcID, message.person.id, message.content, message.date);
+            this.#chatView.appendChild(await this.generateMessageElm(message.person, message.date, message.content, message.gcID));
+            //await database.addGroupChatMessage(message.gcID, message.person.id, message.content, message.date);
         })
-        // this.#chatView.appendChild(this.generateMessageElm(scoob, new Date, "hey i heard that they have therapy dogs visiting in the campus center today!", 0));
-        // this.#chatView.appendChild(this.generateMessageElm(spiderman, new Date, "Wait really?", 0));
-        // this.#chatView.appendChild(this.generateMessageElm(spiderman, new Date, "We actually have to go right now", 0));
-        // this.#chatView.appendChild(this.generateMessageElm(spiderman, new Date, "I am running there", 0));
-        // this.#chatView.appendChild(this.generateMessageElm(scoob, new Date, "please don't go too fast or you'll scare the dogs", 0));
         
 
         console.log('this.groupChats', this.groupChats);
@@ -190,6 +186,7 @@ export default class MessagesView extends View {
 
         this.groupList.forEach(async gc => {
             try {
+                // !!!!
                 await database.addGroupChat(gc.id);
             } catch (err) {
                 console.error(err);
@@ -226,12 +223,18 @@ export default class MessagesView extends View {
      * @param {Object[]} people 
      */
 
-    addGroupChat(people) {
+    async addGroupChat(people) {
         this.#curr_id = this.groupList.length;
         this.groupList.push({
             id: this.curr_id,
             people: people
         });
+
+        await database.addGroupChat(this.curr_id);
+        for (let person of people) {
+            await database.addGroupChatMember(person.id, this.curr_id);
+        }
+        
 
         const gcElm = document.createElement('div');
         gcElm.className = "flex -space-x-4 rtl:space-x-reverse bg-slate-100 hover:cursor-pointer";
@@ -257,6 +260,8 @@ export default class MessagesView extends View {
 
         this.#col1.appendChild(gcElm);
         this.groupChats[this.curr_id] = {id: this.curr_id, messages: [], gcElm: gcElm};
+        
+        
         this.curr_id++;
 
         
@@ -268,9 +273,9 @@ export default class MessagesView extends View {
      * @param {Date} timestamp 
      * @param {string} message 
      * @param {number} gcID
-     * @returns {HTMLElement}
+     * @returns {Promise<HTMLElement>}
      */
-    generateMessageElm(person, timestamp, message, gcID) {
+    async generateMessageElm(person, timestamp, message, gcID) {
         const messageElm = document.createElement('div');
         messageElm.className = "flex";
 
@@ -326,6 +331,7 @@ export default class MessagesView extends View {
         }
 
         this.groupChats[gcID].messages.push(messageElm);
+        await database.addGroupChatMessage(gcID, person.id, message, timestamp);
         //this.#chatView.appendChild(messageElm);
         return messageElm;
 
@@ -346,7 +352,7 @@ export default class MessagesView extends View {
             e.preventDefault();
             if (e.key === "Enter") {
                 const sentDate = new Date;
-                this.#chatView.appendChild(this.generateMessageElm(this.#currUser, sentDate, messageArea.value, this.#active_id));
+                this.#chatView.appendChild(await this.generateMessageElm(this.#currUser, sentDate, messageArea.value, this.#active_id));
                 this.#chatView.scrollTop = this.#chatView.scrollHeight;
                 messageForm.submit();
                 messageForm.reset();

@@ -14,7 +14,7 @@
  * @property {string} username The user's username
  * @property {string} email The user's email
  * @property {string} avatar The user's avatar
- * @property {AvatarConfig} [avatarConfig] The configuration for the user's avatar
+ * @property {AvatarConfig} avatarConfig The configuration for the user's avatar
  * @property {string} password The user's password
  */
 
@@ -527,7 +527,7 @@ class Database {
    */
   async getGroupById(gcID) {
     try {
-      const groupChat = this.#db.get(this.#formatGroupKey(gcID));
+      const groupChat = await this.#db.get(this.#formatGroupKey(gcID));
       return groupChat;
     } catch (err) {
       return null;
@@ -541,7 +541,7 @@ class Database {
    */
   async getPersonById(pID) {
     try {
-      const person = this.#db.get(this.#formatPersonKey(pID));
+      const person = await this.#db.get(this.#formatPersonKey(pID));
       return person;
     } catch (err) {
       return null;
