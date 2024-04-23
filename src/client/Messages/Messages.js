@@ -74,7 +74,7 @@ export default class MessagesView extends View {
         const fillerBox = document.createElement('div');
         fillerBox.className = "h-full max-h-full bg-slate-100";
         this.#col1.appendChild(fillerBox);
-        console.log("this.#curr_id is", this.#curr_id);
+        //console.log("this.#curr_id is", this.#curr_id);
 
 
         if (this.#curr_id !== undefined) { // i.e. If the user actually has any chats
@@ -112,13 +112,13 @@ export default class MessagesView extends View {
                 const members = await database.getMembersByGroupChatID(groupchat.GroupChatID);
                 // @ts-ignore
                 const messages = await database.getMessagesByGroupChatID(groupchat.GroupChatID);
-                console.log(messages)
-                console.log("members is", members);
-                console.log("messages is", messages);
+                // console.log(messages)
+                // console.log("members is", members);
+                // console.log("messages is", messages);
                 messages.sort(function(a, b) {
                     return new Date(a.time).getTime() - new Date(b.time).getTime()
                 })
-                console.log("messages after sorting:", messages);
+                //console.log("messages after sorting:", messages);
                 const people = [];
                 for (let member of members) {
                     const person = await database.getPersonById(member.PersonID);
@@ -191,8 +191,8 @@ export default class MessagesView extends View {
         })
         
 
-        console.log('this.groupChats', this.groupChats);
-        console.log('this.groupList',this.groupList);
+        // console.log('this.groupChats', this.groupChats);
+        // console.log('this.groupList',this.groupList);
 
 
         this.groupList.forEach(async gc => {

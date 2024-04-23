@@ -578,9 +578,9 @@ class Database {
    * @param {number} gcID
    */
   async addGroupChat(gcID) {
-    console.log('in addGroupChat');
+    //('in addGroupChat');
     const existingGC = await this.getGroupById(gcID);
-    console.log(`existingGC is ${existingGC}`);
+    //console.log(`existingGC is ${existingGC}`);
     if (existingGC) {
       console.error(`Group chat with ID ${gcID} already exists.`);
       return existingGC;
