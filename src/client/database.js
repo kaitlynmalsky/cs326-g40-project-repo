@@ -14,7 +14,7 @@
  * @property {string} username The user's username
  * @property {string} email The user's email
  * @property {string} avatar The user's avatar
- * @property {AvatarConfig} avatarConfig The configuration for the user's avatar
+ * @property {AvatarConfig} [avatarConfig] The configuration for the user's avatar
  * @property {string} password The user's password
  */
 
@@ -23,6 +23,8 @@
  * @typedef {Object} User
  * @property {string} userID The ID of the user
  * @property {string} name The user's name
+ * @property {string} username The user's username
+ * @property {string} email The user's email
  * @property {string} password The user's password
  * @property {string} avatar The user's avatar
  * @property {AvatarConfig} avatarConfig The configuration for the user's avatar
@@ -173,9 +175,9 @@ class Database {
    * @returns {string | null}
    */
   getCurrentUserID() {
-    try{
+    try {
       return localStorage.getItem('userID');
-    } catch(err){
+    } catch (err) {
       console.error(err);
       return null;
     }
@@ -222,9 +224,9 @@ class Database {
    * @throws {Error}
    */
   async getPin(pinID) {
-    try{
-      return this.#db.get(this.#formatPinKey(pinID));
-    } catch(err){
+    try {
+      return await this.#db.get(this.#formatPinKey(pinID));
+    } catch (err) {
       console.error(err);
       return null;
     }
@@ -261,7 +263,7 @@ class Database {
    * @returns {Promise<Array<Pin>>}
    */
   async getAllPins() {
-    try{
+    try {
       const pinsResult = await this.#db.allDocs({
         include_docs: true,
         startkey: 'pin',
@@ -269,7 +271,7 @@ class Database {
       });
 
       return pinsResult.rows.map((row) => row.doc);
-    } catch(err){
+    } catch (err) {
       return null;
     }
   }
@@ -322,9 +324,9 @@ class Database {
    * @returns {Promise<PinAttendee>}
    */
   async getPinAttendee(pinId, userID) {
-    try{
-      return this.#db.get(this.#formatPinAttendeeKey(pinId, userID));
-    }catch(err){
+    try {
+      return await this.#db.get(this.#formatPinAttendeeKey(pinId, userID));
+    } catch (err) {
       return null;
     }
   }
@@ -343,9 +345,9 @@ class Database {
    * @returns {Promise<User>}
    */
   async getUser(userID) {
-    try{
-      return this.#db.get(this.#formatUserKey(userID));
-    }catch(err){
+    try {
+      return await this.#db.get(this.#formatUserKey(userID));
+    } catch (err) {
       return null;
     }
   }
@@ -356,11 +358,13 @@ class Database {
    * @returns {Promise<VillageConnection>} The newly created connection
    */
   async createConnection(connection) {
-    const userID = this.getCurrentUserID();
-    const connectionKey = this.#formatConnectionKey(
-      userID,
-      connection.targetID,
-    );
+    const { userID, targetID } = connection;
+
+    const connectionKey = this.#formatConnectionKey(userID, targetID);
+
+    const existingConnection = await this.getConnection(userID, targetID);
+
+    if (existingConnection) return existingConnection;
 
     const connectionDoc = {
       ...connection,
@@ -379,6 +383,19 @@ class Database {
       ...connectionDoc,
       _rev: rev,
     };
+  }
+
+  /**
+   *
+   * @param {string} userID
+   * @param {string} targetID
+   */
+  async getConnection(userID, targetID) {
+    try {
+      return await this.#db.get(this.#formatConnectionKey(userID, targetID));
+    } catch (err) {
+      return null;
+    }
   }
 
   /**
