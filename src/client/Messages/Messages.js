@@ -115,6 +115,10 @@ export default class MessagesView extends View {
                 console.log(messages)
                 console.log("members is", members);
                 console.log("messages is", messages);
+                messages.sort(function(a, b) {
+                    return new Date(a.time).getTime() - new Date(b.time).getTime()
+                })
+                console.log("messages after sorting:", messages);
                 const people = [];
                 for (let member of members) {
                     const person = await database.getPersonById(member.PersonID);
@@ -174,11 +178,11 @@ export default class MessagesView extends View {
 
 
         const messages = [
-            {person: scoob, date: new Date(), content: "hey i heard that they have therapy dogs visiting in the campus center today!", gcID: 0},
-            {person: spiderman, date: new Date(), content: "Wait really?", gcID: 0},
-            {person: spiderman, date: new Date(), content: "We actually have to go right now", gcID: 0},
-            {person: spiderman, date: new Date(), content: "I am running there", gcID: 0},
-            {person: scoob, date: new Date(), content: "please don't go too fast or you will scare the dogs", gcID: 0},
+            {person: scoob, date: new Date('April 23, 2024 13:24:00'), content: "hey i heard that they have therapy dogs visiting in the campus center today!", gcID: 0},
+            {person: spiderman, date: new Date('April 23, 2024 13:25:00'), content: "Wait really?", gcID: 0},
+            {person: spiderman, date: new Date('April 23, 2024 13:24:01'), content: "We actually have to go right now", gcID: 0},
+            {person: spiderman, date: new Date('April 23, 2024 13:24:02'), content: "I am running there", gcID: 0},
+            {person: scoob, date: new Date('April 23, 2024 13:25:00'), content: "please don't go too fast or you will scare the dogs", gcID: 0},
         ]
 
         messages.forEach(async message => {
@@ -314,9 +318,9 @@ export default class MessagesView extends View {
         if (pm) {
             let h = timestamp.getHours();
             if (h !== 12) {h -= 12};
-            messageTimestamp.innerText = dayText + " at " + h + ":" + timestamp.getMinutes() + " PM";
+            messageTimestamp.innerText = dayText + " at " + h + ":" + timestamp.getMinutes().toString().padStart(2, '0') + " PM";
         } else {
-            messageTimestamp.innerText = dayText + " at " + timestamp.getHours() + ":" + timestamp.getMinutes() + " AM";
+            messageTimestamp.innerText = dayText + " at " + timestamp.getHours() + ":" + timestamp.getMinutes().toString().padStart(2, '0') + " AM";
         }
         
         messageContent.appendChild(messageTimestamp);
