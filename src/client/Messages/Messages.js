@@ -33,61 +33,66 @@ export default class MessagesView extends View {
      * @returns {Promise<HTMLElement>} 
      */
     async render() {
-        const elm = document.createElement('header');
-        elm.id = 'messages-view';
-        elm.className = "h-full grid grid-cols-5";
+        try{
+            const elm = document.createElement('header');
+            elm.id = 'messages-view';
+            elm.className = "h-full grid grid-cols-5";
 
-        this.#col1 = document.createElement('div');
+            this.#col1 = document.createElement('div');
 
-        //this.#col1.className = "max-h-screen overflow-y-scroll w-1/5 h-100 message-view-col bg-amber-500";
-        this.#col1.className = "overscroll-contain overflow-y-scroll col-span-1";
-        this.#col1.id = "col1";
+            //this.#col1.className = "max-h-screen overflow-y-scroll w-1/5 h-100 message-view-col bg-amber-500";
+            this.#col1.className = "overscroll-contain overflow-y-scroll col-span-1";
+            this.#col1.id = "col1";
 
-        this.#col2 = document.createElement('div');
-        this.#col2.className = "overscroll-contain grid grid-rows-5 col-span-4 overflow-y-scroll"
-        this.#col2.id = "col2";
-        this.#chatView = document.createElement('div');
-        this.#chatView.id = "chat-container"
-        this.#chatView.className = "pt-1 overscroll-contain overflow-y-scroll overflow-x-hidden gap-2.5 grid grid-flow-row auto-rows-max row-span-4"; // content-end breaks scrolling for some reason???
-        this.#col2.appendChild(this.#chatView);
+            this.#col2 = document.createElement('div');
+            this.#col2.className = "overscroll-contain grid grid-rows-5 col-span-4 overflow-y-scroll"
+            this.#col2.id = "col2";
+            this.#chatView = document.createElement('div');
+            this.#chatView.id = "chat-container"
+            this.#chatView.className = "pt-1 overscroll-contain overflow-y-scroll overflow-x-hidden gap-2.5 grid grid-flow-row auto-rows-max row-span-4"; // content-end breaks scrolling for some reason???
+            this.#col2.appendChild(this.#chatView);
 
-        const col1Title = document.createElement('h1');
-        col1Title.className = "message-text text-xl p-2 bg-slate-100";
-        col1Title.innerText = 'My Groups';
-        this.#col1.appendChild(col1Title);
+            const col1Title = document.createElement('h1');
+            col1Title.className = "message-text text-xl p-2 bg-slate-100";
+            col1Title.innerText = 'My Groups';
+            this.#col1.appendChild(col1Title);
 
-        this.#sendView = document.createElement('div');
-        this.#sendView.className = "p-5";
-        this.#sendView.id = "send-message";
-        this.#col2.appendChild(this.#sendView);
+            this.#sendView = document.createElement('div');
+            this.#sendView.className = "p-5";
+            this.#sendView.id = "send-message";
+            this.#col2.appendChild(this.#sendView);
 
-        this.initializeSendView();
+            this.initializeSendView();
 
-        elm.appendChild(this.#col1);
-        elm.appendChild(this.#col2);
+            elm.appendChild(this.#col1);
+            elm.appendChild(this.#col2);
 
-        // Demo messages
-        await this.demoMessages();
+            // Demo messages
+            await this.demoMessages();
 
 
-        const fillerBox = document.createElement('div');
-        fillerBox.className = "h-full max-h-full bg-slate-100";
-        this.#col1.appendChild(fillerBox);
-        console.log(this.#curr_id);
+            const fillerBox = document.createElement('div');
+            fillerBox.className = "h-full max-h-full bg-slate-100";
+            this.#col1.appendChild(fillerBox);
+            console.log(this.#curr_id);
 
-        const groupChats = await database.getAllGroupChats();
-        const messages = [];
-        for (let gc of groupChats) {
-            let gcMessages = await (database.getMessagesByGroupChatID(gc.id));
-            for (let message of gcMessages) {
-                messages.push(message);
+            const groupChats = await database.getAllGroupChats();
+            const messages = [];
+            for (let gc of groupChats) {
+                let gcMessages = await (database.getMessagesByGroupChatID(gc.id));
+                for (let message of gcMessages) {
+                    messages.push(message);
+                }
             }
+            console.log("messages", messages);
+
+            this.changeChat(0);
+
+            return elm;
+        } catch(err){
+            console.error(err);
+            return null;
         }
-        console.log("messages", messages);
-
-        this.changeChat(0);
-
-        return elm;
     }
 
     /**
