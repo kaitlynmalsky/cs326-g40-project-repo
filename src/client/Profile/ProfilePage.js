@@ -45,7 +45,7 @@ export default class ProfileView extends View {
     const userName = document.createElement('input');
     userName.type = 'text';
     userName.id = 'userName';
-    userName.value = (await dbInstance.getUser(dbInstance.getCurrentUserID())).name;
+    userName.value = (await dbInstance.getUser(dbInstance.getCurrentUserID())).username;
     userDiv.appendChild(userName);
 
     const iconPreview = document.createElement('canvas');
@@ -179,9 +179,10 @@ export default class ProfileView extends View {
     };
 
     document.getElementById("save").addEventListener("click", async () => {
+      const userName = /**@type {HTMLInputElement} */ (document.getElementById('userName'));
       user.avatar = (/**@type {HTMLCanvasElement} */ (document.getElementById("myIcon"))).toDataURL("image/jpeg", 1);
       layers.forEach(l => user.avatarConfig[l.name] = l.i);
-      if (document.getElementById('userName').value !== "" && document.getElementById('userName').value !== user.name) user.name = document.getElementById('userName').value;
+      if (userName.value !== "" && userName.value !== user.username) user.username = userName.value;
       await dbInstance.updateUser(user);
 
       const saveNoti = document.createElement('i');
@@ -190,11 +191,11 @@ export default class ProfileView extends View {
       document.getElementById('profilePage-view').appendChild(saveNoti);
 
       let op = 1;
-      saveNoti.style.opacity = op;
+      saveNoti.style.opacity = op + "";
       for (let i = 0; i < 500; i++) {
         setTimeout(() => {
           op -= 0.002;
-          saveNoti.style.opacity = op;
+          saveNoti.style.opacity = op + "";
         }, i);
       }
       setTimeout(() => saveNoti.remove(), 500);
