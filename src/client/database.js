@@ -505,10 +505,19 @@ class Database {
    * Formats message db key
    * @param {string} gcID
    * @param {string} msgID
-   * @returns
+   * @returns {string}
    */
   #formatGroupMessageKey(gcID, msgID) {
     return `message_${gcID}_${msgID}`;
+  }
+
+  /**
+   * Formats person (temp) db key
+   * @param {number} pID
+   * @returns {string}
+   */
+  #formatPersonKey(pID) {
+    return `person_${pID}`;
   }
 
   /**
@@ -526,12 +535,27 @@ class Database {
   }
 
   /**
+   * Retrieves person (temp) with given ID.
+   * @param {number} pID 
+   * @returns {Promise<Person|null>}
+   */
+  async getPersonById(pID) {
+    try {
+      const person = this.#db.get(this.#formatPersonKey(pID));
+      return person;
+    } catch (err) {
+      return null;
+    }
+  }
+
+  /**
    * Adds a group chat with the given ID to the database.
    * @param {number} gcID
    */
   async addGroupChat(gcID) {
+    console.log("in addGroupChat");
     const existingGC = await this.getGroupById(gcID);
-
+    console.log(`existingGC is ${existingGC}`);
     if (existingGC) {
       console.error(`Group chat with ID ${gcID} already exists.`);
       return existingGC;
@@ -562,7 +586,7 @@ class Database {
    * @param {string} content
    * @param {Date} time
    */
-  async addMessage(gcID, pID, content, time) {
+  async addGroupChatMessage(gcID, pID, content, time) {
     const messageID = self.crypto.randomUUID();
     const messageDoc = {
       _id: this.#formatGroupMessageKey(`${gcID}`, messageID),
@@ -593,7 +617,7 @@ class Database {
    */
   async addPerson(pID, name, avatar) {
     const personDoc = {
-      _id: 'person_' + pID,
+      _id: this.#formatPersonKey(pID),
       name: name,
       avatar: avatar,
     };
@@ -608,6 +632,16 @@ class Database {
       _rev: rev,
       ...personDoc,
     };
+  }
+
+  async getAllPeople() {
+    const peopleResult = await this.#db.allDocs({
+      include_docs: true,
+      startkey: 'person',
+      endkey: `person\ufff0`,
+    });
+
+    return peopleResult.rows.map((row) => row.doc);
   }
 
   /**

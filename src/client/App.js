@@ -77,7 +77,8 @@ export class App {
     const profileView = new ProfileView();
     this.#addRoute('profile', { view: profileView });
 
-    if (dbInstance.getCurrentUserID()) {
+
+    if (await dbInstance.getCurrentUserID()) {
       history.replaceState('map', '', '#map');
       this.#navigateTo('map');
     } else {
@@ -114,7 +115,7 @@ export class App {
    * @param {string} routeKey
    */
   async #navigateTo(routeKey) {
-    if (this.#routes[routeKey].authRequired && !dbInstance.getCurrentUserID()) {
+    if (this.#routes[routeKey].authRequired && await !dbInstance.getCurrentUserID()) {
       return GlobalEvents.navigate('login');
     }
 

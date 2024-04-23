@@ -67,36 +67,66 @@ export default class MessagesView extends View {
             elm.appendChild(this.#col1);
             elm.appendChild(this.#col2);
 
-            // Demo messages
+        // Demo messages
+        //await this.demoMessages();
+        await this.demoMessagesDB();
+
+        const fillerBox = document.createElement('div');
+        fillerBox.className = "h-full max-h-full bg-slate-100";
+        this.#col1.appendChild(fillerBox);
+        console.log("this.#curr_id is", this.#curr_id);
+
+
+        if (this.#curr_id !== undefined) { // i.e. If the user actually has any chats
+            this.changeChat(0);
+        }
+        
+
+        return elm;
+    } catch (err) {
+        console.error(err);
+    }
+    }
+
+    /**
+     * Adds dummy group chats and messages, keeping the persistence with PouchDB in mind.
+     */
+    async demoMessagesDB() {
+        const groupchats = await database.getAllGroupChats();
+        console.log("groupchats is", groupchats);
+        // When there is no data, groupchats will be an emty array.
+        if (groupchats.length === 0) {
+            console.log("No message data found in database, generating demo data.");
             await this.demoMessages();
-
-
-            const fillerBox = document.createElement('div');
-            fillerBox.className = "h-full max-h-full bg-slate-100";
-            this.#col1.appendChild(fillerBox);
-            console.log(this.#curr_id);
-
-            const groupChats = await database.getAllGroupChats();
-            const messages = [];
-            for (let gc of groupChats) {
-                let gcMessages = await (database.getMessagesByGroupChatID(gc.id));
-                for (let message of gcMessages) {
-                    messages.push(message);
+        } else {
+            console.log("Found group chats in databse, retrieved", groupchats);
+            // @ts-ignore
+            for (let groupchat of groupchats) {
+                // @ts-ignore
+                const members = await database.getMembersByGroupChatID(groupchat.GroupChatID);
+                // @ts-ignore
+                const messages = await database.getMessagesByGroupChatID(groupchat.GroupChatID);
+                console.log("members is", members);
+                console.log("messages is", messages);
+                const people = [];
+                for (let member of members) {
+                    const person = await database.getPersonById(member.PersonID);
+                    people.push({
+                        id: person.id,
+                        avatar: person.avatar,
+                        name: person.name
+                    })
+                }
+                this.addGroupChat(people);
+                for (let message of messages) {
+                    this.#chatView.appendChild(this.generateMessageElm(message.PersonID, message.time, message.messageContent, message.GroupChatID));
                 }
             }
-            console.log("messages", messages);
-
-            this.changeChat(0);
-
-            return elm;
-        } catch(err){
-            console.error(err);
-            return null;
         }
     }
 
     /**
-     * Adds dummy group chats and messages.
+     * Adds dummy group chats and messages, assuming that nothing exists in the database already.
      */
     async demoMessages() {
         this.#currUser = {
@@ -120,26 +150,62 @@ export default class MessagesView extends View {
             avatar: '../images/nemo.png'
         }
 
+        const people = [this.#currUser, spiderman, scoob, nemo];
+        people.forEach(async person => {
+            try {
+                await database.addPerson(person.id, person.name, person.avatar);
+            } catch (err) {
+                console.error(err);
+            }
+            
+        })
 
         this.addGroupChat([spiderman, scoob]);
         this.addGroupChat([nemo]);
         this.addGroupChat([spiderman, nemo, scoob]);
 
-        await database.addGroupChat(0);
-        await database.addGroupChat(1);
-        await database.addGroupChat(2);
 
-        // console.log(await database.getAllGroupChats());
-   
-        this.addMessage(scoob, new Date, "hey i heard that they have therapy dogs visiting in the campus center today!", false, 0);
-        this.addMessage(spiderman, new Date, "Wait really?", false, 0);
-        this.addMessage(spiderman, new Date, "We actually have to go right now", false, 0);
-        this.addMessage(spiderman, new Date, "I am running there", false, 0);
-        this.addMessage(scoob, new Date, "please don't go too fast or you'll scare the dogs", false, 0);
+        const messages = [
+            {person: scoob, date: new Date, content: "hey i heard that they have therapy dogs visiting in the campus center today!", gcID: 0},
+            {person: spiderman, date: new Date, content: "Wait really?", gcID: 0},
+            {person: spiderman, date: new Date, content: "We actually have to go right now", gcID: 0},
+            {person: spiderman, date: new Date, content: "I am running there", gcID: 0},
+            {person: scoob, date: new Date, content: "please don't go to fast or you will scare the dogs", gcID: 0},
+        ]
+
+        messages.forEach(async message => {
+            this.#chatView.appendChild(this.generateMessageElm(message.person, message.date, message.content, message.gcID));
+            await database.addGroupChatMessage(message.gcID, message.person.id, message.content, message.date);
+        })
+        // this.#chatView.appendChild(this.generateMessageElm(scoob, new Date, "hey i heard that they have therapy dogs visiting in the campus center today!", 0));
+        // this.#chatView.appendChild(this.generateMessageElm(spiderman, new Date, "Wait really?", 0));
+        // this.#chatView.appendChild(this.generateMessageElm(spiderman, new Date, "We actually have to go right now", 0));
+        // this.#chatView.appendChild(this.generateMessageElm(spiderman, new Date, "I am running there", 0));
+        // this.#chatView.appendChild(this.generateMessageElm(scoob, new Date, "please don't go too fast or you'll scare the dogs", 0));
+        
+
         console.log('this.groupChats', this.groupChats);
         console.log('this.groupList',this.groupList);
 
+
+        this.groupList.forEach(async gc => {
+            try {
+                await database.addGroupChat(gc.id);
+            } catch (err) {
+                console.error(err);
+            }
+            
+            gc.people.forEach(async (/** @type {{ id: number; }} */ person) => {
+                try {
+                    await database.addGroupChatMember(person.id, gc.id);
+                } catch (err) {
+                    console.error(err);
+                }
+            });
+        });
+
     }
+
 
     /**
      * Changes the chat view to the given chat ID.
@@ -147,17 +213,12 @@ export default class MessagesView extends View {
      */
     changeChat(id) {
         this.#chatView.innerHTML = "";
-        console.log(this.groupChats);
         this.groupChats[id].messages.forEach(messageElm => {
             this.#chatView.appendChild(messageElm);
         })
         this.groupChats[this.#active_id].gcElm.classList.remove("active-group-chat");
         this.groupChats[id].gcElm.classList.add("active-group-chat");
         this.#active_id = id;
-    }
-
-    renderAvatars() {
-
     }
 
     /**
@@ -185,6 +246,7 @@ export default class MessagesView extends View {
 
             avatarElm.src = person.avatar; // TEMPORARY PERSON OBJECT
             gcElm.appendChild(avatarElm);
+
         })
 
         const temp = this.#curr_id;
@@ -195,8 +257,9 @@ export default class MessagesView extends View {
 
         this.#col1.appendChild(gcElm);
         this.groupChats[this.curr_id] = {id: this.curr_id, messages: [], gcElm: gcElm};
-        console.log(this.groupChats);
         this.curr_id++;
+
+        
     }
 
     /**
@@ -204,10 +267,10 @@ export default class MessagesView extends View {
      * @param {Object} person 
      * @param {Date} timestamp 
      * @param {string} message 
-     * @param {boolean} fromMe
      * @param {number} gcID
+     * @returns {HTMLElement}
      */
-    addMessage(person, timestamp, message, fromMe, gcID) {
+    generateMessageElm(person, timestamp, message, gcID) {
         const messageElm = document.createElement('div');
         messageElm.className = "flex";
 
@@ -246,6 +309,8 @@ export default class MessagesView extends View {
         
         messageContent.appendChild(messageTimestamp);
 
+        const fromMe = this.#currUser.id === person.id;
+        
         if (fromMe) {
             messageContent.className = "text-end max-w-prose bg-stone-200 h-min w-auto p-3 mx-3 rounded-l-lg rounded-br-lg z-0";
             messageElm.classList.add("justify-end");
@@ -259,12 +324,12 @@ export default class MessagesView extends View {
             messageElm.appendChild(messageAvatar);
             messageElm.appendChild(messageContent);
         }
+
         this.groupChats[gcID].messages.push(messageElm);
-        this.#chatView.appendChild(messageElm);
+        //this.#chatView.appendChild(messageElm);
+        return messageElm;
 
-        const personIDTemp = (fromMe) ? -1 : person.id;
-
-        database.addMessage(gcID, personIDTemp, message, timestamp);
+        
     }
 
     /**
@@ -277,14 +342,15 @@ export default class MessagesView extends View {
         const messageArea = document.createElement('textarea');
         messageArea.className = "overscroll-contain resize-y text-lg block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500";
         messageArea.id="message-area";
-        messageArea.addEventListener("keyup", e => {
+        messageArea.addEventListener("keyup", async e => {
             e.preventDefault();
             if (e.key === "Enter") {
-                this.addMessage(this.#currUser, new Date, messageArea.value, true, this.#active_id);
+                const sentDate = new Date;
+                this.#chatView.appendChild(this.generateMessageElm(this.#currUser, sentDate, messageArea.value, this.#active_id));
                 this.#chatView.scrollTop = this.#chatView.scrollHeight;
                 messageForm.submit();
                 messageForm.reset();
-
+                await database.addGroupChatMessage(this.#active_id, this.#currUser.id, messageArea.value, sentDate);
             }
         })
         messageForm.appendChild(messageArea);
