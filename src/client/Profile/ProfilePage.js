@@ -152,30 +152,26 @@ export default class ProfileView extends View {
       const icn = document.getElementById(`${option}-icn`);
       const f = document.getElementById(`${option}-forward`);
       const b = document.getElementById(`${option}-back`);
+      const animation = (btn) => {
+        btn.addEventListener("mouseover", () => {
+          icnsStatic[pos].split(' ').forEach(c => icn.classList.remove(c));
+          icnsDynamic[pos].split(' ').forEach(c => icn.classList.add(c));
+        });
+        btn.addEventListener("mouseout", () => {
+          icnsDynamic[pos].split(' ').forEach(c => icn.classList.remove(c));
+          icnsStatic[pos].split(' ').forEach(c => icn.classList.add(c));
+        });
+      };
       f.addEventListener('click', () => {
         obj.i = obj.i + 1 >= obj.imgs.length ? 0 : obj.i + 1;
         render2(0);
       });
-      f.addEventListener("mouseover", () => {
-        icnsStatic[pos].split(' ').forEach(c => icn.classList.remove(c));
-        icnsDynamic[pos].split(' ').forEach(c => icn.classList.add(c));
-      });
-      f.addEventListener("mouseout", () => {
-        icnsDynamic[pos].split(' ').forEach(c => icn.classList.remove(c));
-        icnsStatic[pos].split(' ').forEach(c => icn.classList.add(c));
-      });
+      animation(f);
       b.addEventListener('click', () => {
         obj.i = obj.i - 1 < 0 ? obj.imgs.length - 1 : obj.i - 1;
         render2(0);
       });
-      b.addEventListener("mouseover", () => {
-        icnsStatic[pos].split(' ').forEach(c => icn.classList.remove(c));
-        icnsDynamic[pos].split(' ').forEach(c => icn.classList.add(c));
-      });
-      b.addEventListener("mouseout", () => {
-        icnsDynamic[pos].split(' ').forEach(c => icn.classList.remove(c));
-        icnsStatic[pos].split(' ').forEach(c => icn.classList.add(c));
-      });
+      animation(b);
     };
 
     document.getElementById("save").addEventListener("click", async () => {
