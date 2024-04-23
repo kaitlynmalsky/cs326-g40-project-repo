@@ -105,7 +105,7 @@ export default class ProfileView extends View {
      * Creates a layer object representing a layer on the Profile Canvas.
      * @param {String} n - name of the layer
      * @param {String[]} images - array of all the different options in the layer
-     * @returns 
+     * @returns {{name: String, imgs: String[], img: HTMLImageElement, i: number}} - layer object
      */
     const createLayer = (n, images) => {
       return {
@@ -144,7 +144,7 @@ export default class ProfileView extends View {
 
     /**
      * Initializes the button functionality corresponding to the layer it traverses through.
-     * @param {{name: String, imgs: String[], img: Image, i: number}} obj - Object that represents a layer in the Profile Canvas
+     * @param {{name: String, imgs: String[], img: HTMLImageElement, i: number}} obj - Object that represents a layer in the Profile Canvas
      * @param {String} option - Name of the layer being initialized
      * @param {number} pos - Current index of the image being utilized in the user's layer
      */
