@@ -42,8 +42,9 @@ export default class ExistingPin extends Pin {
       coords: [x, y],
     } = this.#pinInfo;
 
+    let currUserImage = (await dbInstance.getUser(dbInstance.getCurrentUserID())).avatar;
     const marker = this.map.createMarker(
-      './images/placeholder_avatar.png',
+      currUserImage,
       false,
       x,
       y,

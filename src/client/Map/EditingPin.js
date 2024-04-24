@@ -54,8 +54,9 @@ export default class EditingPin extends Pin {
     this.#pinInfo = pinInfo;
   }
 
-  render() {
+  async render() {
     let marker;
+    let currUserImage = (await dbInstance.getUser(dbInstance.getCurrentUserID())).avatar;
 
     if (this.#pinInfo) {
       const {
@@ -63,7 +64,7 @@ export default class EditingPin extends Pin {
       } = this.#pinInfo;
 
       marker = this.map.createMarker(
-        './images/pc.png',
+        currUserImage,
         true,
         lat,
         lng,
@@ -74,7 +75,7 @@ export default class EditingPin extends Pin {
       );
     } else {
       marker = this.map.createCenterMarker(
-        './images/pc.png',
+        currUserImage,
         true,
         {
           draggable: true,

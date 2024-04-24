@@ -148,7 +148,8 @@ export default class MessagesView extends View {
     this.#currUser = {
       id: 0,
       name: 'Cool Cat',
-      avatar: '../images/pc.png',
+      avatar: (await database.getUser(database.getCurrentUserID())).avatar
+
     };
     const spiderman = {
       id: 1,

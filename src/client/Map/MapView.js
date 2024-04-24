@@ -203,7 +203,7 @@ export default class MapView extends View {
       popupAnchor: [0, -50], // point from which the popup should open relative to the iconAnchor
       className: editing
         ? 'border-green-700 border-2 rounded-full border-dashed'
-        : undefined,
+        : 'rounded-full',
     });
 
     return L.marker([lat, lng], {
