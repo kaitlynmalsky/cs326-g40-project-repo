@@ -8,7 +8,6 @@ export default class VillageView extends View {
     super();
     this.#showButton = false;
 
-    this.initSampleData();
     this.initEventHandlers();
   }
 
@@ -23,13 +22,24 @@ export default class VillageView extends View {
   }
 
   async init(userList) {
-    this.#currentUserID = await dbInstance.getCurrentUserID();
+    const currentUserID = dbInstance.getCurrentUserID();
     for (const user of userList) {
-      await dbInstance.createConnection({
-        userID: this.#currentUserID,
-        targetID: (await dbInstance.addUser(user)).userID,
-      });
+      const targetId = (await dbInstance.addUser(user)).userID
+      await Promise.all([
+        dbInstance.createConnection({
+          userID: currentUserID,
+          targetID: targetId,
+        }),
+        dbInstance.createConnection({
+          userID: targetId,
+          targetID: currentUserID,
+        })
+      ])
     }
+    await dbInstance.createConnection({
+      targetID : (await dbInstance.addUser(userList[0])).userID, 
+      userID: (await dbInstance.addUser(userList[2])).userID,
+    });
   }
 
   initEventHandlers() {
@@ -50,6 +60,8 @@ export default class VillageView extends View {
   }
 
   async render() {
+    await this.initSampleData();
+
     const villageViewElm = document.createElement('div');
     villageViewElm.id = 'village-view';
 
@@ -86,16 +98,64 @@ export default class VillageView extends View {
     const elSize = 12;
     for (const connection of connections) {
       const user = await dbInstance.getUser(connection.targetID);
-      console.log(`userID : ${user.userID}`, user);
       const connectionElm = document.createElement('div');
       connectionElm.className = `user_connections`;
 
-      connectionElm.innerHTML = `
-      <div class="group">
-        <img src="${user.avatar}" alt="${user.name}">
-        <div class="overlay text">${user.name}</div>
-      </div>
-      `;
+      const grp = document.createElement('div');
+      grp.className = "group";
+      grp.setAttribute('data-toggle', 'popover');
+      const img = document.createElement('img');
+      img.src = user.avatar;
+      img.alt = user.name;
+      grp.appendChild(img);
+
+      const popover = document.createElement('div');
+      popover.className = "popover bottom";
+
+      const content = document.createElement('div');
+      content.className = "popover-content";
+      const text = document.createElement('h3');
+      text.className = "popover-title";
+      text.innerHTML = user.name;
+      content.appendChild(text);
+      popover.appendChild(content);
+
+      const subConn = document.createElement('div');
+      subConn.className = "sub-connections";
+      subConn.style.maxHeight = '200px'; 
+      subConn.style.overflowY = 'auto';
+      const dataArr = await dbInstance.getConnections(user.userID);
+      console.log(dataArr);
+      
+      for (const elm of dataArr) {
+        const dataElm = await dbInstance.getUser(elm.targetID);
+        console.log(dataElm);
+        const subConnElm = document.createElement('div');
+        subConnElm.className = "sub-connection-elements"
+        const imgElm = document.createElement('img');
+        imgElm.src = dataElm.avatar;
+        imgElm.alt = dataElm.name;
+        const nameSpan = document.createElement('span');
+        nameSpan.textContent = dataElm.name;
+        nameSpan.className = "sub-connection-name";
+        subConnElm.appendChild(imgElm);
+        subConnElm.appendChild(nameSpan);
+        subConn.appendChild(subConnElm);
+      }
+      content.appendChild(subConn);
+
+      grp.appendChild(popover);
+
+
+      grp.addEventListener('click', ()=>{
+        if (popover.style.visibility === 'visible') {
+          popover.style.visibility = 'hidden';
+        } else {
+          popover.style.visibility = 'visible';
+        }
+      });
+
+      connectionElm.appendChild(grp);
 
       const delBtn = document.createElement('button');
       delBtn.className = 'delete-button';
@@ -115,6 +175,4 @@ export default class VillageView extends View {
 
     this.updateDeleteButtonsVisibility()
   }
-
-
 }

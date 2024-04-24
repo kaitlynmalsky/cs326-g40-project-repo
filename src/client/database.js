@@ -371,6 +371,7 @@ class Database {
    * @returns {Promise<VillageConnection>} The newly created connection
    */
   async createConnection(connection) {
+    console.log('Creating connection ', connection);
     const { userID, targetID } = connection;
 
     const connectionKey = this.#formatConnectionKey(userID, targetID);

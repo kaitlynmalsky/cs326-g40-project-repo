@@ -123,7 +123,7 @@ main {
 
 .grid-dude {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* creates as many 150px min columns as can fit */
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); 
   grid-gap: 20px; 
 }
 
@@ -164,7 +164,6 @@ button:hover {
 .user_connections {
   position: relative;
   width: 100px;
-  /* Set width according to your layout needs */
   margin: 20px;
 }
 
@@ -176,27 +175,81 @@ button:hover {
 
 .group img {
   width: 100%;
-  /* Make the image fill the container */
+  
   height: auto;
   display: block;
-  /* Remove any space below the image */
+
   border-radius: 50%;
-  /* Circular images */
+
 }
 
-.overlay {
-  position: absolute;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  color: white;
-  width: 100%;
-  text-align: center;
-  padding: 5px 0;
-  display: none;
-}
-
-.group:hover .overlay {
+.sub-connection-elements img {
+  width: 40%;
+  height: auto;
   display: block;
+  border-radius: 50%;
+}
+
+.popover-container {
+  position: relative;
+}
+
+.popover {
+  position: absolute;
+  z-index: 10;
+  visibility: hidden;
+  display: block;
+  width: 200px; 
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  top: calc(100% + 10px); 
+  left: 50%;
+  transform: translateX(-50%);
+  transition: opacity 0.3s ease-in-out;
+}
+
+.popover::before {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #ccc transparent transparent transparent;
+}
+
+.popover-content {
+  margin-bottom: 10px;
+}
+
+.popover-title {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.popover-body {
+  margin-bottom: 0;
+}
+
+.sub-connection-elements {
+  display: flex;
+  align-items: center;
+}
+
+.sub-connection-img {
+  width: 50%;
+  height: auto;
+  display: block;
+  border-radius: 50%;
+}
+
+.sub-connection-name {
+  margin-left: 10px;
+  font-weight: bold;
 }
 
 .delete-button {
@@ -214,8 +267,6 @@ button:hover {
 .user_connections:hover .delete-button {
   display: block;
 }
-
-/* Profile Style */
 
 #profilePage-view {
   @apply h-full;

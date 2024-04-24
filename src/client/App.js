@@ -38,7 +38,7 @@ export class App {
    */
   #routes = {};
 
-  constructor() {}
+  constructor() { }
 
   /**
    * Renders the application
@@ -59,17 +59,17 @@ export class App {
     rootElm.appendChild(navbarElm);
     rootElm.appendChild(this.#activeViewElm);
 
-    const mapView = new MapView();
-    this.#addRoute('map', { view: mapView });
-
-    const villageView = new VillageView();
-    this.#addRoute('village', { view: villageView });
-
     const loginView = new LoginView();
     this.#addRoute('login', { view: loginView, authRequired: false });
 
     const signupView = new SignupView();
     this.#addRoute('signup', { view: signupView, authRequired: false });
+
+    const mapView = new MapView();
+    this.#addRoute('map', { view: mapView });
+
+    const villageView = new VillageView();
+    this.#addRoute('village', { view: villageView });
 
     const messagesView = new MessagesView();
     this.#addRoute('messages', { view: messagesView });
@@ -78,7 +78,7 @@ export class App {
     this.#addRoute('profile', { view: profileView });
 
 
-    if (await dbInstance.getCurrentUserID()) {
+    if (dbInstance.getCurrentUserID()) {
       history.replaceState('map', '', '#map');
       this.#navigateTo('map');
     } else {
