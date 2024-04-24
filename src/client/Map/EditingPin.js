@@ -50,7 +50,7 @@ export default class EditingPin extends Pin {
       } = this.#pinInfo;
 
       marker = this.map.createMarker(
-        './images/placeholder_avatar.png',
+        './images/pc.png',
         true,
         lat,
         lng,
@@ -61,7 +61,7 @@ export default class EditingPin extends Pin {
       );
     } else {
       marker = this.map.createCenterMarker(
-        './images/placeholder_avatar.png',
+        './images/pc.png',
         true,
         {
           draggable: true,
