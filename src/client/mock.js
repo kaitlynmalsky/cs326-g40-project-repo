@@ -7,11 +7,20 @@ import dbInstance from "./database.js";
 
 const faker = /** @type Faker */ (window.faker);
 
+let userCount = 0;
+
 function testUser() {
     const randomName = faker.name.findName();
     const username = faker.name.firstName();
     const randomEmail = faker.internet.email();
-    const userAvatar = "./images/placeholder_avatar.png" //faker.internet.avatar(); 
+    /*const res = await fetch('https://picsum.photos/200/300');
+    if (!res.ok) {
+        return;
+    }
+    const data = await res.json();*/
+
+    const userAvatar = `https://picsum.photos/150/150?random=${++userCount}`;
+
     const user = {
         name: randomName,
         username: username,
@@ -19,6 +28,7 @@ function testUser() {
         avatar: userAvatar,
         password: faker.commerce.color()
     };
+    console.log(user);
     return user;
 }
 
