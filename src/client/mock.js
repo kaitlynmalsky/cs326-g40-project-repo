@@ -107,18 +107,21 @@ function generateRandomCoords() {
 }
 
 export async function mockPins() {
-    const ids = await mockUsers();
-    console.log('ids', ids);
-    for (const id of ids) {
-        const time = generateRandomTimeRange();
-        const pinData = {
-            hostID: id,
-            startTime: time.startTime,
-            endTime: time.endTime,
-            details: faker.finance.bitcoinAddress(),
-            coords: generateRandomCoords(),
+    const pins = (await dbInstance.getUpcomingPins()).length;
+    if (pins < 15) {
+        const ids = await mockUsers();
+        console.log('ids', ids);
+        for (const id of ids) {
+            const time = generateRandomTimeRange();
+            const pinData = {
+                hostID: id,
+                startTime: time.startTime,
+                endTime: time.endTime,
+                details: faker.finance.bitcoinAddress(),
+                coords: generateRandomCoords(),
+            }
+            console.log(pinData);
+            await dbInstance.createPin(pinData);
         }
-        console.log(pinData);
-        await dbInstance.createPin(pinData);
     }
 }

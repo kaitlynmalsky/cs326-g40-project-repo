@@ -85,11 +85,12 @@ export default class VillageView extends View {
 
     const villageViewElm = document.createElement('div');
     villageViewElm.id = 'village-view';
-
+    /*
     const headerElm = document.createElement('div');
     headerElm.className = 'header';
     headerElm.innerHTML = `<h2>CONNECTION INVITES</h2>`;
     villageViewElm.appendChild(headerElm);
+    */
 
     const header1Elm = document.createElement('div');
     header1Elm.className = 'header';
@@ -141,6 +142,7 @@ export default class VillageView extends View {
       text.innerHTML = user.name;
       content.appendChild(text);
       popover.appendChild(content);
+
 
       const subConn = document.createElement('div');
       subConn.className = 'sub-connections';
