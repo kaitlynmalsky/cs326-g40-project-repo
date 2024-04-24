@@ -117,6 +117,7 @@ export default class MapView extends View {
     this.editingPin = new EditingPin(this, 'existing', pin);
     this.#fabElm.innerText = 'Cancel';
     this.editingPin.render();
+    this.#pins[pinID].removeMarker();
   }
 
   /**
@@ -136,7 +137,7 @@ export default class MapView extends View {
   async savePin(pinInfo) {
     const pinData = await database.createPin(pinInfo);
     this.#fabElm.innerText = 'Add Pin';
-    this.addPin(pinData);
+    await this.addPin(pinData);
     this.editingPin = null;
   }
 
@@ -161,11 +162,11 @@ export default class MapView extends View {
    * Adds an existing or created pin to the map
    * @param {import('../database.js').Pin} pinInfo
    */
-  addPin(pinInfo) {
+  async addPin(pinInfo) {
     console.log('Adding pin', pinInfo);
     const pin = new ExistingPin(this, pinInfo);
     this.#pins[pin.id] = pin;
-    pin.render();
+    await pin.render();
   }
 
   /**

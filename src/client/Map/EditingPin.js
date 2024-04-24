@@ -1,3 +1,4 @@
+import dbInstance from '../database.js';
 import MapView from './MapView.js';
 import Pin from './Pin.js';
 
@@ -23,10 +24,22 @@ export default class EditingPin extends Pin {
   detailInputName = 'edit-detail-input';
   postButtonName = 'edit-post-button';
 
+  /**
+   * @type {HTMLInputElement}
+   */
   startTimeInputElm;
+  /**
+   * @type {HTMLInputElement}
+   */
   endTimeInputElm;
 
+  /**
+   * @type {HTMLTextAreaElement}
+   */
   detailInputElm;
+  /**
+   * @type {HTMLInputElement}
+   */
   postButtonElm;
 
   /**
@@ -78,27 +91,73 @@ export default class EditingPin extends Pin {
     marker.on('dragend', () => this.showPopup(marker));
   }
 
+  /**
+   *
+   * @param {number} hour
+   * @param {number} minutes
+   */
+  getClosestTimestamp(hour, minutes) {
+    const now = new Date();
+    const nowHour = now.getHours();
+    const nowMinutes = now.getMinutes();
+
+    const datetime = new Date();
+    datetime.setSeconds(0);
+    datetime.setHours(hour);
+    datetime.setMinutes(minutes);
+
+    if (nowHour < hour || (nowHour === hour && nowMinutes < minutes)) {
+      datetime.setDate(datetime.getDate() + 1);
+    }
+
+    return datetime;
+  }
+
   async savePin() {
-    const startTime = this.startTimeInputElm.value;
-    const endTime = this.endTimeInputElm.value;
+    const startTimeInputValue = this.startTimeInputElm.value;
+    const endTimeInputValue = this.endTimeInputElm.value;
     const details = this.detailInputElm.value;
 
-    const [startHour, startMinutes] = startTime.split(':');
-    const [endHour, endMinutes] = endTime.split(':');
+    const [startHour, startMinutes] = startTimeInputValue.split(':');
+    const [endHour, endMinutes] = endTimeInputValue.split(':');
+
+    const startTime = this.getClosestTimestamp(
+      parseInt(startHour),
+      parseInt(startMinutes),
+    ).toISOString();
+    const endTime = this.getClosestTimestamp(
+      parseInt(endHour),
+      parseInt(endMinutes),
+    ).toISOString();
 
     const { lat, lng } = this.marker.getLatLng();
 
-    const pinInfo = {
-      ...this.#pinInfo,
-      startTime,
-      endTime,
-      details,
-      coords: /** @type {[number, number]} */ ([lat, lng]),
-    };
-
     if (this.#type === 'new') {
+      /**
+       * @type {import('../database.js').CreatePinInput}
+       */
+      const pinInfo = {
+        hostID: dbInstance.getCurrentUserID(),
+        startTime,
+        endTime,
+        details,
+        coords: /** @type {[number, number]} */ ([lat, lng]),
+      };
+
       await this.map.savePin(pinInfo);
     } else {
+      /**
+       * @type {import('../database.js').Pin}
+       */
+      const pinInfo = {
+        ...this.#pinInfo,
+        hostID: dbInstance.getCurrentUserID(),
+        startTime,
+        endTime,
+        details,
+        coords: /** @type {[number, number]} */ ([lat, lng]),
+      };
+
       await this.map.updatePin(pinInfo);
     }
 
@@ -155,7 +214,10 @@ export default class EditingPin extends Pin {
     this.startTimeInputElm = startTimeInputElm;
 
     if (this.#pinInfo) {
-      startTimeInputElm.value = this.#pinInfo.startTime;
+      const [startHour, startMinutes] = this.extractHourAndMinutes(
+        this.#pinInfo.startTime,
+      );
+      startTimeInputElm.value = `${startHour}:${startMinutes}`;
     }
 
     form.appendChild(startLabel);
@@ -169,7 +231,10 @@ export default class EditingPin extends Pin {
     this.endTimeInputElm = endTimeInputElm;
 
     if (this.#pinInfo) {
-      endTimeInputElm.value = this.#pinInfo.endTime;
+      const [endHour, endMinutes] = this.extractHourAndMinutes(
+        this.#pinInfo.endTime,
+      );
+      endTimeInputElm.value = `${endHour}:${endMinutes}`;
     }
 
     form.append(endLabel);
@@ -198,7 +263,10 @@ export default class EditingPin extends Pin {
     form.appendChild(postButtonElm);
 
     // Handle form submit
-    form.onsubmit = () => this.savePin();
+    form.onsubmit = (e) => {
+      e.preventDefault();
+      this.savePin();
+    };
 
     popupHTML.appendChild(form);
 

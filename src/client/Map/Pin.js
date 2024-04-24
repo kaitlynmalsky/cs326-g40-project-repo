@@ -29,6 +29,9 @@ export default class Pin {
     this.map = map;
   }
 
+  /**
+   * Adds pin to map
+   */
   addToMap() {
     this.placeMarker();
   }
@@ -41,7 +44,24 @@ export default class Pin {
     console.error('Forgot to override placeMarker');
   }
 
+  /**
+   * Removes the marker
+   */
   removeMarker() {
     this.marker.remove();
+  }
+
+  /**
+   *
+   * @param {string} datetimeStr
+   * @returns {[string, string]}
+   */
+  extractHourAndMinutes(datetimeStr) {
+    const datetime = new Date(datetimeStr);
+
+    return [
+      datetime.getHours().toString().padStart(2, '0'),
+      datetime.getMinutes().toString().padStart(2, '0'),
+    ];
   }
 }

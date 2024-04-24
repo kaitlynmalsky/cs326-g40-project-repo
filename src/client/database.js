@@ -117,6 +117,11 @@
  */
 
 /**
+ * Represents a user pin notification
+ * @typedef {Object}
+ */
+
+/**
  * @class
  */
 // @ts-ignore duplicate declaration for Database?????
@@ -177,7 +182,9 @@ class Database {
    * @returns {Promise<Pin>} The created pin
    */
   async createPin(pinData) {
-    const pinID = self.crypto.randomUUID();
+    const pinStart = new Date(pinData.startTime);
+
+    const pinID = `${pinStart.getTime()}_${self.crypto.randomUUID()}`;
 
     const pinDoc = {
       _id: this.#formatPinKey(pinID),
@@ -190,6 +197,8 @@ class Database {
     if (!ok) {
       console.error(`Failed to create ${pinID} (id=${id} , rev=${rev})`);
     }
+
+    await this.addPinAttendee(pinID, pinData.hostID);
 
     return {
       ...pinDoc,
@@ -249,6 +258,21 @@ class Database {
         include_docs: true,
         startkey: 'pin',
         endkey: `pin\ufff0`,
+      });
+
+      return pinsResult.rows.map((row) => row.doc);
+    } catch (err) {
+      return null;
+    }
+  }
+
+  async getUpcomingPins() {
+    try {
+      const now = Date.now();
+      const pinsResult = await this.#db.allDocs({
+        include_docs: true,
+        startkey: `pin_${now}_`,
+        endkey: `pin_${now}_\ufff0`,
       });
 
       return pinsResult.rows.map((row) => row.doc);
@@ -463,6 +487,10 @@ class Database {
    * @returns {Promise<PinAttendee>}
    */
   async addPinAttendee(pinID, userID) {
+    const existingAttendee = await this.getPinAttendee(pinID, userID);
+
+    if (existingAttendee) return existingAttendee;
+
     const doc = {
       _id: this.#formatPinAttendeeKey(pinID, userID),
       pinID,
@@ -518,6 +546,10 @@ class Database {
   async removePinAttendee(attendee) {
     return this.#db.remove(attendee);
   }
+
+  // ********************************************
+  // User Pin Notifications
+  // ********************************************
 
   // ********************************************
   // Messaging

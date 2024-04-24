@@ -1,3 +1,4 @@
+import dbInstance from '../database.js';
 import MapView from './MapView.js';
 import Pin from './Pin.js';
 
@@ -13,12 +14,17 @@ export default class ExistingPin extends Pin {
    * @type {import('../database.js').Pin}
    */
   #pinInfo;
+  /**
+   * @type {import('../database.js').PinAttendee}
+   */
+  attendee;
 
   startTimeInputName = 'existing-start-time-input';
   endTimeInputName = 'existing-end-time-input';
   detailInputName = 'existing-detail-input';
   editButtonName = 'existing-edit-button';
   deleteButtonName = 'existing-delete-button';
+  interestButtonName = 'existing-interest-button';
 
   /**
    *
@@ -31,7 +37,7 @@ export default class ExistingPin extends Pin {
     this.id = pinInfo.pinID;
   }
 
-  render() {
+  async render() {
     const {
       coords: [x, y],
     } = this.#pinInfo;
@@ -49,14 +55,14 @@ export default class ExistingPin extends Pin {
 
     this.marker = marker;
 
-    this.bindPopupTemplate(marker);
+    await this.bindPopupTemplate(marker);
   }
 
   /**
    *
    * @param {import('./MapView.js').LeafletMarker} marker
    */
-  bindPopupTemplate(marker) {
+  async bindPopupTemplate(marker) {
     const timeClass = `bg-gray-50 border leading-none border-gray-300 text-gray-900 text-sm rounded-lg  block w-full p-2.5`;
     const detailClass =
       'bg-gray-50 border border-gray-300 block mb-2 text-sm text-gray-900 text-black rounded-lg p-2';
@@ -94,6 +100,13 @@ export default class ExistingPin extends Pin {
 
     form.appendChild(pinTitle);
 
+    const [startHour, startMinutes] = this.extractHourAndMinutes(
+      this.#pinInfo.startTime,
+    );
+    const [endHour, endMinutes] = this.extractHourAndMinutes(
+      this.#pinInfo.endTime,
+    );
+
     const startTimeInputElm = document.createElement('input');
     startTimeInputElm.required = true;
     startTimeInputElm.className = timeClass;
@@ -102,9 +115,7 @@ export default class ExistingPin extends Pin {
     startTimeInputElm.readOnly = true;
     this.startTimeInputElm = startTimeInputElm;
 
-    if (this.#pinInfo) {
-      startTimeInputElm.value = this.#pinInfo.startTime;
-    }
+    startTimeInputElm.value = `${startHour}:${startMinutes}`;
 
     form.appendChild(startLabel);
     form.appendChild(startTimeInputElm);
@@ -117,9 +128,7 @@ export default class ExistingPin extends Pin {
     endTimeInputElm.readOnly = true;
     this.endTimeInputElm = endTimeInputElm;
 
-    if (this.#pinInfo) {
-      endTimeInputElm.value = this.#pinInfo.endTime;
-    }
+    endTimeInputElm.value = `${endHour}:${endMinutes}`;
 
     form.append(endLabel);
     form.appendChild(endTimeInputElm);
@@ -134,9 +143,7 @@ export default class ExistingPin extends Pin {
     detailInputElm.style.resize = 'none';
     this.detailInputElm = detailInputElm;
 
-    if (this.#pinInfo) {
-      detailInputElm.value = this.#pinInfo.details;
-    }
+    detailInputElm.value = this.#pinInfo.details;
 
     form.appendChild(detailsLabel);
     form.appendChild(detailInputElm);
@@ -145,34 +152,66 @@ export default class ExistingPin extends Pin {
 
     // ******************************************
     // Pin Actions
+
     const pinActionsDiv = document.createElement('div');
     pinActionsDiv.className = 'flex gap-32';
 
-    const editButtonElm = document.createElement('button');
-    editButtonElm.id = this.editButtonName;
-    editButtonElm.innerText = 'Edit';
-    editButtonElm.className = editButtonClass;
+    if (this.#pinInfo.hostID === dbInstance.getCurrentUserID()) {
+      const editButtonElm = document.createElement('button');
+      editButtonElm.id = this.editButtonName;
+      editButtonElm.innerText = 'Edit';
+      editButtonElm.className = editButtonClass;
 
-    editButtonElm.addEventListener('click', () => {
-      this.map.editPin(this.id);
-    });
+      editButtonElm.addEventListener('click', () => {
+        this.map.editPin(this.id);
+      });
 
-    pinActionsDiv.appendChild(editButtonElm);
+      pinActionsDiv.appendChild(editButtonElm);
 
-    const deleteButtonElm = document.createElement('button');
-    deleteButtonElm.id = this.deleteButtonName;
-    deleteButtonElm.innerText = 'Delete';
-    deleteButtonElm.className = deleteButtonClass;
+      const deleteButtonElm = document.createElement('button');
+      deleteButtonElm.id = this.deleteButtonName;
+      deleteButtonElm.innerText = 'Delete';
+      deleteButtonElm.className = deleteButtonClass;
 
-    deleteButtonElm.addEventListener('click', () => {
-      this.map.deletePin(this.#pinInfo);
-    });
+      deleteButtonElm.addEventListener('click', () => {
+        this.map.deletePin(this.#pinInfo);
+      });
 
-    pinActionsDiv.appendChild(deleteButtonElm);
+      pinActionsDiv.appendChild(deleteButtonElm);
+    } else {
+      const interestButton = document.createElement('button');
+      interestButton.id = `${this.interestButtonName}-${this.#pinInfo.pinID}`;
+
+      this.attendee = await dbInstance.getPinAttendee(
+        this.#pinInfo.pinID,
+        dbInstance.getCurrentUserID(),
+      );
+      interestButton.innerText = this.attendee ? 'Leave' : 'Join'; // Depending on if user is already interested or not
+      interestButton.addEventListener('click', () => this.toggleAttending());
+
+      pinActionsDiv.appendChild(interestButton);
+    }
 
     popupHTML.appendChild(pinActionsDiv);
     // ******************************************
 
     marker.bindPopup(popupHTML, { className: 'customPopup' });
+  }
+
+  async toggleAttending() {
+    const btn = document.getElementById(
+      `${this.interestButtonName}-${this.#pinInfo.pinID}`,
+    );
+    if (this.attendee) {
+      await dbInstance.removePinAttendee(this.attendee);
+      this.attendee = null;
+      btn.innerText = 'Join';
+    } else {
+      this.attendee = await dbInstance.addPinAttendee(
+        this.id,
+        dbInstance.getCurrentUserID(),
+      );
+      btn.innerText = 'Leave';
+    }
   }
 }
