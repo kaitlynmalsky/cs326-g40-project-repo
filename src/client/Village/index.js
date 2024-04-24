@@ -116,7 +116,6 @@ export default class VillageView extends View {
     const grid = document.createElement('div');
     grid.className = 'grid-dude';
 
-    const elSize = 12;
     for (const connection of connections) {
       const user = await dbInstance.getUser(connection.targetID);
       const connectionElm = document.createElement('div');
