@@ -51,5 +51,18 @@ export async function mockUsers() {
             ])
             ids.push(targetID);
         }
+        const user1 = ids[0];
+        for (let i = 1; i < 20; i++) {
+            await Promise.all([
+                dbInstance.createConnection({
+                    userID: user1,
+                    targetID: ids[i],
+                }),
+                dbInstance.createConnection({
+                    userID: ids[i],
+                    targetID: user1,
+                })
+            ])
+        }
     }
 }
