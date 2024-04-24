@@ -3,6 +3,7 @@ import defaultAvatar from '../Profile/defaultAvatar.js';
 import View from '../View.js';
 import dbInstance from '../database.js';
 import Database from '../database.js';
+// import GlobalEvents from '../Events/index.js';
 
 export default class SignupView extends View {
   constructor() {
@@ -79,22 +80,30 @@ export default class SignupView extends View {
     container.appendChild(innerContainer);
 
     registerButton.addEventListener('click', async () => {
-      // console.log(form.elements['firstname']);
+      const name = /** @type {HTMLInputElement} */ (
+        document.getElementById('name')
+      ).value;
+      const username = /** @type {HTMLInputElement} */ (
+        document.getElementById('username')
+      ).value;
+      const email = /** @type {HTMLInputElement} */ (
+        document.getElementById('email')
+      ).value;
+      const password = /** @type {HTMLInputElement} */ (
+        document.getElementById('password')
+      ).value;
+      const confirmPassword = /** @type {HTMLInputElement} */ (
+        document.getElementById('confirmPassword')
+      ).value;
 
-      const name = document.getElementById('name').value;
-      const username = document.getElementById('username').value;
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
-      const confirmPassword = document.getElementById('confirmPassword').value;
-
-      //   if (!firstName || !username || !email || !password || !confirmPassword) {
-      //     alert('No field can be left empty');
-      //     return;
-      // }
+      if (!name || !username || !email || !password || !confirmPassword) {
+        this.showAlert(formSection, "No field's can be left empty!");
+        return;
+      }
 
       // Confirm passwords match
       if (password !== confirmPassword) {
-        alert('Passwords do not match.');
+        this.showAlert(formSection, 'Passwords do not match.');
         return;
       }
 
@@ -106,10 +115,10 @@ export default class SignupView extends View {
         name,
         avatar: defaultAvatar,
         avatarConfig: {
-          'bg': 0,
-          'body': 0,
-          'ears': 0,
-          'hat': 0
+          bg: 0,
+          body: 0,
+          ears: 0,
+          hat: 0,
         },
         username,
         email,
@@ -118,7 +127,7 @@ export default class SignupView extends View {
 
       try {
         if (await Database.getUserByEmail(email)) {
-          alert('User with this Email already exists!');
+          this.showAlert(formSection, 'User with this email already exists!');
           return;
         }
 
@@ -133,15 +142,37 @@ export default class SignupView extends View {
       }
     });
 
+    emailInput.querySelector('input').addEventListener('input', () => {
+      this.hideAlert(formSection);
+    });
+
+    passwordInput.querySelector('input').addEventListener('input', () => {
+      this.hideAlert(formSection);
+    });
+
+    confirmPasswordInput
+      .querySelector('input')
+      .addEventListener('input', () => {
+        this.hideAlert(formSection);
+      });
+
     return container;
   }
 
+  /**
+   *
+   * @param {string} id
+   * @param {string} label
+   * @param {string} type
+   * @returns
+   */
   createInput(id, label, type) {
     const inputDiv = document.createElement('div');
     inputDiv.className = 'mt-5';
 
     // console.log(id)r
     const input = document.createElement('input');
+    input.required = true;
     input.id = id;
     input.type = type;
     input.placeholder = label;
@@ -150,5 +181,33 @@ export default class SignupView extends View {
     inputDiv.appendChild(input);
 
     return inputDiv;
+  }
+
+  /**
+   *
+   * @param {HTMLElement} container
+   * @param {string} message
+   */
+  showAlert(container, message) {
+    const existingAlert = container.querySelector('.alert');
+    if (existingAlert) {
+      existingAlert.textContent = message;
+    } else {
+      const alertDiv = document.createElement('div');
+      alertDiv.className = 'alert text-red-600 text-sm mt-1';
+      alertDiv.textContent = message;
+      container.appendChild(alertDiv);
+    }
+  }
+
+  /**
+   *
+   * @param {HTMLDivElement} container
+   */
+  hideAlert(container) {
+    const alert = container.querySelector('.alert');
+    if (alert) {
+      alert.remove();
+    }
   }
 }

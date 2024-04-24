@@ -36,7 +36,7 @@ export default class LoginView extends View {
     const submitButton = document.createElement('button');
     submitButton.type = 'submit';
     submitButton.className =
-      'flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600';
+      'flex w-full justify-center rounded-md bg-yellow-500 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-yellow-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-yellow-600';
     submitButton.textContent = 'Sign in';
 
     submitButton.addEventListener('click', async (event) => {
@@ -45,17 +45,28 @@ export default class LoginView extends View {
       const email = document.getElementById('email').value;
       // @ts-ignore
       const password = document.getElementById('password').value;
+      // Event listener for email input field
+      emailDiv.querySelector('input').addEventListener('input', () => {
+        this.hideAlert(emailDiv);
+      });
+
+      // Event listener for password input field
+      passwordDiv.querySelector('input').addEventListener('input', () => {
+        this.hideAlert(passwordDiv);
+      });
+
       try {
         const user = await Database.getUserByEmail(email);
         if (user && user.password === password) {
           // Open dashboard
+
           console.log('Authentication successful');
           dbInstance.setCurrentUserId(user.userID);
           GlobalEvents.navigate('map');
         } else if (user && user.password !== password) {
-          console.log('Authentication failed: Wrong Password!');
+          this.showAlert(passwordDiv, 'Wrong password!'); // Added line to show alert for wrong password
         } else if (!user) {
-          console.log('Authentication failed: Not a user or Incorrect email');
+          this.showAlert(emailDiv, 'Incorrect email or not a user'); // Added line to show alert for incorrect email or not a user
         }
       } catch (error) {
         console.error('Error during authentication:', error);
@@ -74,7 +85,7 @@ export default class LoginView extends View {
     signupLink.href = '#signup';
     signupLink.className =
       'font-semibold leading-6 text-black-600 hover:text-black-500';
-    signupLink.textContent = 'Join now!';
+    signupLink.textContent = ' Join now!';
     //Join now to signup
     signupLink.addEventListener('click', () => {
       GlobalEvents.navigate('signup');
@@ -114,5 +125,36 @@ export default class LoginView extends View {
     inputDiv.appendChild(inputElem);
 
     return inputDiv;
+  }
+
+  /**
+   *
+   * @param {HTMLElement} container
+   * @param {string} message
+   */
+  showAlert(container, message) {
+    const existingAlerts = container.querySelectorAll('.alert');
+    existingAlerts.forEach((alert) => {
+      alert.remove();
+    });
+
+    const alertDiv = document.createElement('div');
+    alertDiv.className = 'alert text-red-600 text-sm mt-1';
+    alertDiv.textContent = message;
+    container.appendChild(alertDiv);
+  }
+
+  /**
+   *
+   * @param {HTMLDivElement} inputDiv
+   */
+  hideAlert(inputDiv) {
+    const alert = /** @type {HTMLDivElement} */ (
+      inputDiv.querySelector('.alert')
+    );
+
+    if (alert) {
+      alert.style.display = 'none';
+    }
   }
 }
