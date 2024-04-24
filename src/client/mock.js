@@ -25,7 +25,7 @@ function testUser() {
 export async function mockUsers() {
     const ids = [];
     const currentUserID = dbInstance.getCurrentUserID();
-    if((await dbInstance.getConnections()).length <4){
+    if ((await dbInstance.getConnections()).length < 20) {
         for (let i = 0; i < 20; i++) {
             const user = testUser();
             const targetID = (await dbInstance.addUser(user)).userID;

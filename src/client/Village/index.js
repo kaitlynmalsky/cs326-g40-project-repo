@@ -190,7 +190,7 @@ export default class VillageView extends View {
       connectionElm.appendChild(delBtn);
 
       grid.appendChild(connectionElm);
-
+      /*
       connectionCount++;
 
       // Check if adding one more connection will cause overflow
@@ -200,6 +200,7 @@ export default class VillageView extends View {
         emptyEl.style.visibility = 'hidden';
         grid.appendChild(emptyEl);
       }
+      */
     }
 
     this.connectionsDiv.appendChild(grid);
