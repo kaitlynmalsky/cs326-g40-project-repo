@@ -116,6 +116,8 @@ export default class VillageView extends View {
     const grid = document.createElement('div');
     grid.className = 'grid-dude';
 
+    const elSize = 12;
+    let connectionCount = 0;
     for (const connection of connections) {
       const user = await dbInstance.getUser(connection.targetID);
       const connectionElm = document.createElement('div');
@@ -188,6 +190,16 @@ export default class VillageView extends View {
       connectionElm.appendChild(delBtn);
 
       grid.appendChild(connectionElm);
+
+      connectionCount++;
+
+      // Check if adding one more connection will cause overflow
+      if (connectionCount % 5 === 0) { // Adjust this number based on your layout
+        // Add an empty element to force the grid to move to the next row
+        const emptyEl = document.createElement('div');
+        emptyEl.style.visibility = 'hidden';
+        grid.appendChild(emptyEl);
+      }
     }
 
     this.connectionsDiv.appendChild(grid);

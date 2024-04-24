@@ -8,6 +8,7 @@ import LoginView from './Login/login.js';
 import SignupView from './Signup/signup.js';
 import dbInstance from './database.js';
 import View from './View.js';
+import { mockUsers } from './mock.js';
 
 /**
  * @typedef {Object} RouteOptions
@@ -38,7 +39,9 @@ export class App {
    */
   #routes = {};
 
-  constructor() {}
+  constructor() {
+    mockUsers();
+  }
 
   /**
    * Renders the application

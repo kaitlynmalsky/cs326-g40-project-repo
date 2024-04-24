@@ -122,10 +122,10 @@ main {
 }
 
 .grid-dude {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    grid-gap: 35px;
-    justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  grid-gap: 35px;
+  justify-content: center;
 }
 
 .header {
