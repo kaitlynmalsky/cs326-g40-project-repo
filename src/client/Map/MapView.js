@@ -87,7 +87,7 @@ export default class MapView extends View {
   async onLoad() {
     this.setView(42.3868, -72.5293, 17);
 
-    const pins = await database.getAllPins();
+    const pins = await database.getUpcomingPins();
 
     for (const pin of pins) {
       this.addPin(pin);

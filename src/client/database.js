@@ -249,7 +249,7 @@ class Database {
   }
 
   /**
-   * Retrieves all pins
+   * Retrieve all pins
    * @returns {Promise<Array<Pin>>}
    */
   async getAllPins() {
@@ -266,13 +266,18 @@ class Database {
     }
   }
 
+  /**
+   * Retrieve upcoming pins
+   * @returns {Promise<Array<Pin>>}
+   */
   async getUpcomingPins() {
     try {
       const now = Date.now();
+
       const pinsResult = await this.#db.allDocs({
         include_docs: true,
         startkey: `pin_${now}_`,
-        endkey: `pin_${now}_\ufff0`,
+        endkey: `pin_${now + 1000 * 60 * 60 * 24 * 2}_\ufff0`,
       });
 
       return pinsResult.rows.map((row) => row.doc);
