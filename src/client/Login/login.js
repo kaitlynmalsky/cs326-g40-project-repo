@@ -103,6 +103,13 @@ export default class LoginView extends View {
     return container;
   }
 
+  /**
+   *
+   * @param {string} id
+   * @param {string} label
+   * @param {string} type
+   * @returns
+   */
   createInput(id, label, type) {
     const inputDiv = document.createElement('div');
     inputDiv.className = 'mt-2';
@@ -116,6 +123,7 @@ export default class LoginView extends View {
     inputElem.id = id;
     inputElem.name = id;
     inputElem.type = type;
+    // @ts-ignore
     inputElem.autocomplete = type;
     inputElem.required = true;
     inputElem.className =

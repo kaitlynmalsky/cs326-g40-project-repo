@@ -77,8 +77,7 @@ main {
   color: #451a03;
   margin-top: 20px;
   @apply font-medium
-  /* amber 950 */
-  ;
+  /* amber 950 */;
 }
 
 .leaflet-popup-content-wrapper {
@@ -120,7 +119,6 @@ main {
   background-color: #fff5e6;
   border: 3px solid #ffd8a8;
   border-radius: 8px;
-
 }
 
 .grid-dude {
@@ -175,7 +173,6 @@ button:hover {
 
 .group {
   position: relative;
-  ;
   width: 100%;
   cursor: pointer;
 }
@@ -187,7 +184,6 @@ button:hover {
   display: block;
 
   border-radius: 50%;
-
 }
 
 .sub-connection-elements img {
@@ -216,7 +212,6 @@ button:hover {
   transform: translateX(-50%);
   transition: opacity 0.3s ease-in-out;
   overflow: hidden;
-
 }
 
 .popover::before {
@@ -231,17 +226,22 @@ button:hover {
   border: 8px solid;
   border-color: #ffc266;
   -webkit-mask:
-    conic-gradient(from 180deg at top 8px right 8px, #0000 90deg, #000 0) var(--_i, 200%) 0 / 200% var(--_i, 8px) border-box no-repeat,
-    conic-gradient(at bottom 8px left 8px, #0000 90deg, #000 0) 0 var(--_i, 200%) / var(--_i, 8px) 200% border-box no-repeat,
+    conic-gradient(from 180deg at top 8px right 8px, #0000 90deg, #000 0)
+      var(--_i, 200%) 0 / 200% var(--_i, 8px) border-box no-repeat,
+    conic-gradient(at bottom 8px left 8px, #0000 90deg, #000 0) 0
+      var(--_i, 200%) / var(--_i, 8px) 200% border-box no-repeat,
     linear-gradient(#000 0 0) padding-box no-repeat;
-  transition: .1s, -webkit-mask-position .1s .1s;
+  transition:
+    0.1s,
+    -webkit-mask-position 0.1s 0.1s;
 }
 
 .popover:hover::before {
   --_i: 100%;
-  transition: .1s, -webkit-mask-size .1s .1s;
+  transition:
+    0.1s,
+    -webkit-mask-size 0.1s 0.1s;
 }
-
 
 .popover-content {
   margin-bottom: 10px;
@@ -291,7 +291,7 @@ button:hover {
 
 #profilePage-view {
   @apply h-full;
-  background: #FDF3A2;
+  background: #fdf3a2;
   padding-top: 8px;
 }
 
@@ -349,7 +349,7 @@ button:hover {
 .arrow {
   @apply font-bold py-2 px-4 rounded-full;
   color: #412003;
-  background: #BC6700;
+  background: #bc6700;
   border: solid #412003;
   @apply border-2 rounded-full;
 }
@@ -361,7 +361,7 @@ button:hover {
 #save {
   @apply text-black font-bold py-2 px-4 rounded-full;
   float: right;
-  background: #24BA73;
+  background: #24ba73;
   color: white;
   border: solid #412003;
   @apply border-2 rounded-full;
@@ -377,6 +377,6 @@ button:hover {
   left: 50%;
   transform: translate(-50%, -50%);
   font-size: 500px;
-  color: #24BA73;
+  color: #24ba73;
   opacity: 0;
 }

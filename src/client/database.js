@@ -299,6 +299,11 @@ class Database {
     return user || null;
   }
 
+  /**
+   * Gets a user by name
+   * @param {string} name
+   * @returns {Promise<User>}
+   */
   async getUserByName(name) {
     const users = await this.#db.allDocs({
       include_docs: true,
@@ -307,8 +312,8 @@ class Database {
     });
 
     console.log(users);
-    const user = users.rows.filter((row) => row.doc.name === name);
-    return user;
+    const user = users.rows.find((row) => row.doc.name === name);
+    return user.doc;
   }
 
   /**
@@ -688,9 +693,13 @@ class Database {
    * @returns
    */
   async addGroupChatMember(pID, gcID) {
-    const existingGCMember = (await this.getMembersByGroupChatID(gcID)).filter(member => member.PersonID === pID);
+    const existingGCMember = (await this.getMembersByGroupChatID(gcID)).filter(
+      (member) => member.PersonID === pID,
+    );
     if (existingGCMember.length !== 0) {
-      console.error(`GroupChatMember with person ID ${pID} and group chat ID ${gcID} already exists.`);
+      console.error(
+        `GroupChatMember with person ID ${pID} and group chat ID ${gcID} already exists.`,
+      );
       return existingGCMember[0];
     } else {
       const gcmDoc = {
@@ -698,20 +707,19 @@ class Database {
         PersonID: pID,
         GroupChatID: gcID,
       };
-  
+
       const { id, rev, ok } = await this.#db.put(gcmDoc);
-  
+
       if (!ok) {
         console.error(`Failed to create ${gcID}_${pID} (id=${id}, rev=${rev})`);
       }
-  
+
       return {
         _id: id,
         _rev: rev,
         ...gcmDoc,
       };
     }
-
   }
 
   /**

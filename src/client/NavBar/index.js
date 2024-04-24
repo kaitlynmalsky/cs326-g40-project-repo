@@ -1,7 +1,19 @@
 import GlobalEvents from '../Events/index.js';
 
+/**
+ * @typedef {Object}  NavRoute
+ * @property {string} name The route name
+ * @property {string} target The `routeKey` for the route
+ */
+
 export default class NavBar {
+  /**
+   * @type {Array<NavRoute>}
+   */
   #routes;
+  /**
+   * @type {HTMLElement}
+   */
   #navBarElm;
 
   constructor() {
@@ -27,9 +39,8 @@ export default class NavBar {
       navBarElm.appendChild(navLink);
 
       navLink.addEventListener('click', (e) => {
-        GlobalEvents.navigate(route.target);
-        history.pushState(route.target, '', `#${route.target}`);
         e.preventDefault();
+        GlobalEvents.navigate(route.target);
       });
     });
 
@@ -37,8 +48,8 @@ export default class NavBar {
   }
 
   /**
-   * 
-   * @param {string} routeKey 
+   *
+   * @param {string} routeKey
    */
   setActive(routeKey) {
     const activeNavLinks = this.#navBarElm.querySelectorAll(`a.active`);

@@ -3,7 +3,6 @@ import defaultAvatar from '../Profile/defaultAvatar.js';
 import View from '../View.js';
 import dbInstance from '../database.js';
 import Database from '../database.js';
-// import GlobalEvents from '../Events/index.js';
 
 export default class SignupView extends View {
   constructor() {
@@ -33,7 +32,7 @@ export default class SignupView extends View {
 
     const registerText = document.createElement('p');
     registerText.className = 'mb-4';
-    registerText.textContent = 'Create your account. It’s free Sign-Up now!';
+    registerText.textContent = "Create your account. It's free, sign up now!";
 
     const form = document.createElement('form');
     form.action = '#';
@@ -79,7 +78,9 @@ export default class SignupView extends View {
 
     container.appendChild(innerContainer);
 
-    registerButton.addEventListener('click', async () => {
+    registerButton.addEventListener('click', async (e) => {
+      e.preventDefault();
+
       const name = /** @type {HTMLInputElement} */ (
         document.getElementById('name')
       ).value;
@@ -97,7 +98,7 @@ export default class SignupView extends View {
       ).value;
 
       if (!name || !username || !email || !password || !confirmPassword) {
-        this.showAlert(formSection, "No field's can be left empty!");
+        this.showAlert(formSection, 'All fields must be filled out!');
         return;
       }
 

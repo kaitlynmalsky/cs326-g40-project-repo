@@ -38,7 +38,7 @@ export class App {
    */
   #routes = {};
 
-  constructor() { }
+  constructor() {}
 
   /**
    * Renders the application
@@ -77,12 +77,15 @@ export class App {
     const profileView = new ProfileView();
     this.#addRoute('profile', { view: profileView });
 
-
     if (dbInstance.getCurrentUserID()) {
-      history.replaceState('map', '', '#map');
-      this.#navigateTo('map');
+      if (location.hash.startsWith('#')) {
+        const routeKey = location.hash.split('#')[1];
+
+        this.#navigateTo(routeKey);
+      } else {
+        this.#navigateTo('map');
+      }
     } else {
-      history.replaceState('login', '', '#login');
       this.#navigateTo('login');
     }
 
@@ -112,10 +115,15 @@ export class App {
 
   /**
    * Navigates to a registered `routeKey`
-   * @param {string} routeKey
+   * @param {string} routeKey The route to navigate to
+   * @param {boolean} replace Control for history `replaceState` vs `pushState`
    */
-  async #navigateTo(routeKey) {
-    if (this.#routes[routeKey].authRequired && await !dbInstance.getCurrentUserID()) {
+  async #navigateTo(routeKey, replace = false) {
+    if (!this.#routes[routeKey]) {
+      return this.#navigateTo('map');
+    }
+
+    if (this.#routes[routeKey].authRequired && !dbInstance.getCurrentUserID()) {
       return GlobalEvents.navigate('login');
     }
 
@@ -134,6 +142,12 @@ export class App {
     if (!route.loaded) {
       route.view.onLoad();
       route.loaded = true;
+    }
+
+    if (replace) {
+      history.replaceState(routeKey, '', `#${routeKey}`);
+    } else {
+      history.pushState(routeKey, '', `#${routeKey}`);
     }
 
     this.#navbar.setActive(routeKey);
