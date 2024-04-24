@@ -144,22 +144,22 @@ export default class MessagesView extends View {
         this.#currUser = {
             id: 0,
             name: "Cool Cat",
-            avatar: "../images/placeholder_avatar.png"
+            avatar: "../images/pc.png"
         }
         const spiderman = {
             id: 1,
             name: "Spiderman",
-            avatar: "../images/spiderman.png"
+            avatar: "../images/green.png"
         }
         const scoob = {
             id: 2,
             name: "Scoob",
-            avatar: '../images/Sooby_doo.png'
+            avatar: '../images/red.png'
         }
         const nemo = {
             id: 3,
             name: "Nemo",
-            avatar: '../images/nemo.png'
+            avatar: '../images/yellow.png'
         }
 
         const people = [this.#currUser, spiderman, scoob, nemo];
@@ -179,7 +179,7 @@ export default class MessagesView extends View {
 
         const messages = [
             {person: scoob, date: new Date('April 23, 2024 13:24:00'), content: "hey i heard that they have therapy dogs visiting in the campus center today!", gcID: 0},
-            {person: spiderman, date: new Date('April 23, 2024 13:25:00'), content: "Wait really?", gcID: 0},
+            {person: spiderman, date: new Date('April 23, 2024 13:24:00'), content: "Wait really?", gcID: 0},
             {person: spiderman, date: new Date('April 23, 2024 13:24:01'), content: "We actually have to go right now", gcID: 0},
             {person: spiderman, date: new Date('April 23, 2024 13:24:02'), content: "I am running there", gcID: 0},
             {person: scoob, date: new Date('April 23, 2024 13:25:00'), content: "please don't go too fast or you will scare the dogs", gcID: 0},
