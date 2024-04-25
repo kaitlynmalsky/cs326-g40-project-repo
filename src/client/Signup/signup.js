@@ -57,7 +57,8 @@ export default class SignupView extends View {
     const termsDiv = document.createElement('div');
     termsDiv.className = 'mt-5';
 
-    const registerButton = document.createElement('button');
+    const registerButton = document.createElement('input');
+    registerButton.type = 'submit';
     registerButton.className =
       'w-full bg-yellow-500 py-3 text-center text-white mt-5';
     registerButton.textContent = 'Sign-Up';
@@ -78,7 +79,7 @@ export default class SignupView extends View {
 
     container.appendChild(innerContainer);
 
-    registerButton.addEventListener('click', async (e) => {
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
 
       const name = /** @type {HTMLInputElement} */ (
