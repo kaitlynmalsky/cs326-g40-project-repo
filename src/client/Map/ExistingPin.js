@@ -15,6 +15,10 @@ export default class ExistingPin extends Pin {
    */
   #pinInfo;
   /**
+   * @type {import('../database.js').User}
+   */
+  #host;
+  /**
    * @type {import('../database.js').PinAttendee}
    */
   attendee;
@@ -45,9 +49,9 @@ export default class ExistingPin extends Pin {
       coords: [x, y],
     } = this.#pinInfo;
 
-    const host = await dbInstance.getUser(this.#pinInfo.hostID);
+    this.#host = await dbInstance.getUser(this.#pinInfo.hostID);
 
-    let currUserImage = host.avatar;
+    let currUserImage = this.#host.avatar;
     const marker = this.map.createMarker(currUserImage, false, x, y, {
       draggable: false,
       autoPan: false,
@@ -91,14 +95,24 @@ export default class ExistingPin extends Pin {
     detailsLabel.innerHTML = 'Details: ';
 
     // ******************************************
+    const form = document.createElement('form');
+
+    const pinHeader = document.createElement('div');
+    pinHeader.id = `pin-header-${this.#pinInfo.pinID}`;
+    pinHeader.className = 'flex flex-row gap-x-36';
 
     const pinTitle = document.createElement('div');
     pinTitle.classList.add('pin-label-text');
-    pinTitle.innerHTML = '<strong>Pin\n</strong>';
+    pinTitle.innerHTML = '<strong>Pin</strong>';
 
-    const form = document.createElement('form');
+    const hostNameElm = document.createElement('p');
+    hostNameElm.innerText = this.#host.name;
+    hostNameElm.className = 'flex-auto'
 
-    form.appendChild(pinTitle);
+    pinHeader.appendChild(pinTitle);
+    pinHeader.appendChild(hostNameElm);
+
+    form.appendChild(pinHeader);
 
     const [startHour, startMinutes] = this.extractHourAndMinutes(
       this.#pinInfo.startTime,
