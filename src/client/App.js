@@ -39,9 +39,7 @@ export class App {
    */
   #routes = {};
 
-  constructor() {
-    mockPins();
-  }
+  constructor() {}
 
   /**
    * Renders the application

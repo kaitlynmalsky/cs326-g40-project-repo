@@ -3,6 +3,7 @@ import defaultAvatar from '../Profile/defaultAvatar.js';
 import View from '../View.js';
 import dbInstance from '../database.js';
 import Database from '../database.js';
+import { mockPins, mockUsers } from '../mock.js';
 
 export default class SignupView extends View {
   constructor() {
@@ -138,6 +139,9 @@ export default class SignupView extends View {
         // maybe redirect the user to the login page after successful signup
         console.log('User created successfully');
         dbInstance.setCurrentUserId(user.userID);
+
+        await mockUsers();
+
         GlobalEvents.login();
         GlobalEvents.navigate('profile');
       } catch (error) {

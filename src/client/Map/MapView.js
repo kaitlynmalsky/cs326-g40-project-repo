@@ -3,6 +3,7 @@ import ExistingPin from './ExistingPin.js';
 import EditingPin from './EditingPin.js';
 import database from '../database.js';
 import Pin from './Pin.js';
+import { mockPins } from '../mock.js';
 
 /**
  * @typedef {import('leaflet')} Leaflet
@@ -50,6 +51,8 @@ export default class MapView extends View {
    * @returns {Promise<HTMLElement>}
    */
   async render() {
+    await mockPins();
+
     // Create component root
     const elm = document.createElement('div');
     elm.id = 'map-view';
@@ -163,7 +166,6 @@ export default class MapView extends View {
    * @param {import('../database.js').Pin} pinInfo
    */
   async addPin(pinInfo) {
-    console.log('Adding pin', pinInfo);
     const pin = new ExistingPin(this, pinInfo);
     this.#pins[pin.id] = pin;
     await pin.render();

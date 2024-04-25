@@ -92,7 +92,9 @@
 /**
  * Represents a group chat object.
  * @typedef {Object} GroupChat
- * @property {number} id
+ * @property {number} GroupChatID
+ * @property {string} _id PouchDB ID
+ * @property {string} _rev PouchDB revision
  */
 
 /**
@@ -386,6 +388,24 @@ class Database {
     return user;
   }
 
+  /**
+   * Retrieve all users
+   * @returns {Promise<Array<User>>}
+   */
+  async getAllUsers() {
+    try {
+      const usersResult = await this.#db.allDocs({
+        include_docs: true,
+        startkey: 'user_',
+        endkey: `user_\ufff0`,
+      });
+
+      return usersResult.rows.map((row) => row.doc);
+    } catch (err) {
+      return null;
+    }
+  }
+
   // ********************************************
   // Connections
   // ********************************************
@@ -621,6 +641,7 @@ class Database {
   /**
    * Adds a group chat with the given ID to the database.
    * @param {number} gcID
+   * @returns {Promise<GroupChat>}
    */
   async addGroupChat(gcID) {
     //('in addGroupChat');
@@ -729,7 +750,7 @@ class Database {
    * Adds a group chat member with the given person ID and group chat ID.
    * @param {number} pID
    * @param {number} gcID
-   * @returns
+   * @returns {Promise<GroupChatMember>}
    */
   async addGroupChatMember(pID, gcID) {
     const existingGCMember = (await this.getMembersByGroupChatID(gcID)).filter(

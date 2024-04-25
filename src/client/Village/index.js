@@ -20,64 +20,6 @@ export default class VillageView extends View {
   }
 
   /**
-   * Generates test mock data 
-   */
-  async initSampleData() {
-    const userList = [
-      {
-        name: 'scooby doo',
-        username: 'sooby_doo',
-        email: 'food@scooby.org',
-        avatar: '../images/Sooby_doo.png',
-        password: 'woof',
-      },
-      {
-        name: 'nemo',
-        username: 'nemo123',
-        email: 'fish@ocean.org',
-        avatar: '../images/nemo.png',
-        password: 'WhereIsNemo',
-      },
-      {
-        name: 'Cat',
-        username: 'cat123',
-        email: 'cat123@example.com',
-        avatar: './images/placeholder_avatar.png',
-        password: 'dontdr',
-      },
-    ];
-
-    await this.init(userList);
-  }
-
-
-  /**
-   * 
-   * Creates users and creates connections 
-   * @param {Array<import('../database.js').CreateUserInput>} userList 
-   */
-  async init(userList) {
-    const currentUserID = dbInstance.getCurrentUserID();
-    for (const user of userList) {
-      const targetId = (await dbInstance.addUser(user)).userID;
-      await Promise.all([
-        dbInstance.createConnection({
-          userID: currentUserID,
-          targetID: targetId,
-        }),
-        dbInstance.createConnection({
-          userID: targetId,
-          targetID: currentUserID,
-        }),
-      ]);
-    }
-    await dbInstance.createConnection({
-      targetID: (await dbInstance.addUser(userList[0])).userID,
-      userID: (await dbInstance.addUser(userList[2])).userID,
-    });
-  }
-
-  /**
    * Initializes event handler for toggle delete button
    */
   initEventHandlers() {
@@ -109,11 +51,11 @@ export default class VillageView extends View {
   }
 
   /**
-   * Renders the village view 
+   * Renders the village view
    * @returns {Promise<HTMLDivElement>}
    */
   async render() {
-    await this.initSampleData();
+    //await this.initSampleData();
 
     const villageViewElm = document.createElement('div');
     villageViewElm.id = 'village-view';
@@ -230,7 +172,6 @@ export default class VillageView extends View {
       connectionElm.appendChild(delBtn);
 
       grid.appendChild(connectionElm);
-
     }
 
     this.connectionsDiv.appendChild(grid);
