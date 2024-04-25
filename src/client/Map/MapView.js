@@ -124,7 +124,7 @@ export default class MapView extends View {
   }
 
   /**
-   *
+   * Delete a pin
    * @param {import('../database.js').Pin} pin
    */
   async deletePin(pin) {
@@ -145,7 +145,7 @@ export default class MapView extends View {
   }
 
   /**
-   *
+   * Update a pin
    * @param {import('../database.js').Pin} pin
    */
   async updatePin(pin) {
@@ -155,6 +155,9 @@ export default class MapView extends View {
     this.editingPin = null;
   }
 
+  /**
+   * Cancel pin editing
+   */
   cancelPin() {
     this.editingPin.cancel();
     this.#fabElm.innerText = 'Add Pin';
@@ -188,7 +191,7 @@ export default class MapView extends View {
   }
 
   /**
-   *
+   * Create a Leaflet marker
    * @param {string} imageLink
    * @param {number} lat
    * @param {number} lng

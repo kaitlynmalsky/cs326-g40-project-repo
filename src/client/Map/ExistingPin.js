@@ -37,6 +37,9 @@ export default class ExistingPin extends Pin {
     this.id = pinInfo.pinID;
   }
 
+  /**
+   * Render an existing pin
+   */
   async render() {
     const {
       coords: [x, y],
@@ -56,7 +59,7 @@ export default class ExistingPin extends Pin {
   }
 
   /**
-   *
+   * Create pin popup
    * @param {import('./MapView.js').LeafletMarker} marker
    */
   async bindPopupTemplate(marker) {
@@ -195,6 +198,9 @@ export default class ExistingPin extends Pin {
     marker.bindPopup(popupHTML, { className: 'customPopup' });
   }
 
+  /**
+   * Toggle pin attendance
+   */
   async toggleAttending() {
     const btn = document.getElementById(
       `${this.interestButtonName}-${this.#pinInfo.pinID}`,

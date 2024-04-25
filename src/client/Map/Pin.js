@@ -30,18 +30,11 @@ export default class Pin {
   }
 
   /**
-   * Adds pin to map
+   * Placeholder for pin rendering
+   * @returns {Promise<void>}
    */
-  addToMap() {
-    this.placeMarker();
-  }
-
-  render() {
+  async render() {
     console.error('Forgot to override render!');
-  }
-
-  placeMarker() {
-    console.error('Forgot to override placeMarker');
   }
 
   /**

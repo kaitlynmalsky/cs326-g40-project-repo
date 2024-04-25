@@ -54,6 +54,10 @@ export default class EditingPin extends Pin {
     this.#pinInfo = pinInfo;
   }
 
+  /**
+   * Renders a pin currently being edited or created
+   * @returns {Promise<void>}
+   */
   async render() {
     let marker;
     let currUserImage = (
@@ -106,6 +110,9 @@ export default class EditingPin extends Pin {
     return datetime;
   }
 
+  /**
+   * Saves the edited pin information
+   */
   async savePin() {
     const startTimeInputValue = this.startTimeInputElm.value;
     const endTimeInputValue = this.endTimeInputElm.value;
@@ -157,6 +164,9 @@ export default class EditingPin extends Pin {
     this.removeMarker();
   }
 
+  /**
+   * Cancel pin edits
+   */
   cancel() {
     this.removeMarker();
 
@@ -166,7 +176,7 @@ export default class EditingPin extends Pin {
   }
 
   /**
-   *
+   * Create pin popup
    * @param {import('./MapView.js').LeafletMarker} marker
    */
   bindPopupTemplate(marker) {
@@ -267,7 +277,7 @@ export default class EditingPin extends Pin {
   }
 
   /**
-   *
+   * Show the pin popup
    * @param {import('./MapView.js').LeafletMarker} marker
    */
   showPopup(marker) {
