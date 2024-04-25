@@ -374,6 +374,7 @@ class Database {
 
   /**
    *
+   * Updates existing user
    * @param {User} user
    * @returns {Promise<User>}
    */
@@ -435,6 +436,7 @@ class Database {
 
   /**
    *
+   * Creates connection object between userId and targetID
    * @param {string} userID
    * @param {string} targetID
    */

@@ -2,8 +2,16 @@ import View from '../View.js';
 import dbInstance from '../database.js';
 
 export default class VillageView extends View {
+  /**
+   * @type {boolean}
+   */
   #showButton;
+
+  /**
+   * @type {string}
+   */
   #currentUserID;
+
   constructor() {
     super();
     this.#showButton = false;
@@ -11,6 +19,9 @@ export default class VillageView extends View {
     this.initEventHandlers();
   }
 
+  /**
+   * Generates test mock data 
+   */
   async initSampleData() {
     const userList = [
       {
@@ -39,6 +50,12 @@ export default class VillageView extends View {
     await this.init(userList);
   }
 
+
+  /**
+   * 
+   * Creates users and creates connections 
+   * @param {Array<import('../database.js').CreateUserInput>} userList 
+   */
   async init(userList) {
     const currentUserID = dbInstance.getCurrentUserID();
     for (const user of userList) {
@@ -60,6 +77,9 @@ export default class VillageView extends View {
     });
   }
 
+  /**
+   * Initializes event handler for toggle delete button
+   */
   initEventHandlers() {
     document.addEventListener(
       'toggleDelete',
@@ -67,11 +87,19 @@ export default class VillageView extends View {
     );
   }
 
+  /**
+   * To toggle button on and off condition
+   */
   toggleDeleteButton() {
     this.#showButton = !this.#showButton;
     this.updateDeleteButtonsVisibility();
   }
 
+  /**
+   * Updates the visibility of delete buttons based on the value of the 'showButton' property.
+   * If 'showButton' is true, sets the display style of delete buttons to 'block',
+   * otherwise sets it to 'none'.
+   */
   updateDeleteButtonsVisibility() {
     const deleteButtons = document.querySelectorAll('.delete-button');
     deleteButtons.forEach((btn) => {
@@ -80,11 +108,16 @@ export default class VillageView extends View {
     });
   }
 
+  /**
+   * Renders the village view 
+   * @returns {Promise<HTMLDivElement>}
+   */
   async render() {
     await this.initSampleData();
 
     const villageViewElm = document.createElement('div');
     villageViewElm.id = 'village-view';
+
     /*
     const headerElm = document.createElement('div');
     headerElm.className = 'header';
@@ -104,10 +137,16 @@ export default class VillageView extends View {
     return villageViewElm;
   }
 
+  /**
+   * Asynchronous method called when the component is loaded.
+   */
   async onLoad() {
     await this.loadConnections();
   }
 
+  /**
+   * Asynchronously loads connections data and renders them on the UI.
+   */
   async loadConnections() {
     this.connectionsDiv.innerHTML = '';
 
@@ -191,17 +230,7 @@ export default class VillageView extends View {
       connectionElm.appendChild(delBtn);
 
       grid.appendChild(connectionElm);
-      /*
-      connectionCount++;
 
-      // Check if adding one more connection will cause overflow
-      if (connectionCount % 5 === 0) { // Adjust this number based on your layout
-        // Add an empty element to force the grid to move to the next row
-        const emptyEl = document.createElement('div');
-        emptyEl.style.visibility = 'hidden';
-        grid.appendChild(emptyEl);
-      }
-      */
     }
 
     this.connectionsDiv.appendChild(grid);
