@@ -13,7 +13,21 @@ class Events extends EventTarget {
   }
 
   /**
-   * @param {["navigate", ...*]} args
+   * Dispatch a login event
+   */
+  login() {
+    this.dispatchEvent(new CustomEvent('login'));
+  }
+
+  /**
+   * Dispatch a logout event
+   */
+  logout() {
+    this.dispatchEvent(new CustomEvent('logout'));
+  }
+
+  /**
+   * @param {["navigate" | "login" | "logout", ...*]} args
    */
   addEventListener(...args) {
     // @ts-ignore

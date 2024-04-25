@@ -62,6 +62,7 @@ export default class LoginView extends View {
 
           console.log('Authentication successful');
           dbInstance.setCurrentUserId(user.userID);
+          GlobalEvents.login();
           GlobalEvents.navigate('map');
         } else if (user && user.password !== password) {
           this.showAlert(passwordDiv, 'Wrong password!'); // Added line to show alert for wrong password

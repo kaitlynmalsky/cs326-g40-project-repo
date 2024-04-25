@@ -1,4 +1,5 @@
 import GlobalEvents from '../Events/index.js';
+import dbInstance from '../database.js';
 
 /**
  * @typedef {Object}  NavRoute
@@ -25,6 +26,26 @@ export default class NavBar {
     ];
   }
 
+  /**
+   *
+   * @param {HTMLDivElement} parent
+   */
+  addLogoutBtn(parent) {
+    const logoutBtn = document.createElement('button');
+    logoutBtn.id = 'logout-btn';
+    logoutBtn.innerHTML = '<i class="fa-solid fa-right-from-bracket"></i>';
+    logoutBtn.title = 'Logout';
+
+    logoutBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      dbInstance.deleteCurrentUserId();
+      GlobalEvents.logout();
+      GlobalEvents.navigate('login');
+    });
+
+    parent.appendChild(logoutBtn);
+  }
+
   async render() {
     const navBarElm = document.createElement('nav');
     this.#navBarElm = navBarElm;
@@ -36,13 +57,30 @@ export default class NavBar {
       navLink.innerText = route.name;
       navLink.href = `#${route.target}`;
 
-      navBarElm.appendChild(navLink);
-
       navLink.addEventListener('click', (e) => {
         e.preventDefault();
         GlobalEvents.navigate(route.target);
       });
+
+      navBarElm.appendChild(navLink);
     });
+
+    const logoutBtnDiv = document.createElement('div');
+    logoutBtnDiv.className = 'ml-auto';
+
+    if (dbInstance.getCurrentUserID()) {
+      this.addLogoutBtn(logoutBtnDiv);
+    }
+
+    GlobalEvents.addEventListener('login', () => {
+      this.addLogoutBtn(logoutBtnDiv);
+    });
+
+    GlobalEvents.addEventListener('logout', () => {
+      logoutBtnDiv.innerHTML = '';
+    });
+
+    navBarElm.appendChild(logoutBtnDiv);
 
     return navBarElm;
   }

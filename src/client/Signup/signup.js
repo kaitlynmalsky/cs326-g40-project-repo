@@ -137,6 +137,7 @@ export default class SignupView extends View {
         // maybe redirect the user to the login page after successful signup
         console.log('User created successfully');
         dbInstance.setCurrentUserId(user.userID);
+        GlobalEvents.login();
         GlobalEvents.navigate('profile');
       } catch (error) {
         console.error('Error creating user:', error);
