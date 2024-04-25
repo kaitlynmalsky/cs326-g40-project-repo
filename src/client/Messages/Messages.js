@@ -97,7 +97,6 @@ export default class MessagesView extends View {
       await this.demoMessages();
     } else {
       console.log('Found group chats in databse, retrieved', groupchats);
-      // @ts-ignore
       const user0result = await database.getPersonById(0);
       this.#currUser = {
         id: user0result.id,
@@ -105,11 +104,11 @@ export default class MessagesView extends View {
         avatar: user0result.avatar,
       };
       for (let groupchat of groupchats) {
-        // @ts-ignore
+
         const members = await database.getMembersByGroupChatID(
           groupchat.GroupChatID,
         );
-        // @ts-ignore
+
         const messages = await database.getMessagesByGroupChatID(
           groupchat.GroupChatID,
         );

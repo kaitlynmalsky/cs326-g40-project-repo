@@ -8,6 +8,10 @@ export default class LoginView extends View {
     super();
   }
 
+  /**
+   * Renders login view
+   * @returns {Promise<HTMLElement>}
+   */
   async render() {
     const container = document.createElement('div');
     container.className =
@@ -41,10 +45,8 @@ export default class LoginView extends View {
 
     submitButton.addEventListener('click', async (event) => {
       event.preventDefault();
-      // @ts-ignore
-      const email = document.getElementById('email').value;
-      // @ts-ignore
-      const password = document.getElementById('password').value;
+      const email = (/** @type {HTMLInputElement} */ (document.getElementById('email'))).value;
+      const password = (/** @type {HTMLInputElement} */ (document.getElementById('password'))).value;
       // Event listener for email input field
       emailDiv.querySelector('input').addEventListener('input', () => {
         this.hideAlert(emailDiv);
@@ -105,7 +107,7 @@ export default class LoginView extends View {
   }
 
   /**
-   *
+   * Creates an input element with a corresponding label.
    * @param {string} id
    * @param {string} label
    * @param {string} type
@@ -137,7 +139,7 @@ export default class LoginView extends View {
   }
 
   /**
-   *
+   * Displays an alert message within the specified container element.
    * @param {HTMLElement} container
    * @param {string} message
    */
@@ -154,7 +156,7 @@ export default class LoginView extends View {
   }
 
   /**
-   *
+   * Hides the alert element within the specified HTMLDivElement.
    * @param {HTMLDivElement} inputDiv
    */
   hideAlert(inputDiv) {

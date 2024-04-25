@@ -44,8 +44,7 @@ export default class VillageView extends View {
    */
   updateDeleteButtonsVisibility() {
     const deleteButtons = document.querySelectorAll('.delete-button');
-    deleteButtons.forEach((btn) => {
-      // @ts-ignore
+    deleteButtons.forEach((/** @type {HTMLElement} */btn) => {
       btn.style.display = this.#showButton ? 'block' : 'none';
     });
   }

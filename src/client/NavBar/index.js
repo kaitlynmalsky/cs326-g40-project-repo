@@ -27,7 +27,7 @@ export default class NavBar {
   }
 
   /**
-   *
+   * This function dynamically adds a logout button to a specified parent element.
    * @param {HTMLDivElement} parent
    */
   addLogoutBtn(parent) {
@@ -46,6 +46,10 @@ export default class NavBar {
     parent.appendChild(logoutBtn);
   }
 
+  /**
+   * Renders a navigation bar
+   * @returns {Promise<HTMLElement>}
+   */
   async render() {
     const navBarElm = document.createElement('nav');
     this.#navBarElm = navBarElm;
@@ -86,7 +90,7 @@ export default class NavBar {
   }
 
   /**
-   *
+   * Sets the active state for the navigation link corresponding to the specified route key.
    * @param {string} routeKey
    */
   setActive(routeKey) {
