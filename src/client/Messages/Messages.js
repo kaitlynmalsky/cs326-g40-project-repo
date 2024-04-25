@@ -106,9 +106,13 @@ export default class MessagesView extends View {
       };
       for (let groupchat of groupchats) {
         // @ts-ignore
-        const members = await database.getMembersByGroupChatID(groupchat.GroupChatID);
+        const members = await database.getMembersByGroupChatID(
+          groupchat.GroupChatID,
+        );
         // @ts-ignore
-        const messages = await database.getMessagesByGroupChatID( groupchat.GroupChatID);
+        const messages = await database.getMessagesByGroupChatID(
+          groupchat.GroupChatID,
+        );
         // console.log(messages)
         // console.log("members is", members);
         // console.log("messages is", messages);
@@ -148,8 +152,7 @@ export default class MessagesView extends View {
     this.#currUser = {
       id: 0,
       name: 'Cool Cat',
-      avatar: (await database.getUser(database.getCurrentUserID())).avatar
-
+      avatar: (await database.getUser(database.getCurrentUserID())).avatar,
     };
     const spiderman = {
       id: 1,

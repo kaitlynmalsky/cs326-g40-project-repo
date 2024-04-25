@@ -56,32 +56,24 @@ export default class EditingPin extends Pin {
 
   async render() {
     let marker;
-    let currUserImage = (await dbInstance.getUser(dbInstance.getCurrentUserID())).avatar;
+    let currUserImage = (
+      await dbInstance.getUser(dbInstance.getCurrentUserID())
+    ).avatar;
 
     if (this.#pinInfo) {
       const {
         coords: [lat, lng],
       } = this.#pinInfo;
 
-      marker = this.map.createMarker(
-        currUserImage,
-        true,
-        lat,
-        lng,
-        {
-          draggable: true,
-          autoPan: true,
-        },
-      );
+      marker = this.map.createMarker(currUserImage, true, lat, lng, {
+        draggable: true,
+        autoPan: true,
+      });
     } else {
-      marker = this.map.createCenterMarker(
-        currUserImage,
-        true,
-        {
-          draggable: true,
-          autoPan: true,
-        },
-      );
+      marker = this.map.createCenterMarker(currUserImage, true, {
+        draggable: true,
+        autoPan: true,
+      });
     }
 
     this.marker = marker;

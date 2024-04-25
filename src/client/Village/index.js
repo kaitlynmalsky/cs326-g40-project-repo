@@ -143,7 +143,6 @@ export default class VillageView extends View {
       content.appendChild(text);
       popover.appendChild(content);
 
-
       const subConn = document.createElement('div');
       subConn.className = 'sub-connections';
       subConn.style.maxHeight = '200px';

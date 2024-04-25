@@ -45,16 +45,10 @@ export default class ExistingPin extends Pin {
     const host = await dbInstance.getUser(this.#pinInfo.hostID);
 
     let currUserImage = host.avatar;
-    const marker = this.map.createMarker(
-      currUserImage,
-      false,
-      x,
-      y,
-      {
-        draggable: false,
-        autoPan: false,
-      },
-    );
+    const marker = this.map.createMarker(currUserImage, false, x, y, {
+      draggable: false,
+      autoPan: false,
+    });
 
     this.marker = marker;
 

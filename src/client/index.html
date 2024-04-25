@@ -1,25 +1,33 @@
 <!doctype html>
 <html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>VillageLink</title>
+    <link rel="icon" typ="image/x-icon" href="./images/house.ico" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""
+    />
+    <!--<script type="module" src="https://cdn.jsdelivr.net/npm/@faker-js/faker@8.4.1/dist/esm/index.mjs"></script>-->
+    <script src="https://unpkg.com/faker@5.5.3/dist/faker.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/pouchdb@8.0.1/dist/pouchdb.min.js"></script>
+    <link rel="stylesheet" href="styles.css" />
+    <script type="module" src="index.js"></script>
+    <!-- Make sure you put this AFTER Leaflet's CSS -->
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossorigin=""
+    ></script>
+    <script
+      src="https://kit.fontawesome.com/fbda6e5570.js"
+      crossorigin="anonymous"
+    ></script>
+  </head>
 
-<head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <title>VillageLink</title>
-  <link rel="icon" typ="image/x-icon" href="./images/house.ico">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
-  <!--<script type="module" src="https://cdn.jsdelivr.net/npm/@faker-js/faker@8.4.1/dist/esm/index.mjs"></script>-->
-  <script src="https://unpkg.com/faker@5.5.3/dist/faker.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/pouchdb@8.0.1/dist/pouchdb.min.js"></script>
-  <link rel="stylesheet" href="styles.css" />
-  <script type="module" src="index.js"></script>
-  <!-- Make sure you put this AFTER Leaflet's CSS -->
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-  <script src="https://kit.fontawesome.com/fbda6e5570.js" crossorigin="anonymous"></script>
-</head>
-
-<body>
-  <div id="root"></div>
-</body>
-
+  <body>
+    <div id="root"></div>
+  </body>
 </html>

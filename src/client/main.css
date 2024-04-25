@@ -77,8 +77,7 @@ main {
   color: #451a03;
   margin-top: 20px;
   @apply font-medium
-  /* amber 950 */
-  ;
+  /* amber 950 */;
 }
 
 .leaflet-popup-content-wrapper {
@@ -151,8 +150,8 @@ button {
   font-size: 1em;
   font-weight: bold;
   color: white;
-  background-color: #B91C1C;
-  border: #991B1B;
+  background-color: #b91c1c;
+  border: #991b1b;
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s ease;
@@ -215,9 +214,8 @@ button:hover {
   /* Allow scrolling */
 }
 
-
 .popover::before {
-  content: " ";
+  content: ' ';
   position: absolute;
   top: 0;
   left: 0;
@@ -228,16 +226,24 @@ button:hover {
   border: 8px solid;
   background-color: #fff9e6;
   border-color: #ffc266;
-  -webkit-mask: conic-gradient(from 180deg at top 8px right 8px, #0000 90deg, #000 0) var(--_i, 200%) 0 / 200% var(--_i, 8px) border-box no-repeat, conic-gradient(at bottom 8px left 8px, #0000 90deg, #000 0) 0 var(--_i, 200%) / var(--_i, 8px) 200% border-box no-repeat, linear-gradient(#000 0 0) padding-box no-repeat;
-  transition: 0.1s, -webkit-mask-position 0.1s 0.1s;
+  -webkit-mask:
+    conic-gradient(from 180deg at top 8px right 8px, #0000 90deg, #000 0)
+      var(--_i, 200%) 0 / 200% var(--_i, 8px) border-box no-repeat,
+    conic-gradient(at bottom 8px left 8px, #0000 90deg, #000 0) 0
+      var(--_i, 200%) / var(--_i, 8px) 200% border-box no-repeat,
+    linear-gradient(#000 0 0) padding-box no-repeat;
+  transition:
+    0.1s,
+    -webkit-mask-position 0.1s 0.1s;
   overflow-y: auto;
   z-index: -1;
 }
 
-
 .popover:hover::before {
   --_i: 100%;
-  transition: 0.1s, -webkit-mask-size 0.1s 0.1s;
+  transition:
+    0.1s,
+    -webkit-mask-size 0.1s 0.1s;
 }
 
 .popover-content {
