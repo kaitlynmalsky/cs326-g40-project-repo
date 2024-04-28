@@ -52,18 +52,20 @@
         "milestone-02": "http-server src/client -p 3000 -c-1 -o -s",
         "validate-html": "html-validate 'src/**/*.html'",
         "prettier": "prettier -w src",
-        "dev": "concurrently \"npm run milestone-02\" \"tailwindcss -i ./src/client/main.css -o ./src/client/styles.css --watch\""
+        "dev": "concurrently \"npm run milestone-02\" \"tailwindcss -i ./src/client/main.css -o ./src/client/styles.css --watch\"",
+        "start": "node ./src/server/index.js"
     },
     "devDependencies": {
+        "@types/faker": "^5.5.3",
+        "@types/leaflet": "^1.9.11",
+        "@types/pouchdb": "^6.4.2",
         "concurrently": "^8.2.2",
         "html-validate": "^8.18.0",
         "prettier": "^3.2.5",
-        "tailwindcss": "^3.4.3",
-        "@types/faker": "^5.5.3",
-        "@types/leaflet": "^1.9.11",
-        "@types/pouchdb": "^6.4.2"
+        "tailwindcss": "^3.4.3"
     },
     "dependencies": {
+        "express": "^4.19.2",
         "faker": "^5.5.3",
         "http-server": "^14.1.1"
     }
