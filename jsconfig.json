@@ -3,7 +3,8 @@
       "allowJs": true,
       "checkJs": true,
       "target": "ESNext",
-      "module": "ESNext"
+      "module": "Node16",
+      "moduleResolution": "node16"
     },
     "exclude": ["node_modules"]
   }
