@@ -77,7 +77,7 @@ export default class MessagesView extends View {
       this.initializeSendView();
     } else {
       this.#chatView.className =
-      'pt-1 overscroll-contain overflow-y-scroll overflow-x-hidden row-span-4 flex-col items-center justify-center'
+      'pt-1 overscroll-contain overflow-y-scroll overflow-x-hidden row-span-4 flex-col items-center justify-center flex flex-col-reverse justify-end'
       this.#col2.classList.add("items-center");
       this.#col2.classList.add("justify-center");
       const noGroupImage = document.createElement('img');
@@ -124,6 +124,9 @@ export default class MessagesView extends View {
         }
         await this.addGroupChat(gcUsersDB);
         const gcMessagesDB = await database.getMessagesByGroupChatID(groupChatsDB[i].GroupChatID);
+        gcMessagesDB.sort(function (a, b) {
+          return new Date(a.time).getTime() - new Date(b.time).getTime();
+        });
         for (let message of gcMessagesDB) {
           this.#chatView.appendChild(await this.generateMessageElm(await database.getUser(message.UserID), new Date(message.time), message.messageContent, message.GroupChatID));
         }
