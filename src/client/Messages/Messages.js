@@ -23,7 +23,7 @@ export default class MessagesView extends View {
 
   constructor() {
     super();
-    this.curr_id = 0;
+    this.#curr_id = 0;
     this.#active_id = 0;
     this.groupList = [];
     this.groupChats = [];
@@ -64,6 +64,7 @@ export default class MessagesView extends View {
     this.#col2.appendChild(this.#sendView);
 
     // Demo messages
+    this.#currUser = await database.getUser(database.getCurrentUserID());
     await mockMessages();
     await this.loadDBMessages();
 
@@ -102,7 +103,7 @@ export default class MessagesView extends View {
       this.changeChat(0);
     }
 
-    this.#currUser = await database.getUser(database.getCurrentUserID());
+    
 
     return elm;
   }
@@ -119,7 +120,7 @@ export default class MessagesView extends View {
             gcUsersDB.push(userDB);
           }
         }
-        this.addGroupChat(gcUsersDB);
+        await this.addGroupChat(gcUsersDB);
       }
     }
   }
@@ -143,18 +144,19 @@ export default class MessagesView extends View {
   /**
    * (people IS A TEMPORARY PARAM!) Adds a group chat to the left panel and to the user's internal messageList.
    * @param {import('../database.js').User[]} users
+   * @returns {Promise<void>}
    */
 
   async addGroupChat(users) {
     this.#curr_id = this.groupList.length;
     this.groupList.push({
-      id: this.curr_id,
+      id: this.#curr_id,
       people: users,
     });
 
-    await database.addGroupChat(this.curr_id);
+    await database.addGroupChat(this.#curr_id);
     for (let user of users) {
-      await database.addGroupChatMember(user.userID, this.curr_id);
+      await database.addGroupChatMember(user.userID, this.#curr_id);
     }
 
     const gcElm = document.createElement('div');
@@ -165,11 +167,13 @@ export default class MessagesView extends View {
     gcElm.classList.add('gc-stack');
 
     users.forEach((user) => {
-      const avatarElm = document.createElement('img');
-      avatarElm.className = 'w-10 h-10 border-2 border-white rounded-full';
-
-      avatarElm.src = user.avatar;
-      gcElm.appendChild(avatarElm);
+      if (user.userID !== this.#currUser.userID) {
+        const avatarElm = document.createElement('img');
+        avatarElm.className = 'w-10 h-10 border-2 border-white rounded-full';
+  
+        avatarElm.src = user.avatar;
+        gcElm.appendChild(avatarElm);
+      }
     });
 
     const temp = this.#curr_id;
@@ -179,13 +183,13 @@ export default class MessagesView extends View {
     });
 
     this.#col1.appendChild(gcElm);
-    this.groupChats[this.curr_id] = {
-      id: this.curr_id,
+    this.groupChats[this.#curr_id] = {
+      id: this.#curr_id,
       messages: [],
       gcElm: gcElm,
     };
 
-    this.curr_id++;
+    this.#curr_id++;
   }
 
   /**
