@@ -52,7 +52,7 @@
     "milestone-02": "http-server src/client -p 3000 -c-1 -o -s",
     "validate-html": "html-validate 'src/**/*.html'",
     "prettier": "prettier -w src",
-    "dev": "concurrently \"npm run milestone-02\" \"tailwindcss -i ./src/client/main.css -o ./src/client/styles.css --watch\"",
+    "dev": "concurrently \"npm run milestone-02\" \"tailwindcss -i ./src/client/main.css -o ./src/client/styles.css --watch\" \"nodemon ./src/server/index.js\"",
     "start": "node ./src/server/index.js"
   },
   "devDependencies": {
@@ -69,6 +69,7 @@
     "express-session": "^1.18.0",
     "faker": "^5.5.3",
     "http-server": "^14.1.1",
+    "nodemon": "^3.1.0",
     "pouchdb": "^8.0.1"
   }
 }
