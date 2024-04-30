@@ -22,13 +22,13 @@ app.use(
  *
  * @param {import('express').Request} req
  * @param {import('express').Response} res
+ * @param {import('express').NextFunction} next
  */
-function isAuthenticated(req, res) {
-    // @ts-ignore
-    if (req.session.userID) next();
-    else {
-        return res.status(403).end();
-    }
+function isAuthenticated(req, res, next) {
+  if (/** @type {AuthenticatedSessionData} */ (req.session).userID) next();
+  else {
+    return res.status(401).end();
+  }
 }
 
 /**

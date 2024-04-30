@@ -620,7 +620,7 @@ export async function addGroupChat(gcID) {
  * @param {Date} time
  */
 export async function addGroupChatMessage(gcID, pID, content, time) {
-  const messageID = self.crypto.randomUUID();
+  const messageID = `${Date.now()}_${self.crypto.randomUUID()}`;
   const messageDoc = {
     _id: formatGroupMessageKey(`${gcID}`, messageID),
     messageID: messageID,

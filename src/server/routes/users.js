@@ -116,6 +116,13 @@ userRouter.put('/:userID', async (req, res) => {
   const userID = req.params.userID;
   const userData = req.body;
 
+  if (
+    /** @type {import('../index.js').AuthenticatedSessionData} */ (req.session)
+      .userID !== userID
+  ) {
+    return res.status(403).end();
+  }
+
   if (userID !== userData.userID) {
     return res
       .status(400)
