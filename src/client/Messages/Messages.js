@@ -207,6 +207,7 @@ export default class MessagesView extends View {
    * @returns {Promise<HTMLElement>}
    */
   async generateMessageElm(user, timestamp, message, gcID) {
+    if (user === null) {user = this.#currUser}
     const messageElm = document.createElement('div');
     messageElm.className = 'flex';
 
