@@ -65,7 +65,9 @@ export default class MessagesView extends View {
 
     // Demo messages
     this.#currUser = await database.getUser(database.getCurrentUserID());
-    await mockMessages();
+    if ((await database.getAllGroupChats()).length === 0) {
+      await mockMessages();
+    }
     await this.loadDBMessages();
 
 
@@ -121,6 +123,10 @@ export default class MessagesView extends View {
           }
         }
         await this.addGroupChat(gcUsersDB);
+        const gcMessagesDB = await database.getMessagesByGroupChatID(groupChatsDB[i].GroupChatID);
+        for (let message of gcMessagesDB) {
+          this.#chatView.appendChild(await this.generateMessageElm(await database.getUser(message.UserID), new Date(message.time), message.messageContent, message.GroupChatID));
+        }
       }
     }
   }
@@ -327,7 +333,6 @@ export default class MessagesView extends View {
           sentDate,
         );
         this.#chatView.scrollTop = this.#chatView.scrollHeight;
-        //messageForm.submit();
         messageForm.reset();
       }
     });

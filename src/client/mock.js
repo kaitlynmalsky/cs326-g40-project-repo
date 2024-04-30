@@ -176,12 +176,25 @@ export async function mockPins() {
 export async function mockMessages() {
     const users = await dbInstance.getAllUsers();
     console.log(users);
-    if (users.length > 1) {
-        let u1 = users[0];
-        let u2 = users[1];
+    if (users.length >= 20) {
+        let u1 = users[1];
+        let u2 = users[2];
         await dbInstance.addGroupChat(0);
         await dbInstance.addGroupChatMember(u1.userID, 0);
-        await dbInstance.addGroupChatMember(u2.userID, 1);
+        await dbInstance.addGroupChatMember(u2.userID, 0);
 
+        let u3 = users[3];
+        let u4 = users[4];
+        let u5 = users[5];
+        await dbInstance.addGroupChat(1);
+        await dbInstance.addGroupChatMember(u3.userID, 1);
+        await dbInstance.addGroupChatMember(u4.userID, 1);
+        await dbInstance.addGroupChatMember(u5.userID, 1);
+
+        await dbInstance.addGroupChatMessage(0, u1.userID, "Hey I just found out that they have therapy dogs in the campus center today!", new Date('April 23, 2024 13:24:00'));
+        await dbInstance.addGroupChatMessage(0, u2.userID, "Wait really??", new Date('April 23, 2024 13:25:00'));
+        await dbInstance.addGroupChatMessage(0, u2.userID, "I am going there right now", new Date('April 23, 2024 13:25:20'));
+        await dbInstance.addGroupChatMessage(0, u2.userID, "I am running", new Date('April 23, 2024 13:25:40'));
+        await dbInstance.addGroupChatMessage(0, u1.userID, "Please try not to scare the dogs...", new Date('April 23, 2024 13:26:40'));
     }
 }
