@@ -10,12 +10,13 @@ import PouchDBSessionStore from './session.js';
 const app = express();
 app.use(express.json());
 app.use(
-    session({
-        secret: 'village linked is cool',
-        resave: false,
-        saveUninitialized: true,
-        store: new PouchDBSessionStore(db),
-    }),
+  session({
+    name: 'vl_session',
+    secret: 'village linked is cool',
+    resave: false,
+    saveUninitialized: false,
+    store: new PouchDBSessionStore(db),
+  }),
 );
 
 /**
@@ -36,7 +37,7 @@ function isAuthenticated(req, res, next) {
  * @param {string} password
  */
 function hashPassword(userID, password) {
-    return scryptSync(password, userID, 64).toString('hex');
+  return scryptSync(password, userID, 64).toString('hex');
 }
 
 /**
@@ -44,71 +45,98 @@ function hashPassword(userID, password) {
  */
 
 // Login
-app.post('/login', async(req, res, next) => {
-    const { email, password } = req.body;
+app.post('/login', async (req, res, next) => {
+  const { email, password } = req.body;
 
-    const user = await getUserByEmail(email);
+  if (!email || !password) {
+    return res.status(400).json({ error: 'Missing fields email or password' });
+  }
 
-    if (!user) {
-        return res.status(401).json({ error: 'Invalid email' });
-    }
+  const user = await getUserByEmail(email);
 
-    const hashedPassword = hashPassword(user.userID, password);
+  if (!user) {
+    console.log('No user found');
+    return res.status(401).json({ error: 'Invalid email' });
+  }
 
-    if (hashedPassword !== user.password) {
-        return res.status(401).json({ error: 'Incorrect password' });
-    }
+  const hashedPassword = hashPassword(user.userID, password);
 
-    req.session.regenerate((err) => {
-        if (err) next(err);
+  if (hashedPassword !== user.password) {
+    console.log('Incorrect password');
+    return res.status(401).json({ error: 'Incorrect password' });
+  }
 
-        /** @type {AuthenticatedSessionData} */
-        (req.session).userID = user.userID;
+  /** @type {AuthenticatedSessionData} */
+  (req.session).userID = user.userID;
 
-        req.session.save();
-    });
+  return res.status(204).end();
 });
 
-app.get('/logout', async(req, res, next) => {
-    /** @type {AuthenticatedSessionData} */
-    (req.session).userID = null;
+app.get('/logout', isAuthenticated, async (req, res, next) => {
+  req.session.destroy((err) => {
+    if (err) {
+      return console.log(err);
+    }
+  });
 
-    req.session.save((err) => {
-        if (err) next(err);
-
-        req.session.regenerate((err) => {
-            if (err) next(err);
-        });
-    });
+  return res.status(204).end();
 });
 
 // Signup
-app.post('/signup', async(req, res, next) => {
-    const { username, name, avatar, avatarConfig, email, password } = req.body;
+app.post('/signup', async (req, res, next) => {
+  const { username, name, avatar, avatarConfig, email, password } = req.body;
 
-    const userID = randomUUID();
-    const hashedPassword = hashPassword(userID, password);
+  if (/** @type {AuthenticatedSessionData} */ (req.session).userID) {
+    return res.status(403).send({ error: 'Already logged in' });
+  }
 
-    const user = await createUser({
-        userID,
-        username,
-        name,
-        email,
-        password: hashedPassword,
-        avatar,
-        avatarConfig,
-    });
+  if (!username) {
+    return res.status(400).json({ error: 'Missing username' });
+  }
 
-    req.session.regenerate((err) => {
-        if (err) next(err);
+  if (!name) {
+    return res.status(400).json({ error: 'Missing name' });
+  }
 
-        /** @type {AuthenticatedSessionData} */
-        (req.session).userID = user.userID;
+  if (!avatar) {
+    return res.status(400).json({ error: 'Missing avatar' });
+  }
 
-        req.session.save();
-    });
+  if (!avatarConfig) {
+    return res.status(400).json({ error: 'Missing avatarConfig' });
+  }
 
-    return res.status(200).json(user);
+  if (!email) {
+    return res.status(400).json({ error: 'Missing email' });
+  }
+
+  if (!password) {
+    return res.status(400).json({ error: 'Missing password' });
+  }
+
+  const existingUser = await getUserByEmail(email);
+
+  if (existingUser) {
+    return res.status(400).json({ error: 'Email already used' });
+  }
+
+  const userID = randomUUID();
+  const hashedPassword = hashPassword(userID, password);
+
+  const user = await createUser({
+    userID,
+    username,
+    name,
+    email,
+    password: hashedPassword,
+    avatar,
+    avatarConfig,
+  });
+
+  /** @type {AuthenticatedSessionData} */
+  (req.session).userID = user.userID;
+
+  return res.status(200).json(user);
 });
 
 // User routes
@@ -120,11 +148,11 @@ app.use('/pins', isAuthenticated, pinsRouter);
 // Message routes
 app.use('/messages', isAuthenticated, messagesRouter);
 
-app.route('*').all(async(request, response) => {
-    response.status(404).send(`Not found: ${request.path}`);
+app.route('*').all(async (request, response) => {
+  response.status(404).send(`Not found: ${request.path}`);
 });
 
 const PORT = 3260;
 app.listen(PORT, () => {
-    console.log(`Server started on port ${PORT}`);
+  console.log(`Server started on port ${PORT}`);
 });
