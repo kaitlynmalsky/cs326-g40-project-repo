@@ -81,7 +81,7 @@ export default class ProfileView extends View {
 
         ['Bg', 'Body', 'Ears', 'Hat'].forEach((option, i) => {
             const optionDiv = document.createElement('div');
-            optionDiv.className = 'grid grid-cols-10';
+            optionDiv.className = 'grid grid-cols-8';
 
             const backArrow = document.createElement('button');
             backArrow.id = `${option}-back`;
