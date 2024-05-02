@@ -1415,6 +1415,13 @@ main {
   justify-content: center;
 }
 
+.grid-bro {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  grid-gap: 35px;
+  justify-content: center;
+}
+
 .header {
   display: flex;
   justify-content: space-between;
@@ -1513,24 +1520,15 @@ button:hover {
   border: 8px solid;
   background-color: #fff9e6;
   border-color: #ffc266;
-  -webkit-mask:
-    conic-gradient(from 180deg at top 8px right 8px, #0000 90deg, #000 0)
-      var(--_i, 200%) 0 / 200% var(--_i, 8px) border-box no-repeat,
-    conic-gradient(at bottom 8px left 8px, #0000 90deg, #000 0) 0
-      var(--_i, 200%) / var(--_i, 8px) 200% border-box no-repeat,
-    linear-gradient(#000 0 0) padding-box no-repeat;
-  transition:
-    0.1s,
-    -webkit-mask-position 0.1s 0.1s;
+  -webkit-mask: conic-gradient(from 180deg at top 8px right 8px, #0000 90deg, #000 0) var(--_i, 200%) 0 / 200% var(--_i, 8px) border-box no-repeat, conic-gradient(at bottom 8px left 8px, #0000 90deg, #000 0) 0 var(--_i, 200%) / var(--_i, 8px) 200% border-box no-repeat, linear-gradient(#000 0 0) padding-box no-repeat;
+  transition: 0.1s, -webkit-mask-position 0.1s 0.1s;
   overflow-y: auto;
   z-index: -1;
 }
 
 .popover:hover::before {
   --_i: 100%;
-  transition:
-    0.1s,
-    -webkit-mask-size 0.1s 0.1s;
+  transition: 0.1s, -webkit-mask-size 0.1s 0.1s;
 }
 
 .popover-content {
@@ -1590,7 +1588,6 @@ button:hover {
   background: #d9b683;
   border: 6px solid #8e4e01;
   border-radius: 5px;
-  display: block;
   margin: 0 auto;
   margin-top: 20px;
   width: 680px;
