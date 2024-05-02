@@ -30,18 +30,30 @@ export default class ProfileView extends View {
         creatorContainer.classList.add('grid-cols-2');
 
         const creatorContainerLeft = document.createElement('div');
+        creatorContainerLeft.id = 'creatorContainerLeft';
         const creatorContainerRight = document.createElement('div');
+        creatorContainerRight.id = 'creatorContainerRight';
         creatorContainer.appendChild(creatorContainerLeft);
         creatorContainer.appendChild(creatorContainerRight);
 
         const pageLabel = document.createElement('h1');
         pageLabel.innerText = 'Profile Editor';
         pageLabel.id = 'pageLabel';
-        creatorContainer.appendChild(pageLabel);
+        creatorContainerLeft.appendChild(pageLabel);
+
+
+        const spacer = document.createElement('div');
+        spacer.style.minHeight = "45px";
 
         const userDiv = document.createElement('div');
         userDiv.id = 'userDiv';
-        creatorContainer.appendChild(userDiv);
+        creatorContainerRight.appendChild(spacer);
+        creatorContainerRight.appendChild(userDiv);
+
+        creatorContainerRight.appendChild(document.createElement('br'));
+        creatorContainerRight.appendChild(document.createElement('br'));
+        creatorContainerRight.appendChild(document.createElement('br'));
+
 
         const userNameLabel = document.createElement('h1');
         userNameLabel.innerText = 'User Name:';
@@ -60,15 +72,16 @@ export default class ProfileView extends View {
         iconPreview.id = 'myIcon';
         iconPreview.width = 300;
         iconPreview.height = 300;
-        creatorContainer.appendChild(iconPreview);
+        creatorContainerLeft.appendChild(iconPreview);
 
         const chooseContainer = document.createElement('div');
-        chooseContainer.className = 'grid grid-cols-1 gap-y-3';
-        creatorContainer.appendChild(chooseContainer);
+        chooseContainer.className = 'gap-y-3';
+        chooseContainer.id = 'chooseContainer';
+        creatorContainerRight.appendChild(chooseContainer);
 
         ['Bg', 'Body', 'Ears', 'Hat'].forEach((option, i) => {
             const optionDiv = document.createElement('div');
-            optionDiv.className = 'grid grid-cols-12';
+            optionDiv.className = 'grid grid-cols-10';
 
             const backArrow = document.createElement('button');
             backArrow.id = `${option}-back`;
@@ -98,7 +111,7 @@ export default class ProfileView extends View {
         const saveButton = document.createElement('button');
         saveButton.id = 'save';
         saveButton.innerText = 'Save';
-        creatorContainer.appendChild(saveButton);
+        creatorContainerRight.appendChild(saveButton);
 
         return profilePageDiv;
     }
