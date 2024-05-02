@@ -50,6 +50,10 @@ function hashPassword(userID, password) {
 app.post('/login', async (req, res, next) => {
   const { email, password } = req.body;
 
+  if (/** @type {AuthenticatedSessionData} */ (req.session).userID) {
+    return res.status(400).send({ error: 'Already logged in' });
+  }
+
   if (!email || !password) {
     return res.status(400).json({ error: 'Missing fields email or password' });
   }

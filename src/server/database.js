@@ -1,4 +1,5 @@
 import PouchDB from 'pouchdb';
+import { randomUUID } from 'crypto';
 
 export const db = new PouchDB('villagelink');
 
@@ -45,6 +46,7 @@ export const db = new PouchDB('villagelink');
  * @property {string} endTime The end time of the pin's event (in  ISO-8601 format)
  * @property {string} details The pin details
  * @property {[number, number]} coords The [lat,long] coordinates representing the pin's location
+ * @property {number} attendeeCount The number of pin attendees
  */
 
 /**
@@ -56,6 +58,7 @@ export const db = new PouchDB('villagelink');
  * @property {string} endTime The end time of the pin's event (in  ISO-8601 format)
  * @property {string} details The pin details
  * @property {[number, number]} coords The [lat,long] coordinates representing the pin's location
+ * @property {number} attendeeCount The number of pin attendees
  * @property {string} _id PouchDB ID
  * @property {string} _rev PouchDB revision
  */
@@ -144,7 +147,7 @@ function formatPinKey(pinID) {
 export async function createPin(pinData) {
   const pinStart = new Date(pinData.startTime);
 
-  const pinID = `${pinStart.getTime()}_${self.crypto.randomUUID()}`;
+  const pinID = `${pinStart.getTime()}_${randomUUID()}`;
 
   const pinDoc = {
     _id: formatPinKey(pinID),
@@ -426,7 +429,7 @@ export async function getConnection(userID, targetID) {
 }
 
 /**
- * Retrieves connections for either the specified userID or for the current user
+ * Retrieves connections for the specified userID
  * @param {string} userID
  * @returns {Promise<Array<VillageConnection>>}
  */
@@ -497,6 +500,7 @@ export async function addPinAttendee(pinID, userID) {
 /**
  * Get the attendees of a pin
  * @param {string} pinID
+ * @returns {Promise<PinAttendee[]>}
  */
 export async function getPinAttendees(pinID) {
   const pinAttendeesResult = await db.allDocs({
@@ -510,13 +514,13 @@ export async function getPinAttendees(pinID) {
 
 /**
  * Gets the attendee for a pin
- * @param {string} pinId
+ * @param {string} pinID
  * @param {string} userID
  * @returns {Promise<PinAttendee>}
  */
-export async function getPinAttendee(pinId, userID) {
+export async function getPinAttendee(pinID, userID) {
   try {
-    return await db.get(formatPinAttendeeKey(pinId, userID));
+    return await db.get(formatPinAttendeeKey(pinID, userID));
   } catch (err) {
     return null;
   }
@@ -620,7 +624,7 @@ export async function addGroupChat(gcID) {
  * @param {Date} time
  */
 export async function addGroupChatMessage(gcID, pID, content, time) {
-  const messageID = `${Date.now()}_${self.crypto.randomUUID()}`;
+  const messageID = `${Date.now()}_${randomUUID()}`;
   const messageDoc = {
     _id: formatGroupMessageKey(`${gcID}`, messageID),
     messageID: messageID,
