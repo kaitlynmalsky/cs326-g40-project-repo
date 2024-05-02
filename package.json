@@ -69,6 +69,7 @@
     "express-session": "^1.18.0",
     "faker": "^5.5.3",
     "http-server": "^14.1.1",
+    "morgan": "^1.10.0",
     "nodemon": "^3.1.0",
     "pouchdb": "^8.0.1"
   }

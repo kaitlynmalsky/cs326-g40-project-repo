@@ -6,9 +6,11 @@ import { randomUUID, scryptSync } from 'crypto';
 import { createUser, db, getUserByEmail } from './database.js';
 import session, { Session } from 'express-session';
 import PouchDBSessionStore from './session.js';
+import morgan from 'morgan';
 
 const app = express();
 app.use(express.json());
+app.use(morgan('tiny'));
 app.use(
   session({
     name: 'vl_session',
