@@ -6,6 +6,7 @@ import {
   createConnection,
   getConnections,
   getConnection,
+  deleteConnection,
 } from '../database.js';
 
 const userRouter = Router();
@@ -34,8 +35,8 @@ userRouter.get('/', async (req, res) => {
 /**
  * Create a bi-directional connection between userID and targetID
  */
-userRouter.post('/:userId/connections/', async (req, res) => {
-  const userID = req.params.userId;
+userRouter.post('/:userID/connections/', async (req, res) => {
+  const userID = req.params.userID;
   const targetData = req.body;
 
   if (!targetData.targetID) {
@@ -65,21 +66,15 @@ userRouter.post('/:userId/connections/', async (req, res) => {
  */
 userRouter.get('/:userID/connections', async (req, res) => {
   const userID = req.params.userID;
-  const userData = req.body;
-
-  if (userID !== userData.userID) {
-    return res
-      .status(400)
-      .json({ error: 'Wrong userID provided in get all connections data' });
-  }
 
   try {
     const connections = await getConnections(userID);
-    res.status(201).json(connections);
+    res.status(200).json(connections);
   } catch (err) {
     res.status(500).json({ error: 'Failed to get all connections of user' });
   }
 });
+
 
 /**
  * Delete a connection between userID and targetID
@@ -87,17 +82,11 @@ userRouter.get('/:userID/connections', async (req, res) => {
 userRouter.delete('/:userID/connections/:targetID', async (req, res) => {
   const userID = req.params.userID;
   const targetID = req.params.targetID;
-  const data = req.body;
-
-  if (userID !== data.userID || targetID !== data.targetID) {
-    return res
-      .status(400)
-      .json({ error: 'Wrong userID or targetID provided in request body' });
-  }
 
   try {
     const connection = await getConnection(userID, targetID);
-    res.status(201).json(connection);
+    const del = await deleteConnection(connection);
+    res.status(201).json(del);
   } catch (err) {
     res.status(500).json({ error: 'Failed to get connection' });
   }
@@ -152,7 +141,6 @@ userRouter.put('/:userID', async (req, res) => {
   ) {
     return res.status(403).end();
   }
-
   if (userID !== userData.userID) {
     return res
       .status(400)

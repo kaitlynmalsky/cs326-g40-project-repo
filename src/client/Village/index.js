@@ -10,7 +10,6 @@ export default class VillageView extends View {
   /**
    * @type {string}
    */
-  #currentUserID;
 
   constructor() {
     super();
@@ -54,17 +53,9 @@ export default class VillageView extends View {
    * @returns {Promise<HTMLDivElement>}
    */
   async render() {
-    //await this.initSampleData();
 
     const villageViewElm = document.createElement('div');
     villageViewElm.id = 'village-view';
-
-    /*
-    const headerElm = document.createElement('div');
-    headerElm.className = 'header';
-    headerElm.innerHTML = `<h2>CONNECTION INVITES</h2>`;
-    villageViewElm.appendChild(headerElm);
-    */
 
     const header1Elm = document.createElement('div');
     header1Elm.className = 'header';
@@ -90,8 +81,19 @@ export default class VillageView extends View {
    */
   async loadConnections() {
     this.connectionsDiv.innerHTML = '';
+    const userData = await fetch(`http://localhost:3260/users/me`)
+    if (!userData.ok) {
+      console.error("FAILED TO GET USERDATA");
+    }
+    const userJson = await userData.json();
+    const userID = userJson.userID;
 
-    const connections = await dbInstance.getConnections();
+    const connectionData = await fetch(`http://localhost:3260/users/${userID}/connections`);
+    if (!connectionData.ok) {
+      console.error(`FAILED TO GET CONNECTIONS OF ${userID}`);
+    }
+    const connections = await connectionData.json();
+
     console.log('connections', connections);
 
     const grid = document.createElement('div');
@@ -100,7 +102,11 @@ export default class VillageView extends View {
     const elSize = 12;
     let connectionCount = 0;
     for (const connection of connections) {
-      const user = await dbInstance.getUser(connection.targetID);
+      const userD = await fetch(`http://localhost:3260/users/${connection.targetID}/`);
+      if (!userD.ok) {
+        console.error(`FAILED TO GET DATA OF USER ${connection}`);
+      }
+      const user = await userD.json();
       const connectionElm = document.createElement('div');
       connectionElm.className = `user_connections`;
 
@@ -127,11 +133,19 @@ export default class VillageView extends View {
       subConn.className = 'sub-connections';
       subConn.style.maxHeight = '200px';
       subConn.style.overflowY = 'auto';
-      const dataArr = await dbInstance.getConnections(user.userID);
+      let dataArrData = await fetch(`http://localhost:3260/users/${user.userID}/connections/`)
+      if (!dataArrData.ok) {
+        console.error("FAILED TO GET CURRENT USER CONNECTIONS");
+      }
+      const dataArr = await dataArrData.json();
       console.log(dataArr);
 
       for (const elm of dataArr) {
-        const dataElm = await dbInstance.getUser(elm.targetID);
+        const dataElmPromise = await fetch(`http://localhost:3260/users/${elm.targetID}/`)
+        if (!dataElmPromise.ok) {
+          console.error(`FAILED TO GET USER DATA OF ${elm}`);
+        }
+        const dataElm = await dataElmPromise.json();
         console.log(dataElm);
         const subConnElm = document.createElement('div');
         subConnElm.className = 'sub-connection-elements';
@@ -163,10 +177,21 @@ export default class VillageView extends View {
       delBtn.className = 'delete-button';
       delBtn.style.display = 'none';
       delBtn.innerText = 'Delete';
-      delBtn.addEventListener('click', () => {
-        dbInstance.deleteConnection(connection);
-        this.loadConnections();
+      delBtn.addEventListener('click', async () => {
+        try {
+          const delResponse = await fetch(`http://localhost:3260/users/${connection.userID}/connections/${connection.targetID}`, {
+            method: 'DELETE'
+          });
+          if (!delResponse.ok) {
+            throw new Error('Failed to delete connection');
+          }
+          console.log('Connection deleted successfully');
+          this.loadConnections();
+        } catch (error) {
+          console.error(`Delete failed: ${error}`);
+        }
       });
+
 
       connectionElm.appendChild(delBtn);
 

@@ -418,7 +418,7 @@ export async function createConnection(connection) {
 
 /**
  *
- * Creates connection object between userId and targetID
+ * Creates connection object between userID and targetID
  * @param {string} userID
  * @param {string} targetID
  */
@@ -460,7 +460,7 @@ export async function deleteConnection(connection) {
 // ********************************************
 
 /**
- * Format `pinId` and `userId` into a pin attendee database key
+ * Format `pinID` and `userID` into a pin attendee database key
  * @param {string} pinID
  * @param {string} userID
  */
@@ -489,7 +489,7 @@ export async function addPinAttendee(pinID, userID) {
 
   if (!ok) {
     console.error(
-      `Could not add userId=${userID} as attendee for pin pinI=${pinID}`,
+      `Could not add userID=${userID} as attendee for pin pinI=${pinID}`,
     );
   }
 
