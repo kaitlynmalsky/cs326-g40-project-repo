@@ -13,13 +13,20 @@ const icnsDynamic = [
     'fa-solid fa-headphones fa-bounce',
     'fa-solid fa-hat-cowboy fa-bounce',
 ];
-
+/**
+ * Makes an HTML element given defined attributes.
+ * @param {string} type 
+ * @param {string} id 
+ * @param {string[]} [classes] 
+ * @param {HTMLElement} [parent] 
+ * @returns {HTMLElement}
+ */
 function makeElement(type, id, classes, parent) {
-  const elem = document.createElement(type);
-  elem.id = id;
-  if (classes) classes.forEach((c) => elem.classList.add(c));
-  if (parent) parent.appendChild(elem);
-  return elem;
+    const elem = document.createElement(type);
+    elem.id = id;
+    if (classes) classes.forEach((c) => elem.classList.add(c));
+    if (parent) parent.appendChild(elem);
+    return elem;
 }
 
 export default class ProfileView extends View {
@@ -49,13 +56,13 @@ export default class ProfileView extends View {
         const userNameLabel = makeElement('h1', 'userNameLabel', null, userDiv);
         userNameLabel.innerText = "Username:";
 
-        const userName = makeElement('input', 'userName', null, userDiv);
+        const userName = /** @type {HTMLInputElement}*/ (makeElement('input', 'userName', null, userDiv));
         userName.type = 'text';
         userName.value = (
-          await dbInstance.getUser(dbInstance.getCurrentUserID())
+            await dbInstance.getUser(dbInstance.getCurrentUserID())
         ).username;
 
-        const iconPreview = makeElement('canvas', 'myIcon', null, creatorContainerLeft);
+        const iconPreview = /**@type {HTMLCanvasElement}*/ (makeElement('canvas', 'myIcon', null, creatorContainerLeft));
         iconPreview.width = 300;
         iconPreview.height = 300;
 
