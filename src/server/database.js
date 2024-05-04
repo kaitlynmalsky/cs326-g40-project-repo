@@ -326,7 +326,7 @@ export async function createUser(userData) {
       _id: formatUserKey(userID),
       userID,
       ...userData,
-      bio: "";
+      bio: ""
     };
 
     const { rev } = await db.put(userDoc);
