@@ -231,6 +231,9 @@ export default class ProfileView extends View {
             layers.forEach((l) => (user.avatarConfig[l.name] = l.i));
             if (userName.value !== '' && userName.value !== user.username)
                 user.username = userName.value;
+            const bioInput = /** @type {HTMLTextAreaElement} */ (document.getElementById('bioInput'));
+            const bioText = bioInput.value;
+            user.bio = bioText;
             await dbInstance.updateUser(user);
 
             const saveNoti = document.createElement('i');

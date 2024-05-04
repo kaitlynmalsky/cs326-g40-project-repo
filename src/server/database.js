@@ -33,6 +33,7 @@ export const db = new PouchDB('villagelink');
  * @property {string} email The user's email
  * @property {string} password The user's password
  * @property {string} avatar The user's avatar
+ * @property {string} bio The user's bio
  * @property {AvatarConfig} avatarConfig The configuration for the user's avatar
  * @property {string} _id PouchDB ID
  * @property {string} _rev PouchDB revision
@@ -136,7 +137,7 @@ export const db = new PouchDB('villagelink');
  * @returns {string}
  */
 function formatPinKey(pinID) {
-  return `pin_${pinID}`;
+    return `pin_${pinID}`;
 }
 
 /**
@@ -145,29 +146,29 @@ function formatPinKey(pinID) {
  * @returns {Promise<Pin>} The created pin
  */
 export async function createPin(pinData) {
-  const pinStart = new Date(pinData.startTime);
+    const pinStart = new Date(pinData.startTime);
 
-  const pinID = `${pinStart.getTime()}_${randomUUID()}`;
+    const pinID = `${pinStart.getTime()}_${randomUUID()}`;
 
-  const pinDoc = {
-    _id: formatPinKey(pinID),
-    pinID,
-    ...pinData,
-  };
+    const pinDoc = {
+        _id: formatPinKey(pinID),
+        pinID,
+        ...pinData,
+    };
 
-  const { id, rev, ok } = await db.put(pinDoc);
+    const { id, rev, ok } = await db.put(pinDoc);
 
-  if (!ok) {
-    console.error(`Failed to create ${pinID} (id=${id} , rev=${rev})`);
-  }
+    if (!ok) {
+        console.error(`Failed to create ${pinID} (id=${id} , rev=${rev})`);
+    }
 
-  await addPinAttendee(pinID, pinData.hostID);
+    await addPinAttendee(pinID, pinData.hostID);
 
-  return {
-    ...pinDoc,
-    _id: id,
-    _rev: rev,
-  };
+    return {
+        ...pinDoc,
+        _id: id,
+        _rev: rev,
+    };
 }
 
 /**
@@ -177,12 +178,12 @@ export async function createPin(pinData) {
  * @throws {Error}
  */
 export async function getPin(pinID) {
-  try {
-    return await db.get(formatPinKey(pinID));
-  } catch (err) {
-    console.error(err);
-    return null;
-  }
+    try {
+        return await db.get(formatPinKey(pinID));
+    } catch (err) {
+        console.error(err);
+        return null;
+    }
 }
 
 /**
@@ -191,15 +192,15 @@ export async function getPin(pinID) {
  * @returns {Promise<Pin>}
  */
 export async function updatePin(pin) {
-  const { rev, ok, id } = await db.put(pin);
+    const { rev, ok, id } = await db.put(pin);
 
-  if (!ok) {
-    console.error(`Failed to update ${pin.pinID} (id=${id} , rev=${rev})`);
-  }
+    if (!ok) {
+        console.error(`Failed to update ${pin.pinID} (id=${id} , rev=${rev})`);
+    }
 
-  pin._rev = rev;
+    pin._rev = rev;
 
-  return pin;
+    return pin;
 }
 
 /**
@@ -208,7 +209,7 @@ export async function updatePin(pin) {
  * @returns {Promise<PouchDB.Core.Response>}
  */
 export async function deletePin(pin) {
-  return db.remove(pin);
+    return db.remove(pin);
 }
 
 /**
@@ -216,17 +217,17 @@ export async function deletePin(pin) {
  * @returns {Promise<Array<Pin>>}
  */
 export async function getAllPins() {
-  try {
-    const pinsResult = await db.allDocs({
-      include_docs: true,
-      startkey: 'pin',
-      endkey: `pin\ufff0`,
-    });
+    try {
+        const pinsResult = await db.allDocs({
+            include_docs: true,
+            startkey: 'pin',
+            endkey: `pin\ufff0`,
+        });
 
-    return pinsResult.rows.map((row) => row.doc);
-  } catch (err) {
-    return null;
-  }
+        return pinsResult.rows.map((row) => row.doc);
+    } catch (err) {
+        return null;
+    }
 }
 
 /**
@@ -234,19 +235,19 @@ export async function getAllPins() {
  * @returns {Promise<Array<Pin>>}
  */
 export async function getUpcomingPins() {
-  try {
-    const now = Date.now();
+    try {
+        const now = Date.now();
 
-    const pinsResult = await db.allDocs({
-      include_docs: true,
-      startkey: `pin_${now}_`,
-      endkey: `pin_${now + 1000 * 60 * 60 * 24 * 2}_\ufff0`,
-    });
+        const pinsResult = await db.allDocs({
+            include_docs: true,
+            startkey: `pin_${now}_`,
+            endkey: `pin_${now + 1000 * 60 * 60 * 24 * 2}_\ufff0`,
+        });
 
-    return pinsResult.rows.map((row) => row.doc);
-  } catch (err) {
-    return null;
-  }
+        return pinsResult.rows.map((row) => row.doc);
+    } catch (err) {
+        return null;
+    }
 }
 
 // ********************************************
@@ -259,7 +260,7 @@ export async function getUpcomingPins() {
  * @returns {string}
  */
 function formatUserKey(userID) {
-  return `user_${userID}`;
+    return `user_${userID}`;
 }
 
 /**
@@ -268,11 +269,11 @@ function formatUserKey(userID) {
  * @returns {Promise<User | null>}
  */
 export async function getUser(userID) {
-  try {
-    return await db.get(formatUserKey(userID));
-  } catch (err) {
-    return null;
-  }
+    try {
+        return await db.get(formatUserKey(userID));
+    } catch (err) {
+        return null;
+    }
 }
 
 /**
@@ -281,14 +282,14 @@ export async function getUser(userID) {
  * @returns {Promise<User>}
  */
 export async function getUserByEmail(email) {
-  const users = await db.allDocs({
-    include_docs: true,
-    startkey: 'user',
-    endkey: `user\ufff0`,
-  });
+    const users = await db.allDocs({
+        include_docs: true,
+        startkey: 'user',
+        endkey: `user\ufff0`,
+    });
 
-  const user = users.rows.find((row) => row.doc.email === email)?.doc;
-  return user || null;
+    const user = users.rows.find((row) => row.doc.email === email) ? .doc;
+    return user || null;
 }
 
 /**
@@ -297,15 +298,15 @@ export async function getUserByEmail(email) {
  * @returns {Promise<User>}
  */
 export async function getUserByName(name) {
-  const users = await db.allDocs({
-    include_docs: true,
-    startkey: 'user',
-    endkey: 'user\ufff0',
-  });
+    const users = await db.allDocs({
+        include_docs: true,
+        startkey: 'user',
+        endkey: 'user\ufff0',
+    });
 
-  console.log(users);
-  const user = users.rows.find((row) => row.doc.name === name);
-  return user.doc;
+    console.log(users);
+    const user = users.rows.find((row) => row.doc.name === name);
+    return user.doc;
 }
 
 /**
@@ -314,26 +315,27 @@ export async function getUserByName(name) {
  * @returns {Promise<User>} The created user
  */
 export async function createUser(userData) {
-  const { userID } = userData;
-  const existingUser = await getUserByEmail(userData.email);
+    const { userID } = userData;
+    const existingUser = await getUserByEmail(userData.email);
 
-  if (existingUser) {
-    console.error(`An account with ${userData.email} already exists`);
-    return existingUser;
-  } else {
-    const userDoc = {
-      _id: formatUserKey(userID),
-      userID,
-      ...userData,
-    };
+    if (existingUser) {
+        console.error(`An account with ${userData.email} already exists`);
+        return existingUser;
+    } else {
+        const userDoc = {
+            _id: formatUserKey(userID),
+            userID,
+            ...userData,
+            bio: "";
+        };
 
-    const { rev } = await db.put(userDoc);
+        const { rev } = await db.put(userDoc);
 
-    return {
-      ...userDoc,
-      _rev: rev,
-    };
-  }
+        return {
+            ...userDoc,
+            _rev: rev,
+        };
+    }
 }
 
 /**
@@ -343,11 +345,11 @@ export async function createUser(userData) {
  * @returns {Promise<User>}
  */
 export async function updateUser(user) {
-  const { rev } = await db.put(user);
+    const { rev } = await db.put(user);
 
-  user._rev = rev;
+    user._rev = rev;
 
-  return user;
+    return user;
 }
 
 /**
@@ -355,17 +357,17 @@ export async function updateUser(user) {
  * @returns {Promise<Array<User>>}
  */
 export async function getAllUsers() {
-  try {
-    const usersResult = await db.allDocs({
-      include_docs: true,
-      startkey: 'user_',
-      endkey: `user_\ufff0`,
-    });
+    try {
+        const usersResult = await db.allDocs({
+            include_docs: true,
+            startkey: 'user_',
+            endkey: `user_\ufff0`,
+        });
 
-    return usersResult.rows.map((row) => row.doc);
-  } catch (err) {
-    return null;
-  }
+        return usersResult.rows.map((row) => row.doc);
+    } catch (err) {
+        return null;
+    }
 }
 
 // ********************************************
@@ -379,7 +381,7 @@ export async function getAllUsers() {
  * @returns {string}
  */
 function formatConnectionKey(userID, targetID) {
-  return `connection_${userID}_${targetID}`;
+    return `connection_${userID}_${targetID}`;
 }
 
 /**
@@ -388,30 +390,30 @@ function formatConnectionKey(userID, targetID) {
  * @returns {Promise<VillageConnection>} The newly created connection
  */
 export async function createConnection(connection) {
-  console.log('Creating connection ', connection);
-  const { userID, targetID } = connection;
+    console.log('Creating connection ', connection);
+    const { userID, targetID } = connection;
 
-  const connectionKey = formatConnectionKey(userID, targetID);
+    const connectionKey = formatConnectionKey(userID, targetID);
 
-  const existingConnection = await getConnection(userID, targetID);
+    const existingConnection = await getConnection(userID, targetID);
 
-  if (existingConnection) return existingConnection;
+    if (existingConnection) return existingConnection;
 
-  const connectionDoc = {
-    ...connection,
-    _id: connectionKey,
-  };
+    const connectionDoc = {
+        ...connection,
+        _id: connectionKey,
+    };
 
-  const { id, rev, ok } = await db.put(connectionDoc);
+    const { id, rev, ok } = await db.put(connectionDoc);
 
-  if (!ok) {
-    console.error(`Failed to create ${connectionKey} (id=${id} , rev=${rev})`);
-  }
+    if (!ok) {
+        console.error(`Failed to create ${connectionKey} (id=${id} , rev=${rev})`);
+    }
 
-  return {
-    ...connectionDoc,
-    _rev: rev,
-  };
+    return {
+        ...connectionDoc,
+        _rev: rev,
+    };
 }
 
 /**
@@ -421,11 +423,11 @@ export async function createConnection(connection) {
  * @param {string} targetID
  */
 export async function getConnection(userID, targetID) {
-  try {
-    return await db.get(formatConnectionKey(userID, targetID));
-  } catch (err) {
-    return null;
-  }
+    try {
+        return await db.get(formatConnectionKey(userID, targetID));
+    } catch (err) {
+        return null;
+    }
 }
 
 /**
@@ -434,14 +436,14 @@ export async function getConnection(userID, targetID) {
  * @returns {Promise<Array<VillageConnection>>}
  */
 export async function getConnections(userID) {
-  const connectionsFilterKey = `connection_${userID}`;
-  const connectionsResult = await db.allDocs({
-    include_docs: true,
-    startkey: connectionsFilterKey,
-    endkey: `${connectionsFilterKey}\ufff0`,
-  });
+    const connectionsFilterKey = `connection_${userID}`;
+    const connectionsResult = await db.allDocs({
+        include_docs: true,
+        startkey: connectionsFilterKey,
+        endkey: `${connectionsFilterKey}\ufff0`,
+    });
 
-  return connectionsResult.rows.map((row) => row.doc);
+    return connectionsResult.rows.map((row) => row.doc);
 }
 
 /**
@@ -450,7 +452,7 @@ export async function getConnections(userID) {
  * @returns {Promise<PouchDB.Core.Response>}
  */
 export async function deleteConnection(connection) {
-  return db.remove(connection);
+    return db.remove(connection);
 }
 
 // ********************************************
@@ -463,7 +465,7 @@ export async function deleteConnection(connection) {
  * @param {string} userID
  */
 function formatPinAttendeeKey(pinID, userID) {
-  return `pat_${pinID}_${userID}`;
+    return `pat_${pinID}_${userID}`;
 }
 
 /**
@@ -473,28 +475,28 @@ function formatPinAttendeeKey(pinID, userID) {
  * @returns {Promise<PinAttendee>}
  */
 export async function addPinAttendee(pinID, userID) {
-  const existingAttendee = await getPinAttendee(pinID, userID);
+    const existingAttendee = await getPinAttendee(pinID, userID);
 
-  if (existingAttendee) return existingAttendee;
+    if (existingAttendee) return existingAttendee;
 
-  const doc = {
-    _id: formatPinAttendeeKey(pinID, userID),
-    pinID,
-    userID,
-  };
+    const doc = {
+        _id: formatPinAttendeeKey(pinID, userID),
+        pinID,
+        userID,
+    };
 
-  const { ok, id, rev } = await db.put(doc);
+    const { ok, id, rev } = await db.put(doc);
 
-  if (!ok) {
-    console.error(
-      `Could not add userId=${userID} as attendee for pin pinI=${pinID}`,
-    );
-  }
+    if (!ok) {
+        console.error(
+            `Could not add userId=${userID} as attendee for pin pinI=${pinID}`,
+        );
+    }
 
-  return {
-    ...doc,
-    _rev: rev,
-  };
+    return {
+        ...doc,
+        _rev: rev,
+    };
 }
 
 /**
@@ -503,13 +505,13 @@ export async function addPinAttendee(pinID, userID) {
  * @returns {Promise<PinAttendee[]>}
  */
 export async function getPinAttendees(pinID) {
-  const pinAttendeesResult = await db.allDocs({
-    include_docs: true,
-    startkey: `pat_${pinID}`,
-    endkey: `pat_${pinID}\ufff0`,
-  });
+    const pinAttendeesResult = await db.allDocs({
+        include_docs: true,
+        startkey: `pat_${pinID}`,
+        endkey: `pat_${pinID}\ufff0`,
+    });
 
-  return pinAttendeesResult.rows.map((row) => row.doc);
+    return pinAttendeesResult.rows.map((row) => row.doc);
 }
 
 /**
@@ -519,11 +521,11 @@ export async function getPinAttendees(pinID) {
  * @returns {Promise<PinAttendee>}
  */
 export async function getPinAttendee(pinID, userID) {
-  try {
-    return await db.get(formatPinAttendeeKey(pinID, userID));
-  } catch (err) {
-    return null;
-  }
+    try {
+        return await db.get(formatPinAttendeeKey(pinID, userID));
+    } catch (err) {
+        return null;
+    }
 }
 
 /**
@@ -531,7 +533,7 @@ export async function getPinAttendee(pinID, userID) {
  * @param {PinAttendee} attendee
  */
 export async function removePinAttendee(attendee) {
-  return db.remove(attendee);
+    return db.remove(attendee);
 }
 
 // ********************************************
@@ -548,7 +550,7 @@ export async function removePinAttendee(attendee) {
  * @returns {string}
  */
 function formatGroupKey(gcID) {
-  return 'groupchat_' + gcID;
+    return 'groupchat_' + gcID;
 }
 
 /**
@@ -558,7 +560,7 @@ function formatGroupKey(gcID) {
  * @returns {string}
  */
 function formatGroupMessageKey(gcID, msgID) {
-  return `message_${gcID}_${msgID}`;
+    return `message_${gcID}_${msgID}`;
 }
 
 /**
@@ -567,7 +569,7 @@ function formatGroupMessageKey(gcID, msgID) {
  * @returns {string}
  */
 function formatPersonKey(pID) {
-  return `person_${pID}`;
+    return `person_${pID}`;
 }
 
 /**
@@ -576,12 +578,12 @@ function formatPersonKey(pID) {
  * @returns {Promise<GroupChat | null>}
  */
 export async function getGroupById(gcID) {
-  try {
-    const groupChat = await db.get(formatGroupKey(gcID));
-    return groupChat;
-  } catch (err) {
-    return null;
-  }
+    try {
+        const groupChat = await db.get(formatGroupKey(gcID));
+        return groupChat;
+    } catch (err) {
+        return null;
+    }
 }
 
 /**
@@ -590,30 +592,30 @@ export async function getGroupById(gcID) {
  * @returns {Promise<GroupChat>}
  */
 export async function addGroupChat(gcID) {
-  //('in addGroupChat');
-  const existingGC = await getGroupById(gcID);
-  //console.log(`existingGC is ${existingGC}`);
-  if (existingGC) {
-    console.error(`Group chat with ID ${gcID} already exists.`);
-    return existingGC;
-  } else {
-    const gcDoc = {
-      _id: formatGroupKey(gcID),
-      GroupChatID: gcID,
-    };
+    //('in addGroupChat');
+    const existingGC = await getGroupById(gcID);
+    //console.log(`existingGC is ${existingGC}`);
+    if (existingGC) {
+        console.error(`Group chat with ID ${gcID} already exists.`);
+        return existingGC;
+    } else {
+        const gcDoc = {
+            _id: formatGroupKey(gcID),
+            GroupChatID: gcID,
+        };
 
-    const { id, rev, ok } = await db.put(gcDoc);
+        const { id, rev, ok } = await db.put(gcDoc);
 
-    if (!ok) {
-      console.error(`Failed to create ${gcID} (id=${id} , rev=${rev})`);
+        if (!ok) {
+            console.error(`Failed to create ${gcID} (id=${id} , rev=${rev})`);
+        }
+
+        return {
+            _id: id,
+            _rev: rev,
+            ...gcDoc,
+        };
     }
-
-    return {
-      _id: id,
-      _rev: rev,
-      ...gcDoc,
-    };
-  }
 }
 
 /**
@@ -624,26 +626,26 @@ export async function addGroupChat(gcID) {
  * @param {Date} time
  */
 export async function addGroupChatMessage(gcID, pID, content, time) {
-  const messageID = `${Date.now()}_${randomUUID()}`;
-  const messageDoc = {
-    _id: formatGroupMessageKey(`${gcID}`, messageID),
-    messageID: messageID,
-    GroupChatID: gcID,
-    PersonID: pID,
-    messageContent: content,
-    time: time,
-  };
-  const { id, rev, ok } = await db.put(messageDoc);
+    const messageID = `${Date.now()}_${randomUUID()}`;
+    const messageDoc = {
+        _id: formatGroupMessageKey(`${gcID}`, messageID),
+        messageID: messageID,
+        GroupChatID: gcID,
+        PersonID: pID,
+        messageContent: content,
+        time: time,
+    };
+    const { id, rev, ok } = await db.put(messageDoc);
 
-  if (!ok) {
-    console.error(`Failed to create ${messageID} (id=${id} , rev=${rev})`);
-  }
+    if (!ok) {
+        console.error(`Failed to create ${messageID} (id=${id} , rev=${rev})`);
+    }
 
-  return {
-    _id: id,
-    _rev: rev,
-    ...messageDoc,
-  };
+    return {
+        _id: id,
+        _rev: rev,
+        ...messageDoc,
+    };
 }
 
 /**
@@ -652,7 +654,7 @@ export async function addGroupChatMessage(gcID, pID, content, time) {
  * @param {string} pID
  */
 function formatGroupChatMemberKey(gcId, pID) {
-  return `groupchatmember_${gcId}_${pID}`;
+    return `groupchatmember_${gcId}_${pID}`;
 }
 
 /**
@@ -662,33 +664,33 @@ function formatGroupChatMemberKey(gcId, pID) {
  * @returns {Promise<GroupChatMember>}
  */
 export async function addGroupChatMember(pID, gcID) {
-  const existingGCMember = (await getMembersByGroupChatID(gcID)).filter(
-    (member) => member.PersonID === pID,
-  );
-  if (existingGCMember.length !== 0) {
-    console.error(
-      `GroupChatMember with person ID ${pID} and group chat ID ${gcID} already exists.`,
+    const existingGCMember = (await getMembersByGroupChatID(gcID)).filter(
+        (member) => member.PersonID === pID,
     );
-    return existingGCMember[0];
-  } else {
-    const gcmDoc = {
-      _id: formatGroupChatMemberKey(`${gcID}`, `${pID}`),
-      PersonID: pID,
-      GroupChatID: gcID,
-    };
+    if (existingGCMember.length !== 0) {
+        console.error(
+            `GroupChatMember with person ID ${pID} and group chat ID ${gcID} already exists.`,
+        );
+        return existingGCMember[0];
+    } else {
+        const gcmDoc = {
+            _id: formatGroupChatMemberKey(`${gcID}`, `${pID}`),
+            PersonID: pID,
+            GroupChatID: gcID,
+        };
 
-    const { id, rev, ok } = await db.put(gcmDoc);
+        const { id, rev, ok } = await db.put(gcmDoc);
 
-    if (!ok) {
-      console.error(`Failed to create ${gcID}_${pID} (id=${id}, rev=${rev})`);
+        if (!ok) {
+            console.error(`Failed to create ${gcID}_${pID} (id=${id}, rev=${rev})`);
+        }
+
+        return {
+            _id: id,
+            _rev: rev,
+            ...gcmDoc,
+        };
     }
-
-    return {
-      _id: id,
-      _rev: rev,
-      ...gcmDoc,
-    };
-  }
 }
 
 /**
@@ -696,13 +698,13 @@ export async function addGroupChatMember(pID, gcID) {
  * @returns {Promise<Array<GroupChat>>}
  */
 export async function getAllGroupChats() {
-  const gcsResult = await db.allDocs({
-    include_docs: true,
-    startkey: 'groupchat_',
-    endkey: `groupchat_\ufff0`,
-  });
+    const gcsResult = await db.allDocs({
+        include_docs: true,
+        startkey: 'groupchat_',
+        endkey: `groupchat_\ufff0`,
+    });
 
-  return gcsResult.rows.map((row) => row.doc);
+    return gcsResult.rows.map((row) => row.doc);
 }
 
 /**
@@ -711,13 +713,13 @@ export async function getAllGroupChats() {
  * @returns {Promise<Array<GroupChatMessage>>}
  */
 export async function getMessagesByGroupChatID(gcID) {
-  const messageResult = await db.allDocs({
-    include_docs: true,
-    startkey: `message_${gcID}`,
-    endkey: `message_${gcID}\ufff0`,
-  });
+    const messageResult = await db.allDocs({
+        include_docs: true,
+        startkey: `message_${gcID}`,
+        endkey: `message_${gcID}\ufff0`,
+    });
 
-  return messageResult.rows.map((row) => row.doc);
+    return messageResult.rows.map((row) => row.doc);
 }
 
 /**
@@ -726,10 +728,10 @@ export async function getMessagesByGroupChatID(gcID) {
  * @returns {Promise<Array<GroupChatMember>>}
  */
 export async function getMembersByGroupChatID(gcID) {
-  const memberResult = await db.allDocs({
-    include_docs: true,
-    startkey: `groupchatmember_${gcID}`,
-    endkey: `groupchatmember_${gcID}\ufff0`,
-  });
-  return memberResult.rows.map((row) => row.doc);
+    const memberResult = await db.allDocs({
+        include_docs: true,
+        startkey: `groupchatmember_${gcID}`,
+        endkey: `groupchatmember_${gcID}\ufff0`,
+    });
+    return memberResult.rows.map((row) => row.doc);
 }

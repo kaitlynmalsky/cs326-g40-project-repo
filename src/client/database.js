@@ -27,7 +27,8 @@
  * @property {string} email The user's email
  * @property {string} password The user's password
  * @property {string} avatar The user's avatar
- * @property {AvatarConfig} avatarConfig The configuration for the user's avatar
+ * @property {string} bio The user's bio
+ * @property {AvatarConfig} avatarConfig The configuration for the user's avatar 
  * @property {string} _id PouchDB ID
  * @property {string} _rev PouchDB revision
  */
@@ -353,6 +354,7 @@ class Database {
         _id: this.#formatUserKey(userID),
         userID,
         ...userData,
+        bio: "" // reminder to add this thing to the server side
       };
 
       const { rev } = await this.#db.put(userDoc);
