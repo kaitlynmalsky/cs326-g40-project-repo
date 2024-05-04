@@ -327,7 +327,30 @@ button:hover {
     margin-right: 6px;
 }
 
+#bioLabel {
+    @apply font-bold;
+    color: #412003;
+    margin-top: 6px;
+    /* margin-right: 6px; */
+}
+
+#bioInput {
+    resize: horizontal;
+    resize: vertical;
+    width: 600px;
+    height: 200px;
+}
+
 #userName {
+    background: #d9b683;
+    color: #412003;
+    border: 3px solid #8e4e01;
+    border-radius: 5px;
+    margin-bottom: 3px;
+    float: left;
+}
+
+#bioInput {
     background: #d9b683;
     color: #412003;
     border: 3px solid #8e4e01;

@@ -608,10 +608,6 @@ video {
   grid-column: span 1 / span 1;
 }
 
-.col-span-2 {
-  grid-column: span 2 / span 2;
-}
-
 .col-span-4 {
   grid-column: span 4 / span 4;
 }
@@ -692,6 +688,11 @@ video {
 
 .h-full {
   height: 100%;
+}
+
+.h-max {
+  height: -moz-max-content;
+  height: max-content;
 }
 
 .h-min {
@@ -781,10 +782,6 @@ video {
 
 .grid-cols-5 {
   grid-template-columns: repeat(5, minmax(0, 1fr));
-}
-
-.grid-cols-10 {
-  grid-template-columns: repeat(10, minmax(0, 1fr));
 }
 
 .grid-cols-8 {
@@ -1618,7 +1615,30 @@ button:hover {
   margin-right: 6px;
 }
 
+#bioLabel {
+  font-weight: 700;
+  color: #412003;
+  margin-top: 6px;
+  /* margin-right: 6px; */
+}
+
+#bioInput {
+  resize: horizontal;
+  resize: vertical;
+  width: 600px;
+  height: 200px;
+}
+
 #userName {
+  background: #d9b683;
+  color: #412003;
+  border: 3px solid #8e4e01;
+  border-radius: 5px;
+  margin-bottom: 3px;
+  float: left;
+}
+
+#bioInput {
   background: #d9b683;
   color: #412003;
   border: 3px solid #8e4e01;

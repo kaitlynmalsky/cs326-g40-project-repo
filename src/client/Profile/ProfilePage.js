@@ -24,17 +24,19 @@ export default class ProfileView extends View {
         profilePageDiv.id = 'profilePage-view';
 
         const creatorContainer = document.createElement('div');
+        const creatorContainerGrid = document.createElement('div');
+        creatorContainer.appendChild(creatorContainerGrid);
         creatorContainer.id = 'creatorContainer';
         profilePageDiv.appendChild(creatorContainer);
-        creatorContainer.classList.add('grid');
-        creatorContainer.classList.add('grid-cols-2');
+        creatorContainerGrid.classList.add('grid');
+        creatorContainerGrid.classList.add('grid-cols-2');
 
         const creatorContainerLeft = document.createElement('div');
         creatorContainerLeft.id = 'creatorContainerLeft';
         const creatorContainerRight = document.createElement('div');
         creatorContainerRight.id = 'creatorContainerRight';
-        creatorContainer.appendChild(creatorContainerLeft);
-        creatorContainer.appendChild(creatorContainerRight);
+        creatorContainerGrid.appendChild(creatorContainerLeft);
+        creatorContainerGrid.appendChild(creatorContainerRight);
 
         const pageLabel = document.createElement('h1');
         pageLabel.innerText = 'Profile Editor';
@@ -56,7 +58,7 @@ export default class ProfileView extends View {
 
 
         const userNameLabel = document.createElement('h1');
-        userNameLabel.innerText = 'User Name:';
+        userNameLabel.innerText = 'Username:';
         userNameLabel.id = 'userNameLabel';
         userDiv.appendChild(userNameLabel);
 
@@ -78,6 +80,19 @@ export default class ProfileView extends View {
         chooseContainer.className = 'gap-y-3';
         chooseContainer.id = 'chooseContainer';
         creatorContainerRight.appendChild(chooseContainer);
+
+
+        const bioLabel = document.createElement('h1');
+        bioLabel.innerText = "Bio:";
+        bioLabel.id = "bioLabel";
+        const bioArea = document.createElement('div');
+        bioArea.appendChild(bioLabel);
+        bioArea.id = "bioArea";
+        bioArea.className = "h-max";
+        creatorContainer.appendChild(bioArea);
+        const bioInput = document.createElement('textarea');
+        bioInput.id = "bioInput";
+        bioArea.appendChild(bioInput);
 
         ['Bg', 'Body', 'Ears', 'Hat'].forEach((option, i) => {
             const optionDiv = document.createElement('div');
