@@ -142,6 +142,8 @@ app.post('/signup', async (req, res, next) => {
   /** @type {AuthenticatedSessionData} */
   (req.session).userID = user.userID;
 
+  delete user.password;
+
   return res.status(200).json(user);
 });
 

@@ -117,6 +117,8 @@ userRouter.get('/me', async (req, res) => {
     return res.status(404).end();
   }
 
+  delete user.password;
+
   return res.status(200).json(user);
 });
 
@@ -131,6 +133,8 @@ userRouter.get('/:userID', async (req, res) => {
   if (!user) {
     return res.status(404).end();
   }
+
+  delete user.password;
 
   return res.status(200).json(user);
 });
