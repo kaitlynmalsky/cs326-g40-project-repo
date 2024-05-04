@@ -1687,6 +1687,7 @@ button:hover {
   background: #24ba73;
   color: white;
   border: solid #412003;
+  margin-top: 20px;
   border-radius: 9999px;
   border-width: 2px;
 }

@@ -388,6 +388,7 @@ button:hover {
     background: #24ba73;
     color: white;
     border: solid #412003;
+    margin-top: 20px;
     @apply border-2 rounded-full;
 }
 

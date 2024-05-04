@@ -126,7 +126,7 @@ export default class ProfileView extends View {
         const saveButton = document.createElement('button');
         saveButton.id = 'save';
         saveButton.innerText = 'Save';
-        creatorContainerRight.appendChild(saveButton);
+        bioArea.appendChild(saveButton);
 
         return profilePageDiv;
     }
