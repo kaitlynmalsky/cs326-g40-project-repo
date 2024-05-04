@@ -1,3 +1,5 @@
+
+
 /**
  * Avatar configuration
  * @typedef {object} AvatarConfig
@@ -187,14 +189,6 @@ class Database {
   // Pins
   // ********************************************
 
-  /**
-   * Formats `pinID` into a database key
-   * @param {string} pinID The ID of the pin
-   * @returns {string}
-   */
-  #formatPinKey(pinID) {
-    return `pin_${pinID}`;
-  }
 
   /**
    * Creates a new pin
@@ -510,7 +504,7 @@ class Database {
    * @returns {Promise<Array<VillageConnection>>}
    */
   async getConnections(userID) {
-    userID = userID || this.getCurrentUserID();
+    userID = userID || await this.getCurrentUserID();
     const connectionsFilterKey = `connection_${userID}`;
     const connectionsResult = await this.#db.allDocs({
       include_docs: true,

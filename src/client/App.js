@@ -77,7 +77,7 @@ export class App {
     const profileView = new ProfileView();
     this.#addRoute('profile', { view: profileView });
 
-    if (dbInstance.getCurrentUserID()) {
+    if (await dbInstance.getCurrentUserID()) {
       if (location.hash.startsWith('#')) {
         const routeKey = location.hash.split('#')[1];
 
@@ -123,7 +123,7 @@ export class App {
       return this.#navigateTo('map');
     }
 
-    if (this.#routes[routeKey].authRequired && !dbInstance.getCurrentUserID()) {
+    if (this.#routes[routeKey].authRequired && !await dbInstance.getCurrentUserID()) {
       return GlobalEvents.navigate('login');
     }
 

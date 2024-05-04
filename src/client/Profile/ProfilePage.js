@@ -59,7 +59,7 @@ export default class ProfileView extends View {
         const userName = /** @type {HTMLInputElement}*/ (makeElement('input', 'userName', null, userDiv));
         userName.type = 'text';
         userName.value = (
-            await dbInstance.getUser(dbInstance.getCurrentUserID())
+            await dbInstance.getUser(await dbInstance.getCurrentUserID())
         ).username;
 
         const iconPreview = /**@type {HTMLCanvasElement}*/ (makeElement('canvas', 'myIcon', null, creatorContainerLeft));
@@ -82,7 +82,7 @@ export default class ProfileView extends View {
         bioInput.classList.add("p-1");
         bioArea.appendChild(bioInput);
         bioInput.value = (
-            await dbInstance.getUser(dbInstance.getCurrentUserID())
+            await dbInstance.getUser(await dbInstance.getCurrentUserID())
         ).bio;
 
         ['Bg', 'Body', 'Ears', 'Hat'].forEach((option, i) => {
@@ -161,7 +161,7 @@ export default class ProfileView extends View {
 
         const layers = [bg, ears, body, hat];
 
-        const user = await dbInstance.getUser(dbInstance.getCurrentUserID());
+        const user = await dbInstance.getUser(await dbInstance.getCurrentUserID());
 
         layers.forEach((l) => (l.i = user.avatarConfig[l.name]));
 
@@ -212,7 +212,7 @@ export default class ProfileView extends View {
             animation(b);
         };
 
-        document.getElementById('save').addEventListener('click', async() => {
+        document.getElementById('save').addEventListener('click', async () => {
             const userName = /**@type {HTMLInputElement} */ (
                 document.getElementById('userName')
             );

@@ -61,7 +61,7 @@ export default class EditingPin extends Pin {
   async render() {
     let marker;
     let currUserImage = (
-      await dbInstance.getUser(dbInstance.getCurrentUserID())
+      await dbInstance.getUser(await dbInstance.getCurrentUserID())
     ).avatar;
 
     if (this.#pinInfo) {
@@ -137,7 +137,7 @@ export default class EditingPin extends Pin {
        * @type {import('../database.js').CreatePinInput}
        */
       const pinInfo = {
-        hostID: dbInstance.getCurrentUserID(),
+        hostID: await dbInstance.getCurrentUserID(),
         startTime,
         endTime,
         details,
@@ -151,7 +151,7 @@ export default class EditingPin extends Pin {
        */
       const pinInfo = {
         ...this.#pinInfo,
-        hostID: dbInstance.getCurrentUserID(),
+        hostID: await dbInstance.getCurrentUserID(),
         startTime,
         endTime,
         details,

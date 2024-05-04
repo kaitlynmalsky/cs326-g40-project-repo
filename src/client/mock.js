@@ -50,7 +50,7 @@ function testUser() {
  */
 export async function mockUsers() {
     const ids = [];
-    const currentUserID = dbInstance.getCurrentUserID();
+    const currentUserID = await dbInstance.getCurrentUserID();
     const currentConnections = await dbInstance.getConnections();
     if (currentConnections.length < 20) {
         for (let i = 0; i < 20; i++) {

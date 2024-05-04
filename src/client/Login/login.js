@@ -1,6 +1,7 @@
 import GlobalEvents from '../Events/index.js';
 import View from '../View.js';
 import dbInstance from '../database.js';
+import 
 
 export default class LoginView extends View {
   constructor() {
@@ -77,7 +78,7 @@ export default class LoginView extends View {
 
           const userResponse = await fetch(`/users/me`);
           const user = await userResponse.json();
-
+          
           dbInstance.setCurrentUserId(user.userID);
           GlobalEvents.login();
           GlobalEvents.navigate('map');

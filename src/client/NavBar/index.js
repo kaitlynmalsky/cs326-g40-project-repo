@@ -72,7 +72,7 @@ export default class NavBar {
     const logoutBtnDiv = document.createElement('div');
     logoutBtnDiv.className = 'ml-auto';
 
-    if (dbInstance.getCurrentUserID()) {
+    if (await dbInstance.getCurrentUserID()) {
       this.addLogoutBtn(logoutBtnDiv);
     }
 

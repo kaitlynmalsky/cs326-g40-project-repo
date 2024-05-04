@@ -170,7 +170,7 @@ export default class ExistingPin extends Pin {
     const pinActionsDiv = document.createElement('div');
     pinActionsDiv.className = 'flex gap-32';
 
-    if (this.#pinInfo.hostID === dbInstance.getCurrentUserID()) {
+    if (this.#pinInfo.hostID === await dbInstance.getCurrentUserID()) {
       const editButtonElm = document.createElement('button');
       editButtonElm.id = this.editButtonName;
       editButtonElm.innerText = 'Edit';
@@ -198,7 +198,7 @@ export default class ExistingPin extends Pin {
 
       this.attendee = await dbInstance.getPinAttendee(
         this.#pinInfo.pinID,
-        dbInstance.getCurrentUserID(),
+        await dbInstance.getCurrentUserID(),
       );
       interestButton.innerText = this.attendee ? 'Leave' : 'Join'; // Depending on if user is already interested or not
       interestButton.addEventListener('click', () => this.toggleAttending());
@@ -226,7 +226,7 @@ export default class ExistingPin extends Pin {
     } else {
       this.attendee = await dbInstance.addPinAttendee(
         this.id,
-        dbInstance.getCurrentUserID(),
+        await dbInstance.getCurrentUserID(),
       );
       btn.innerText = 'Leave';
     }

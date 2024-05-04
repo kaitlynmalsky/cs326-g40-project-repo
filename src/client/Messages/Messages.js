@@ -64,7 +64,7 @@ export default class MessagesView extends View {
     this.#col2.appendChild(this.#sendView);
 
     // Demo messages
-    this.#currUser = await database.getUser(database.getCurrentUserID());
+    this.#currUser = await database.getUser(await database.getCurrentUserID());
     if ((await database.getAllGroupChats()).length === 0) {
       await mockMessages();
     }
