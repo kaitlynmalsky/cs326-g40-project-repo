@@ -9,6 +9,7 @@ import PouchDBSessionStore from './session.js';
 import morgan from 'morgan';
 import startPinsService from './pinsService.js';
 import cors from 'cors';
+import bodyParser from 'body-parser';
 
 const app = express();
 
@@ -20,6 +21,7 @@ app.use(
     credentials: true,
   }),
 );
+app.use(bodyParser.json({ limit: '10mb' }));
 app.use(express.json());
 app.use(morgan('tiny'));
 app.use(

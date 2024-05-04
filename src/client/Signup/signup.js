@@ -2,8 +2,9 @@ import GlobalEvents from '../Events/index.js';
 import defaultAvatar from '../Profile/defaultAvatar.js';
 import View from '../View.js';
 import dbInstance from '../database.js';
-import Database from '../database.js';
-import { mockPins, mockUsers } from '../mock.js';
+// import Database from '../database.js';
+// import { mockPins, mockUsers } from '../mock.js';
+// const API_URL = 'http://localhost:3260';
 
 export default class SignupView extends View {
   constructor() {
@@ -110,44 +111,49 @@ export default class SignupView extends View {
         return;
       }
 
-      // Create user object
-      /**
-       * @type {import('../database.js').CreateUserInput}
-       */
-      const userData = {
-        name,
-        avatar: defaultAvatar,
-        avatarConfig: {
-          bg: 0,
-          body: 0,
-          ears: 0,
-          hat: 0,
-        },
-        username,
-        email,
-        password,
-      };
 
       try {
-        if (await Database.getUserByEmail(email)) {
-          this.showAlert(formSection, 'User with this email already exists!');
-          return;
-        }
+        const signupResponse = await fetch(`/signup`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            username,
+            name,
+            email,
+            password,
+            avatar: defaultAvatar,
+            avatarConfig: {
+              bg: 0,
+              body: 0,
+              ears: 0,
+              hat: 0,
+            },
+          }),
+        });
 
-        const user = await Database.addUser(userData);
 
-        // maybe redirect the user to the login page after successful signup
-        console.log('User created successfully');
-        dbInstance.setCurrentUserId(user.userID);
+    if (signupResponse.ok) {
+      console.log('User signed up successfully');
 
-        await mockUsers();
+      const user = await signupResponse.json();
+      // console.log(user);
+      dbInstance.setCurrentUserId(user.userID); // Set current user ID
+      GlobalEvents.login();
+      GlobalEvents.navigate('profile');
+    } else {
+      const errorMessage = await signupResponse.text();
+      // console.log(errorMessage);
+      console.error('Error signing up:', errorMessage);
+      this.showAlert(formSection, 'Error signing up. Please try again later.');
+    }
+  } catch (error) {
+    console.error('Error signing up:', error);
+    this.showAlert(formSection, 'An error occurred. Please try again later.');
+  }
+});
 
-        GlobalEvents.login();
-        GlobalEvents.navigate('profile');
-      } catch (error) {
-        console.error('Error creating user:', error);
-      }
-    });
 
     emailInput.querySelector('input').addEventListener('input', () => {
       this.hideAlert(formSection);
