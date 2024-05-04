@@ -128,32 +128,59 @@ class Database {
   // Current User
   // ********************************************
 
+
   /**
    * Saves `userID` to `localStorage`
    * @param {string} userID
    */
-  setCurrentUserId(userID) {
-    localStorage.setItem('userID', userID);
+  async setCurrentUserId(userID) {
+    const docID = 'current_user';
+    try {
+      const doc = await this.#db.get(docID);
+
+      doc.userID = userID;
+      await this.#db.put(doc);
+    } catch (err) {
+      if (err.name === 'not_found') {
+
+        await this.#db.put({ _id: docID, userID: userID });
+      } else {
+
+        console.error('Error accessing the database', err);
+      }
+    }
   }
 
   /**
    * Retrieves the current `userID` from `localStorage`
-   * @returns {string | null}
+   * @returns {Promise<string | null>}
    */
-  getCurrentUserID() {
+  async getCurrentUserID() {
+    const docId = 'current_user';
     try {
-      return localStorage.getItem('userID');
+      const doc = await this.#db.get(docId);
+      return doc.userID;
     } catch (err) {
-      console.error(err);
-      return null;
+      if (err.name === 'not_found') {
+        return null;
+      } else {
+        console.error('Failed to retrieve user ID', err);
+        return null;
+      }
     }
   }
 
   /**
    * Deletes the current `userId` from `localStorage`
    */
-  deleteCurrentUserId() {
-    localStorage.removeItem('userID');
+  async deleteCurrentUserId() {
+    const docID = 'current_user';
+    try{
+      const doc = await this.#db.get(docID);
+      await this.#db.remove(doc);
+    } catch(err){
+      console.error(err);
+    }
   }
 
   // ********************************************
