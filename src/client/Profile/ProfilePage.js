@@ -14,72 +14,52 @@ const icnsDynamic = [
     'fa-solid fa-hat-cowboy fa-bounce',
 ];
 
+function makeElement(type, id, classes, parent) {
+  const elem = document.createElement(type);
+  elem.id = id;
+  if (classes) classes.forEach((c) => elem.classList.add(c));
+  if (parent) parent.appendChild(elem);
+  return elem;
+}
+
 export default class ProfileView extends View {
     constructor() {
         super();
     }
 
     async render() {
-        const profilePageDiv = document.createElement('div');
-        profilePageDiv.id = 'profilePage-view';
+        const profilePageDiv = makeElement('div', 'profilePage-view');
 
-        const creatorContainer = document.createElement('div');
-        const creatorContainerGrid = document.createElement('div');
-        creatorContainer.appendChild(creatorContainerGrid);
-        creatorContainer.id = 'creatorContainer';
-        profilePageDiv.appendChild(creatorContainer);
-        creatorContainerGrid.classList.add('grid');
-        creatorContainerGrid.classList.add('grid-cols-2');
+        const creatorContainer = makeElement('div', 'creatorContainer', null, profilePageDiv);
+        const creatorContainerGrid = makeElement('div', null, ['grid', 'grid-cols-2'], creatorContainer);
 
-        const creatorContainerLeft = document.createElement('div');
-        creatorContainerLeft.id = 'creatorContainerLeft';
-        const creatorContainerRight = document.createElement('div');
-        creatorContainerRight.id = 'creatorContainerRight';
-        creatorContainerGrid.appendChild(creatorContainerLeft);
-        creatorContainerGrid.appendChild(creatorContainerRight);
+        const creatorContainerLeft = makeElement('div', 'creatorContainerLeft', null, creatorContainerGrid);
+        const creatorContainerRight = makeElement('div', 'creatorContainerRight', null, creatorContainerGrid);
 
-        const pageLabel = document.createElement('h1');
+        const pageLabel = makeElement('h1', 'pageLabel', null, creatorContainerLeft);
         pageLabel.innerText = 'Profile Editor';
-        pageLabel.id = 'pageLabel';
-        creatorContainerLeft.appendChild(pageLabel);
 
-
-        const spacer = document.createElement('div');
+        const spacer = makeElement('div', null, null, creatorContainerRight);
         spacer.style.minHeight = "45px";
 
-        const userDiv = document.createElement('div');
-        userDiv.id = 'userDiv';
-        creatorContainerRight.appendChild(spacer);
-        creatorContainerRight.appendChild(userDiv);
+        const userDiv = makeElement('div', 'userDiv', null, creatorContainerRight);
 
-        creatorContainerRight.appendChild(document.createElement('br'));
-        creatorContainerRight.appendChild(document.createElement('br'));
-        creatorContainerRight.appendChild(document.createElement('br'));
+        for (let i = 0; i < 3; i++) creatorContainerRight.appendChild(document.createElement('br'));
 
+        const userNameLabel = makeElement('h1', 'userNameLabel', null, userDiv);
+        userNameLabel.innerText = "Username:";
 
-        const userNameLabel = document.createElement('h1');
-        userNameLabel.innerText = 'Username:';
-        userNameLabel.id = 'userNameLabel';
-        userDiv.appendChild(userNameLabel);
-
-        const userName = document.createElement('input');
+        const userName = makeElement('input', 'userName', null, userDiv);
         userName.type = 'text';
-        userName.id = 'userName';
         userName.value = (
-            await dbInstance.getUser(dbInstance.getCurrentUserID())
+          await dbInstance.getUser(dbInstance.getCurrentUserID())
         ).username;
-        userDiv.appendChild(userName);
 
-        const iconPreview = document.createElement('canvas');
-        iconPreview.id = 'myIcon';
+        const iconPreview = makeElement('canvas', 'myIcon', null, creatorContainerLeft);
         iconPreview.width = 300;
         iconPreview.height = 300;
-        creatorContainerLeft.appendChild(iconPreview);
 
-        const chooseContainer = document.createElement('div');
-        chooseContainer.className = 'gap-y-3';
-        chooseContainer.id = 'chooseContainer';
-        creatorContainerRight.appendChild(chooseContainer);
+        const chooseContainer = makeElement('div', 'chooseContainer', ['gap-y-3'], creatorContainerRight);
 
 
         const bioLabel = document.createElement('h1');
