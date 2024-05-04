@@ -3,6 +3,8 @@ import View from '../View.js';
 import dbInstance from '../database.js';
 import Database from '../database.js';
 
+const API_URL = 'http://localhost:3260';
+
 export default class LoginView extends View {
   constructor() {
     super();
@@ -45,8 +47,12 @@ export default class LoginView extends View {
 
     submitButton.addEventListener('click', async (event) => {
       event.preventDefault();
-      const email = (/** @type {HTMLInputElement} */ (document.getElementById('email'))).value;
-      const password = (/** @type {HTMLInputElement} */ (document.getElementById('password'))).value;
+      const email = /** @type {HTMLInputElement} */ (
+        document.getElementById('email')
+      ).value;
+      const password = /** @type {HTMLInputElement} */ (
+        document.getElementById('password')
+      ).value;
       // Event listener for email input field
       emailDiv.querySelector('input').addEventListener('input', () => {
         this.hideAlert(emailDiv);
@@ -58,18 +64,34 @@ export default class LoginView extends View {
       });
 
       try {
-        const user = await Database.getUserByEmail(email);
-        if (user && user.password === password) {
-          // Open dashboard
+        const loginResponse = await fetch(`${API_URL}/login`, {
+          method: 'POST',
+          body: JSON.stringify({
+            email,
+            password,
+          }),
+        });
 
+        if (loginResponse.ok) {
           console.log('Authentication successful');
+
+          const userResponse = await fetch(`${API_URL}/users/me`);
+          const user = await userResponse.json();
+
           dbInstance.setCurrentUserId(user.userID);
           GlobalEvents.login();
           GlobalEvents.navigate('map');
-        } else if (user && user.password !== password) {
-          this.showAlert(passwordDiv, 'Wrong password!'); // Added line to show alert for wrong password
-        } else if (!user) {
-          this.showAlert(emailDiv, 'Incorrect email or not a user'); // Added line to show alert for incorrect email or not a user
+        } else {
+          if (loginResponse.status === 401) {
+            // Incorrect password
+            this.showAlert(passwordDiv, 'Wrong password!'); // Added line to show alert for wrong password
+          } else if (loginResponse.status === 404) {
+            // Invalid email
+            this.showAlert(emailDiv, 'Incorrect email or not a user'); // Added line to show alert for incorrect email or not a user
+          } else {
+            // Some other error
+            // TODO: show something
+          }
         }
       } catch (error) {
         console.error('Error during authentication:', error);

@@ -62,7 +62,7 @@ app.post('/login', async (req, res, next) => {
 
   if (!user) {
     console.log('No user found');
-    return res.status(401).json({ error: 'Invalid email' });
+    return res.status(404).json({ error: 'Invalid email' });
   }
 
   const hashedPassword = hashPassword(user.userID, password);

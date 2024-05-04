@@ -1,5 +1,12 @@
 import { Router } from 'express';
-import { getUser, getUserByEmail, updateUser, createConnection, getConnections, getConnection } from '../database.js';
+import {
+  getUser,
+  getUserByEmail,
+  updateUser,
+  createConnection,
+  getConnections,
+  getConnection,
+} from '../database.js';
 
 const userRouter = Router();
 
@@ -39,16 +46,15 @@ userRouter.post('/:userId/connections/', async (req, res) => {
     const results = await Promise.all([
       createConnection({
         userID: userID,
-        targetID: targetData.targetID
+        targetID: targetData.targetID,
       }),
       createConnection({
         userID: targetData.targetID,
-        targetID: userID
+        targetID: userID,
       }),
     ]);
 
     res.status(201).json(results);
-
   } catch (error) {
     res.status(500).json({ error: 'Failed to create connections' });
   }
@@ -62,16 +68,17 @@ userRouter.get('/:userID/connections', async (req, res) => {
   const userData = req.body;
 
   if (userID !== userData.userID) {
-    return res.status(400).json({ error: 'Wrong userID provided in get all connections data' });
+    return res
+      .status(400)
+      .json({ error: 'Wrong userID provided in get all connections data' });
   }
 
   try {
     const connections = await getConnections(userID);
     res.status(201).json(connections);
   } catch (err) {
-    res.status(500).json({ error: 'Failed to get all connections of user' })
+    res.status(500).json({ error: 'Failed to get all connections of user' });
   }
-
 });
 
 /**
@@ -83,7 +90,9 @@ userRouter.delete('/:userID/connections/:targetID', async (req, res) => {
   const data = req.body;
 
   if (userID !== data.userID || targetID !== data.targetID) {
-    return res.status(400).json({ error: 'Wrong userID or targetID provided in request body' });
+    return res
+      .status(400)
+      .json({ error: 'Wrong userID or targetID provided in request body' });
   }
 
   try {
@@ -92,6 +101,23 @@ userRouter.delete('/:userID/connections/:targetID', async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: 'Failed to get connection' });
   }
+});
+
+/**
+ * Get current user`
+ */
+userRouter.get('/me', async (req, res) => {
+  const userID = /** @type {import('../index.js').AuthenticatedSessionData} */ (
+    req.session
+  ).userID;
+
+  const user = await getUser(userID);
+
+  if (!user) {
+    return res.status(404).end();
+  }
+
+  return res.status(200).json(user);
 });
 
 /**
