@@ -93,6 +93,9 @@ export default class ProfileView extends View {
         const bioInput = document.createElement('textarea');
         bioInput.id = "bioInput";
         bioArea.appendChild(bioInput);
+        bioInput.value = (
+            await dbInstance.getUser(dbInstance.getCurrentUserID())
+        ).bio;
 
         ['Bg', 'Body', 'Ears', 'Hat'].forEach((option, i) => {
             const optionDiv = document.createElement('div');
