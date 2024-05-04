@@ -381,6 +381,23 @@ class Database {
   }
 
   /**
+   * Updates the bio of the user with the given ID.
+   * @param {string} uID 
+   * @param {string} bio 
+   * @returns {Promise<User|null>}
+   */
+  async updateUserBio(uID, bio) {
+    const user = await this.getUser(uID);
+    if (!user) {
+      console.error(`cannot update the bio of user ${uID}`);
+      return null;
+    } else {
+      user.bio = bio;
+      return this.updateUser(user);
+    }
+  }
+
+  /**
    * Retrieve all users
    * @returns {Promise<Array<User>>}
    */

@@ -1,4 +1,5 @@
 import dbInstance from './database.js';
+import mockBios from './mockBios.js';
 
 /**
  * @typedef {import('faker')} Faker
@@ -55,6 +56,7 @@ export async function mockUsers() {
         for (let i = 0; i < 20; i++) {
             const user = testUser();
             const targetID = (await dbInstance.addUser(user)).userID;
+            await dbInstance.updateUserBio(currentUserID, mockBios[i]);
             await Promise.all([
                 dbInstance.createConnection({
                     userID: currentUserID,
