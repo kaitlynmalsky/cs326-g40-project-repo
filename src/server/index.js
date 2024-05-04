@@ -7,6 +7,7 @@ import { createUser, db, getUserByEmail } from './database.js';
 import session, { Session } from 'express-session';
 import PouchDBSessionStore from './session.js';
 import morgan from 'morgan';
+import startPinsService from './pinsService.js';
 import cors from 'cors';
 
 const app = express();
@@ -173,6 +174,9 @@ app.use('/messages', isAuthenticated, messagesRouter);
 app.route('*').all(async (request, response) => {
   response.status(404).send(`Not found: ${request.path}`);
 });
+
+// Start pins service
+startPinsService();
 
 const PORT = 3260;
 app.listen(PORT, () => {

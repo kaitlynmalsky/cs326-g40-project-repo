@@ -7,7 +7,7 @@ import {
   getPin,
   getPinAttendee,
   getPinAttendees,
-  getUpcomingPins,
+  getActivePins,
   removePinAttendee,
   updatePin,
 } from '../database.js';
@@ -24,6 +24,15 @@ pinsRouter.post('/', async (req, res) => {
     return res.status(400).json({
       error: 'Missing at least one of startTime, endTime, details, coords',
     });
+  }
+
+  const now = new Date().toISOString();
+  if (startTime < now || endTime < now) {
+    return res
+      .status(400)
+      .json({
+        error: 'Cannot create a new pin in the past. Time travel not possible.',
+      });
   }
 
   const hostID = /** @type {import('../index.js').AuthenticatedSessionData} */ (
@@ -52,10 +61,10 @@ pinsRouter.get('/', async (req, res) => {
     type = type.toString();
   }
 
-  if (type === 'upcoming') {
-    const upcomingPins = await getUpcomingPins();
+  if (type === 'active') {
+    const activePins = await getActivePins();
 
-    return res.status(200).json(upcomingPins);
+    return res.status(200).json(activePins);
   } else {
     const allPins = await getAllPins();
 

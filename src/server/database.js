@@ -60,13 +60,14 @@ export const db = new PouchDB('villagelink');
  * @property {string} details The pin details
  * @property {[number, number]} coords The [lat,long] coordinates representing the pin's location
  * @property {number} attendeeCount The number of pin attendees
+ * @property {boolean} active If the pin is active
  * @property {string} _id PouchDB ID
  * @property {string} _rev PouchDB revision
  */
 
 /**
  * @typedef {Object} PinAttendee
- * @property {string} pinID
+ * @property {string} pinID The pin ID
  * @property {string} userID
  * @property {string} _id PouchDB ID
  * @property {string} _rev PouchDB revision
@@ -127,6 +128,22 @@ export const db = new PouchDB('villagelink');
  * @property {string} _rev PouchDB revision
  */
 
+/**
+ * Input data to create a Connection Suggestion
+ * @typedef {Object} CreateConnectionSuggestionInput
+ * @property {string} userID
+ * @property {string} targetID
+ */
+
+/**
+ * Represents a connection suggestion
+ * @typedef {Object} ConnectionSuggestion
+ * @property {string} userID
+ * @property {string} targetID
+ * @property {string} _id PouchDB ID
+ * @property {string} _rev PouchDB revision
+ */
+
 // ********************************************
 // Pins
 // ********************************************
@@ -146,14 +163,15 @@ function formatPinKey(pinID) {
  * @returns {Promise<Pin>} The created pin
  */
 export async function createPin(pinData) {
-  const pinStart = new Date(pinData.startTime);
+  const pinEnd = new Date(pinData.endTime);
 
-  const pinID = `${pinStart.getTime()}_${randomUUID()}`;
+  const pinID = `${pinEnd.getTime()}_${randomUUID()}`;
 
   const pinDoc = {
     _id: formatPinKey(pinID),
     pinID,
     ...pinData,
+    active: true,
   };
 
   const { id, rev, ok } = await db.put(pinDoc);
@@ -231,10 +249,31 @@ export async function getAllPins() {
 }
 
 /**
+ * Gets past pins
+ * @param {number} rangeStart
+ * @returns {Promise<Pin[]>}
+ */
+export async function getPastPins(rangeStart) {
+  try {
+    const pastPinsResult = await db.allDocs({
+      include_docs: true,
+      endkey: `pin_${rangeStart}_`,
+      startkey: `pin_${Date.now()}_\ufff0`,
+      descending: true,
+    });
+
+    return pastPinsResult.rows.map((row) => row.doc);
+  } catch (err) {
+    console.log(err);
+    return [];
+  }
+}
+
+/**
  * Retrieve upcoming pins
  * @returns {Promise<Array<Pin>>}
  */
-export async function getUpcomingPins() {
+export async function getActivePins() {
   try {
     const now = Date.now();
 
@@ -326,7 +365,7 @@ export async function createUser(userData) {
       _id: formatUserKey(userID),
       userID,
       ...userData,
-      bio: ""
+      bio: '',
     };
 
     const { rev } = await db.put(userDoc);
@@ -418,9 +457,10 @@ export async function createConnection(connection) {
 
 /**
  *
- * Creates connection object between userID and targetID
+ * Gets connection object between userId and targetID
  * @param {string} userID
  * @param {string} targetID
+ * @returns {Promise<ConnectionSuggestion | null>}
  */
 export async function getConnection(userID, targetID) {
   try {
@@ -453,6 +493,93 @@ export async function getConnections(userID) {
  */
 export async function deleteConnection(connection) {
   return db.remove(connection);
+}
+
+/**
+ * Formats database key for a connection suggestion
+ * @param {string} userID
+ * @param {string} targetID
+ */
+function formatConnectionSuggestionKey(userID, targetID) {
+  return `csuggestion_${userID}_${targetID}`;
+}
+
+/**
+ * Create a connection suggestion
+ * @param {CreateConnectionSuggestionInput} connectionSuggestion
+ */
+export async function createConnectionSuggestion(connectionSuggestion) {
+  const { userID, targetID } = connectionSuggestion;
+
+  const connectionSuggestionKey = formatConnectionSuggestionKey(
+    userID,
+    targetID,
+  );
+
+  const existingConnectionSuggestion = await getConnectionSuggestion(
+    userID,
+    targetID,
+  );
+
+  if (existingConnectionSuggestion) return existingConnectionSuggestion;
+
+  const connectionDoc = {
+    ...connectionSuggestion,
+    _id: connectionSuggestionKey,
+  };
+
+  const { id, rev, ok } = await db.put(connectionDoc);
+
+  if (!ok) {
+    console.error(
+      `Failed to create ${connectionSuggestionKey} (id=${id} , rev=${rev})`,
+    );
+  }
+
+  return {
+    ...connectionDoc,
+    _rev: rev,
+  };
+}
+
+/**
+ *
+ * Gets connection suggestion object between userId and targetID
+ * @param {string} userID
+ * @param {string} targetID
+ * @returns {Promise<ConnectionSuggestion | null>}
+ */
+export async function getConnectionSuggestion(userID, targetID) {
+  try {
+    return await db.get(formatConnectionSuggestionKey(userID, targetID));
+  } catch (err) {
+    return null;
+  }
+}
+
+/**
+ * Retrieves connection suggestions for the specified userID
+ * @param {string} userID
+ * @returns {Promise<Array<ConnectionSuggestion>>}
+ */
+export async function getConnectionSuggestions(userID) {
+  const connectionSuggestionsFilterKey = `csuggestion_${userID}`;
+  const connectionSuggestionsResult = await db.allDocs({
+    include_docs: true,
+    startkey: connectionSuggestionsFilterKey,
+    endkey: `${connectionSuggestionsFilterKey}\ufff0`,
+  });
+
+  return connectionSuggestionsResult.rows.map((row) => row.doc);
+}
+
+/**
+ * Deletes the specified connection
+ * @param {ConnectionSuggestion} connectionSuggestion Connection to delete
+ * @returns {Promise<PouchDB.Core.Response>}
+ */
+export async function deleteConnectionSuggestion(connectionSuggestion) {
+  return db.remove(connectionSuggestion);
 }
 
 // ********************************************
@@ -535,10 +662,6 @@ export async function getPinAttendee(pinID, userID) {
 export async function removePinAttendee(attendee) {
   return db.remove(attendee);
 }
-
-// ********************************************
-// User Pin Notifications
-// ********************************************
 
 // ********************************************
 // Messaging
