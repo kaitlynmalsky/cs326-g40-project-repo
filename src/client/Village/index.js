@@ -101,6 +101,7 @@ export default class VillageView extends View {
 
     const elSize = 12;
     let connectionCount = 0;
+    let currentPopover;
     for (const connection of connections) {
       const userD = await fetch(`http://localhost:3260/users/${connection.targetID}/`);
       if (!userD.ok) {
@@ -169,6 +170,10 @@ export default class VillageView extends View {
         } else {
           popover.style.visibility = 'visible';
         }
+        if (currentPopover) {
+          currentPopover.style.visibility = 'hidden';
+        }
+        currentPopover = popover;
       });
 
       connectionElm.appendChild(grp);

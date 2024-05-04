@@ -79,6 +79,7 @@ export default class ProfileView extends View {
         creatorContainer.appendChild(bioArea);
         const bioInput = document.createElement('textarea');
         bioInput.id = "bioInput";
+        bioInput.classList.add("p-1");
         bioArea.appendChild(bioInput);
         bioInput.value = (
             await dbInstance.getUser(dbInstance.getCurrentUserID())

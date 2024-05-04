@@ -56,7 +56,7 @@ export async function mockUsers() {
         for (let i = 0; i < 20; i++) {
             const user = testUser();
             const targetID = (await dbInstance.addUser(user)).userID;
-            await dbInstance.updateUserBio(currentUserID, mockBios[i]);
+            await dbInstance.updateUserBio(targetID, mockBios[i]);
             await Promise.all([
                 dbInstance.createConnection({
                     userID: currentUserID,
