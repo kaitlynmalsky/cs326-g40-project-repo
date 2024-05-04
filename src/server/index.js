@@ -10,7 +10,15 @@ import morgan from 'morgan';
 import cors from 'cors';
 
 const app = express();
-app.use(cors());
+
+app.set('trust proxy', true);
+app.use(
+  cors({
+    origin: true,
+    allowedHeaders: ['Access-Control-Allow-Origin', 'Content-Type'],
+    credentials: true,
+  }),
+);
 app.use(express.json());
 app.use(morgan('tiny'));
 app.use(
@@ -20,6 +28,10 @@ app.use(
     resave: false,
     saveUninitialized: false,
     store: new PouchDBSessionStore(db),
+    cookie: {
+      sameSite: 'none',
+      httpOnly: true,
+    },
   }),
 );
 

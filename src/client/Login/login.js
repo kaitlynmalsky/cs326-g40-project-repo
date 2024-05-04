@@ -1,9 +1,6 @@
 import GlobalEvents from '../Events/index.js';
 import View from '../View.js';
 import dbInstance from '../database.js';
-import Database from '../database.js';
-
-const API_URL = 'http://localhost:3260';
 
 export default class LoginView extends View {
   constructor() {
@@ -64,7 +61,7 @@ export default class LoginView extends View {
       });
 
       try {
-        const loginResponse = await fetch(`${API_URL}/login`, {
+        const loginResponse = await fetch(`/login`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -78,7 +75,7 @@ export default class LoginView extends View {
         if (loginResponse.ok) {
           console.log('Authentication successful');
 
-          const userResponse = await fetch(`${API_URL}/users/me`);
+          const userResponse = await fetch(`/users/me`);
           const user = await userResponse.json();
 
           dbInstance.setCurrentUserId(user.userID);
