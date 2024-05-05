@@ -135,6 +135,10 @@ userRouter.put('/:userID', async (req, res) => {
   const userID = req.params.userID;
   const userData = req.body;
 
+  console.log("in update route");
+  console.log(JSON.stringify(userData));
+  console.log(`typeof userData is ${typeof userData}`);
+
   if (
     /** @type {import('../index.js').AuthenticatedSessionData} */ (req.session)
       .userID !== userID
