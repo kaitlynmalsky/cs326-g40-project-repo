@@ -112,7 +112,7 @@ export default class ProfileView extends View {
             // icon.classList.add('icn');
             // icon.id = `${option}-icn`;
             // optionDiv.appendChild(icon);
-            const icon = makeElement('i', `${option}-icn`, ['justify-self-center', icnsStatic[i], 'icn'], optionDiv);
+            const icon = makeElement('i', `${option}-icn`, ['justify-self-center', 'icn'].concat(icnsStatic[i].split(' ')), optionDiv);
 
             // const forwardArrow = document.createElement('button');
             // forwardArrow.id = `${option}-forward`;
