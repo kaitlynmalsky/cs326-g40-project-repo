@@ -266,7 +266,7 @@ export default class ProfileView extends View {
             //     console.error(`Put failed: ${err}`);
             // }
 
-            await dbInstance.updateUser(user);
+            user = await dbInstance.updateUser(user);
 
             const saveNoti = document.createElement('i');
             saveNoti.className = 'fa-regular fa-circle-check';
