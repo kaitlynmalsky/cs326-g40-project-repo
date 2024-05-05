@@ -83,6 +83,8 @@ export default class MessagesView extends View {
       const noGroupImage = document.createElement('img');
       noGroupImage.className = "justify-self-center mx-auto";
       noGroupImage.src = "../images/no_group_placeholder.png";
+      noGroupImage.width = 400;
+      noGroupImage.height = 400;
       const noFriendBox = document.createElement('div');
       noFriendBox.innerText = "Looks like this is empty...";
       noFriendBox.className = "text-lg message-text text-center self-center justify-center"
