@@ -107,7 +107,7 @@ export default class ExistingPin extends Pin {
 
     const hostNameElm = document.createElement('p');
     hostNameElm.innerText = this.#host.name;
-    hostNameElm.className = 'flex-auto'
+    hostNameElm.className = 'flex-auto';
 
     pinHeader.appendChild(pinTitle);
     pinHeader.appendChild(hostNameElm);
@@ -170,7 +170,7 @@ export default class ExistingPin extends Pin {
     const pinActionsDiv = document.createElement('div');
     pinActionsDiv.className = 'flex gap-32';
 
-    if (this.#pinInfo.hostID === await dbInstance.getCurrentUserID()) {
+    if (this.#pinInfo.hostID === (await dbInstance.getCurrentUserID())) {
       const editButtonElm = document.createElement('button');
       editButtonElm.id = this.editButtonName;
       editButtonElm.innerText = 'Edit';
@@ -196,10 +196,9 @@ export default class ExistingPin extends Pin {
       const interestButton = document.createElement('button');
       interestButton.id = `${this.interestButtonName}-${this.#pinInfo.pinID}`;
 
-      this.attendee = await dbInstance.getPinAttendee(
-        this.#pinInfo.pinID,
-        await dbInstance.getCurrentUserID(),
-      );
+      const attendees = await dbInstance.getPinAttendees(this.#pinInfo.pinID);
+      const currentUserID = await dbInstance.getCurrentUserID();
+      this.attendee = attendees.find((a) => a.userID === currentUserID);
       interestButton.innerText = this.attendee ? 'Leave' : 'Join'; // Depending on if user is already interested or not
       interestButton.addEventListener('click', () => this.toggleAttending());
 
@@ -224,10 +223,7 @@ export default class ExistingPin extends Pin {
       this.attendee = null;
       btn.innerText = 'Join';
     } else {
-      this.attendee = await dbInstance.addPinAttendee(
-        this.id,
-        await dbInstance.getCurrentUserID(),
-      );
+      this.attendee = await dbInstance.joinPin(this.id);
       btn.innerText = 'Leave';
     }
   }

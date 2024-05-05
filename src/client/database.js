@@ -454,7 +454,7 @@ class Database {
    * @returns {Promise<PinAttendee>}
    */
   async joinPin(pinID) {
-    const joinPinResponse = await fetch(`/${pinID}/attendees`, {
+    const joinPinResponse = await fetch(`/pins/${pinID}/attendees`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -472,9 +472,10 @@ class Database {
   /**
    * Get the attendees of a pin
    * @param {string} pinID
+   * @returns {Promise<PinAttendee[]>}
    */
   async getPinAttendees(pinID) {
-    const pinAttendeesResponse = await fetch(`/${pinID}/attendees`);
+    const pinAttendeesResponse = await fetch(`/pins/${pinID}/attendees`);
 
     if (!pinAttendeesResponse.ok) {
       console.error('Failed to get pin attendees');
@@ -490,7 +491,7 @@ class Database {
    */
   async removePinAttendee(attendee) {
     const removeAttendeeResponse = await fetch(
-      `/${attendee.pinID}/attendees/${attendee.userID}`,
+      `/pins/${attendee.pinID}/attendees/${attendee.userID}`,
       {
         method: 'DELETE',
       },
