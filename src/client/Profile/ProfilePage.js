@@ -175,18 +175,7 @@ export default class ProfileView extends View {
 
         const layers = [bg, ears, body, hat];
 
-
-        let user;
-        try {
-
-            const getResponse = await fetch(`/users/me`, { method: "GET" });
-            if (!getResponse.ok) {
-                console.error(`failed to get data of current user`);
-            }
-            user = await getResponse.json();
-        } catch (err) {
-            console.error(`failed getting user data: ${err}`);
-        }
+        let user = await dbInstance.getUser(await dbInstance.getCurrentUserID());
 
         layers.forEach((l) => (l.i = user.avatarConfig[l.name]));
 
