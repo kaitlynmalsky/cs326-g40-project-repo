@@ -1329,6 +1329,7 @@ video {
 #active-view {
   height: 100%;
   width: 100%;
+  background-color: #fdf3a2;
 }
 
 html {
@@ -1404,9 +1405,13 @@ main {
   margin: 0 auto;
   padding: 20px;
   margin-top: 20px;
-  background-color: #fff5e6;
-  border: 3px solid #ffd8a8;
+  background-color: #d9b684;
+  border: 5px solid #8e4e01;
   border-radius: 8px;
+}
+
+#connection-label {
+  color: #412003;
 }
 
 .grid-dude {
@@ -1429,7 +1434,7 @@ main {
   align-items: center;
   padding: 10px;
   /*background-color: #000000;*/
-  border: 4px outset #a25638;
+  border: 4px solid #a25638;
   margin-bottom: 10px;
 }
 

@@ -59,7 +59,7 @@ export default class VillageView extends View {
 
     const header1Elm = document.createElement('div');
     header1Elm.className = 'header';
-    header1Elm.innerHTML = `<h2>CONNECTIONS</h2><button onclick="document.dispatchEvent(new CustomEvent('toggleDelete'))">Toggle Delete</button>`;
+    header1Elm.innerHTML = `<h2 id="connection-label">CONNECTIONS</h2><button onclick="document.dispatchEvent(new CustomEvent('toggleDelete'))">Toggle Delete</button>`;
     villageViewElm.appendChild(header1Elm);
 
     const connectionsDiv = document.createElement('div');

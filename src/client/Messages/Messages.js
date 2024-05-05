@@ -40,7 +40,6 @@ export default class MessagesView extends View {
 
     this.#col1 = document.createElement('div');
 
-    //this.#col1.className = "max-h-screen overflow-y-scroll w-1/5 h-100 message-view-col bg-amber-500";
     this.#col1.className = 'overscroll-contain overflow-y-scroll col-span-1';
     this.#col1.id = 'col1';
 
@@ -86,7 +85,7 @@ export default class MessagesView extends View {
       noGroupImage.width = 400;
       noGroupImage.height = 400;
       const noFriendBox = document.createElement('div');
-      noFriendBox.innerText = "Looks like this is empty...";
+      noFriendBox.innerText = "We couldn't find any groups...";
       noFriendBox.className = "text-lg message-text text-center self-center justify-center"
       this.#chatView.appendChild(noGroupImage);
       this.#chatView.appendChild(document.createElement('br'));
