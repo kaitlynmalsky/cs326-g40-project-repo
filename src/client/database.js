@@ -277,16 +277,7 @@ class Database {
   // ********************************************
 
   /**
-   * Formats `userID` into a database key
-   * @param {string} userID the ID of the user
-   * @returns {string}
-   */
-  #formatUserKey(userID) {
-    return `user_${userID}`;
-  }
-
-  /**
-   * Retrieves a user
+   * Calls the get backend to get user by userID
    * @param {string} userID The ID of the user to retrieve
    * @returns {Promise<User>}
    */
@@ -294,119 +285,69 @@ class Database {
     const userResponse = await fetch(`/users/${userID}`);
 
     return userResponse.json();
-    /*try {
-      return await this.#db.get(this.#formatUserKey(userID));
-    } catch (err) {
-      return null;
-    }*/
   }
 
   /**
-   * Retrieves user by email
+   * Calls the get backend to get user by email 
    * @param {string} email The email of the user to retrieve
    * @returns {Promise<User>}
    */
   async getUserByEmail(email) {
-    const users = await this.#db.allDocs({
-      include_docs: true,
-      startkey: 'user',
-      endkey: `user\ufff0`,
-    });
-
-    const user = users.rows.find((row) => row.doc.email === email)?.doc;
-    return user || null;
-  }
-
-  /**
-   * Gets a user by name
-   * @param {string} name
-   * @returns {Promise<User>}
-   */
-  async getUserByName(name) {
-    const users = await this.#db.allDocs({
-      include_docs: true,
-      startkey: 'user',
-      endkey: 'user\ufff0',
-    });
-
-    console.log(users);
-    const user = users.rows.find((row) => row.doc.name === name);
-    return user.doc;
-  }
-
-  /**
-   * Adds a new user
-   * @param {CreateUserInput} userData User data to create a new user
-   * @returns {Promise<User>} The created user
-   */
-  async addUser(userData) {
-    const existingUser = await this.getUserByEmail(userData.email);
-    if (existingUser) {
-      //console.error(`An account with ${userData.email} already exists`);
-      return existingUser;
-    } else {
-      const userID = self.crypto.randomUUID();
-      const userDoc = {
-        _id: this.#formatUserKey(userID),
-        userID,
-        ...userData,
-        bio: '', // reminder to add this thing to the server side
-      };
-
-      const { rev } = await this.#db.put(userDoc);
-
-      return {
-        ...userDoc,
-        _rev: rev,
-      };
+    try {
+      const data = await fetch(`/users/?email=${email}`);
+      if (!data.ok) {
+        console.error(`FAILED TO GET USER BY EMAIL ${email}`);
+        return;
+      }
+      return await data.json();
+    } catch (err) {
+      console.error(err);
+      return null;
     }
   }
 
   /**
    *
-   * Updates existing user
+   * Calls the update backend to update the user 
    * @param {User} user
    * @returns {Promise<User>}
    */
   async updateUser(user) {
-    const { rev } = await this.#db.put(user);
-
-    user._rev = rev;
-
-    return user;
+    const data = await fetch(`/users/${user.userID}`, {
+      method: 'PUT',
+      body: JSON.stringify(user)
+    });
+    if (!data.ok) {
+      console.error(`FAILED TO UPDATE USER ${user}`);
+    }
+    return data.json();
   }
 
   /**
-   * Updates the bio of the user with the given ID.
-   * @param {string} uID
-   * @param {string} bio
+   * Calls the update backend to update the bio of the user with the given ID.
+   * @param {string} uID 
+   * @param {string} bio 
    * @returns {Promise<User|null>}
    */
   async updateUserBio(uID, bio) {
-    const user = await this.getUser(uID);
-    if (!user) {
-      console.error(`cannot update the bio of user ${uID}`);
-      return null;
-    } else {
-      user.bio = bio;
-      return this.updateUser(user);
-    }
-  }
-
-  /**
-   * Retrieve all users
-   * @returns {Promise<Array<User>>}
-   */
-  async getAllUsers() {
     try {
-      const usersResult = await this.#db.allDocs({
-        include_docs: true,
-        startkey: 'user_',
-        endkey: `user_\ufff0`,
+      const user = await this.getUser(uID);
+      const newUserData = {
+        ...user,
+        userID: uID,
+        bio: bio
+      };
+      const data = await fetch(`/users/${newUserData.userID}`, {
+        method: 'PUT',
+        body: JSON.stringify(newUserData)
       });
-
-      return usersResult.rows.map((row) => row.doc);
+      if (!data.ok) {
+        console.error(`FAILED TO UPDATE USER BIO : ${uID}`);
+        return null;
+      }
+      return data.json();
     } catch (err) {
+      console.error(err);
       return null;
     }
   }
@@ -416,47 +357,12 @@ class Database {
   // ********************************************
 
   /**
-   * Formats `userID` and `targetID` into a database key
-   * @param {string} userID
-   * @param {string} targetID
-   * @returns {string}
-   */
-  #formatConnectionKey(userID, targetID) {
-    return `connection_${userID}_${targetID}`;
-  }
-
-  /**
-   * Creates a new connection
+   * Calls a post call to create connection 
    * @param {CreateVillageConnectionInput} connection Input data to create the connection
    * @returns {Promise<VillageConnection>} The newly created connection
    */
   async createConnection(connection) {
-    console.log('Creating connection ', connection);
-    const { userID, targetID } = connection;
-
-    const connectionKey = this.#formatConnectionKey(userID, targetID);
-
-    const existingConnection = await this.getConnection(userID, targetID);
-
-    if (existingConnection) return existingConnection;
-
-    const connectionDoc = {
-      ...connection,
-      _id: connectionKey,
-    };
-
-    const { id, rev, ok } = await this.#db.put(connectionDoc);
-
-    if (!ok) {
-      console.error(
-        `Failed to create ${connectionKey} (id=${id} , rev=${rev})`,
-      );
-    }
-
-    return {
-      ...connectionDoc,
-      _rev: rev,
-    };
+    const createPromise = 
   }
 
   /**
