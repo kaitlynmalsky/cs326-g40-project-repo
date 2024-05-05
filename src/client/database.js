@@ -362,47 +362,57 @@ class Database {
    * @returns {Promise<VillageConnection>} The newly created connection
    */
   async createConnection(connection) {
-    const createPromise = 
-  }
-
-  /**
-   *
-   * Creates connection object between userId and targetID
-   * @param {string} userID
-   * @param {string} targetID
-   */
-  async getConnection(userID, targetID) {
     try {
-      return await this.#db.get(this.#formatConnectionKey(userID, targetID));
+      const createPromise = await fetch(`/users/${connection.userID}/connections/`, {
+        method: 'POST',
+        body: JSON.stringify({
+          targetID: connection.targetID
+        })
+      });
+      if (!createPromise.ok) {
+        console.error(`FAILED TO CREATE CONNECTION`);
+        return;
+      }
+      return createPromise.json();
     } catch (err) {
-      return null;
+      console.error(err);
     }
   }
 
   /**
-   * Retrieves connections for either the specified userID or for the current user
+   * Calls the get call to get all connections of userID 
    * @param {string} [userID]
    * @returns {Promise<Array<VillageConnection>>}
    */
   async getConnections(userID) {
-    userID = userID || (await this.getCurrentUserID());
-    const connectionsFilterKey = `connection_${userID}`;
-    const connectionsResult = await this.#db.allDocs({
-      include_docs: true,
-      startkey: connectionsFilterKey,
-      endkey: `${connectionsFilterKey}\ufff0`,
-    });
-
-    return connectionsResult.rows.map((row) => row.doc);
+    try {
+      const getPromise = await fetch(`/users/${userID}/connections`);
+      if (!getPromise.ok) {
+        console.error(`FAILED TO GET ALL CONNECTIONS OF ${userID}`);
+        return;
+      }
+      return getPromise.json();
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   /**
-   * Deletes the specified connection
+   * Calls the delete backend to delete connection
    * @param {VillageConnection} connection Connection to delete
    * @returns {Promise<PouchDB.Core.Response>}
    */
   async deleteConnection(connection) {
-    return this.#db.remove(connection);
+    try {
+      const deletePromise = await fetch(`/users/${connection.userID}/connections/${connection.targetID}`, {
+        method: 'DELETE'
+      });
+      return deletePromise.json();
+
+    } catch (err) {
+      console.error(err);
+    }
+
   }
 
   // ********************************************
