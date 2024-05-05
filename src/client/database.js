@@ -195,7 +195,7 @@ class Database {
    * @throws {Error}
    */
   async createPin(pinData) {
-    const pin_Data_Promise = await fetch(`http://localhost:3260/pins/`, {
+    const pin_Data_Promise = await fetch(`/pins`, {
       method: 'POST',
       body: JSON.stringify(pinData)
     });
@@ -214,7 +214,7 @@ class Database {
    */
   async getPin(pinID) {
     try {
-      const pinData = await fetch(`http://localhost:3260/pins/${pinID}`);
+      const pinData = await fetch(`/pins/${pinID}`);
       if (!pinData.ok) {
         console.error(`FAILED TO GET PIN ${pinID}`);
         return null;
@@ -232,7 +232,7 @@ class Database {
    * @returns {Promise<Pin>}
    */
   async updatePin(pin) {
-    const data = await fetch(`http://localhost:3260/pins/${pin.pinID}`, {
+    const data = await fetch(`/pins/${pin.pinID}`, {
       method: 'PUT',
       body: JSON.stringify(pin)
     });
@@ -251,7 +251,7 @@ class Database {
    * @returns {Promise<PouchDB.Core.Response>}
    */
   async deletePin(pin) {
-    const data = await fetch(`http://localhost:3260/pins/${pin.pinID}`, {
+    const data = await fetch(`/pins/${pin.pinID}`, {
       method: 'DELETE',
     });
     return await data.json();

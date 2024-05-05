@@ -81,14 +81,14 @@ export default class VillageView extends View {
    */
   async loadConnections() {
     this.connectionsDiv.innerHTML = '';
-    const userData = await fetch(`http://localhost:3260/users/me`)
+    const userData = await fetch(`/users/me`)
     if (!userData.ok) {
       console.error("FAILED TO GET USERDATA");
     }
     const userJson = await userData.json();
     const userID = userJson.userID;
 
-    const connectionData = await fetch(`http://localhost:3260/users/${userID}/connections`);
+    const connectionData = await fetch(`/users/${userID}/connections`);
     if (!connectionData.ok) {
       console.error(`FAILED TO GET CONNECTIONS OF ${userID}`);
     }
@@ -103,7 +103,7 @@ export default class VillageView extends View {
     let connectionCount = 0;
     let currentPopover;
     for (const connection of connections) {
-      const userD = await fetch(`http://localhost:3260/users/${connection.targetID}/`);
+      const userD = await fetch(`/users/${connection.targetID}/`);
       if (!userD.ok) {
         console.error(`FAILED TO GET DATA OF USER ${connection}`);
       }
@@ -134,7 +134,7 @@ export default class VillageView extends View {
       subConn.className = 'sub-connections';
       subConn.style.maxHeight = '200px';
       subConn.style.overflowY = 'auto';
-      let dataArrData = await fetch(`http://localhost:3260/users/${user.userID}/connections/`)
+      let dataArrData = await fetch(`/users/${user.userID}/connections/`)
       if (!dataArrData.ok) {
         console.error("FAILED TO GET CURRENT USER CONNECTIONS");
       }
@@ -142,7 +142,7 @@ export default class VillageView extends View {
       console.log(dataArr);
 
       for (const elm of dataArr) {
-        const dataElmPromise = await fetch(`http://localhost:3260/users/${elm.targetID}/`)
+        const dataElmPromise = await fetch(`/users/${elm.targetID}/`)
         if (!dataElmPromise.ok) {
           console.error(`FAILED TO GET USER DATA OF ${elm}`);
         }
@@ -184,7 +184,7 @@ export default class VillageView extends View {
       delBtn.innerText = 'Delete';
       delBtn.addEventListener('click', async () => {
         try {
-          const delResponse = await fetch(`http://localhost:3260/users/${connection.userID}/connections/${connection.targetID}`, {
+          const delResponse = await fetch(`/users/${connection.userID}/connections/${connection.targetID}`, {
             method: 'DELETE'
           });
           if (!delResponse.ok) {

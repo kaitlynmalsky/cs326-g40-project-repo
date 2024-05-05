@@ -179,7 +179,7 @@ export default class ProfileView extends View {
         let user;
         try {
 
-            const getResponse = await fetch(`http://localhost:3260/users/me`, { method: "GET" });
+            const getResponse = await fetch(`/users/me`, { method: "GET" });
             if (!getResponse.ok) {
                 console.error(`failed to get data of current user`);
             }
@@ -251,7 +251,7 @@ export default class ProfileView extends View {
             const bioText = bioInput.value;
             user.bio = bioText;
             try {
-                const putResponse = await fetch(`http://localhost:3260/users/${user.userID}`, { method: "PUT", body: JSON.stringify(user) });
+                const putResponse = await fetch(`/users/${user.userID}`, { method: "PUT", body: JSON.stringify(user) });
                 if (!putResponse.ok) {
                     throw new Error(`Failed to update user`);
                 }
