@@ -68,22 +68,6 @@ export default class ProfileView extends View {
 
         const chooseContainer = makeElement('div', 'chooseContainer', ['gap-y-3'], creatorContainerRight);
 
-        // const bioLabel = document.createElement('h1');
-        // bioLabel.innerText = "Bio:";
-        // bioLabel.id = "bioLabel";
-        // const bioArea = document.createElement('div');
-        // bioArea.appendChild(bioLabel);
-        // bioArea.id = "bioArea";
-        // bioArea.className = "h-max";
-        // creatorContainer.appendChild(bioArea);
-        // const bioInput = document.createElement('textarea');
-        // bioInput.id = "bioInput";
-        // bioInput.classList.add("p-1");
-        // bioArea.appendChild(bioInput);
-        // bioInput.value = (
-        //     await dbInstance.getUser(await dbInstance.getCurrentUserID())
-        // ).bio;
-
         const bioArea = makeElement('div', 'bioArea', ['h-max'], creatorContainer);
         const bioLabel = makeElement('h1', 'bioLabel', null, bioArea);
         bioLabel.innerText = "Bio:";
@@ -93,44 +77,19 @@ export default class ProfileView extends View {
         ).bio;
 
         ['Bg', 'Body', 'Ears', 'Hat'].forEach((option, i) => {
-            // const optionDiv = document.createElement('div');
-            // optionDiv.className = 'grid grid-cols-8';
             const optionDiv = makeElement('div', null, ['grid', 'grid-cols-8'], chooseContainer);
 
-            // const backArrow = document.createElement('button');
-            // backArrow.id = `${option}-back`;
-            // backArrow.classList.add('arrow');
-            // backArrow.classList.add('col-span-1');
-            // backArrow.classList.add(`back${option}`);
-            // backArrow.innerHTML = '<i class="fa-solid fa-caret-left"></i>';
-            // optionDiv.appendChild(backArrow);
             const backArrow = makeElement('button', `${option}-back`, ['arrow', 'col-span-1', `back${option}`], optionDiv);
             backArrow.innerHTML = '<i class="fa-solid fa-caret-left"></i>';
 
-            // const icon = document.createElement('i');
-            // icon.className = 'justify-self-center ' + icnsStatic[i];
-            // icon.classList.add('icn');
-            // icon.id = `${option}-icn`;
-            // optionDiv.appendChild(icon);
             const icon = makeElement('i', `${option}-icn`, ['justify-self-center', 'icn'].concat(icnsStatic[i].split(' ')), optionDiv);
 
-            // const forwardArrow = document.createElement('button');
-            // forwardArrow.id = `${option}-forward`;
-            // forwardArrow.classList.add('arrow');
-            // forwardArrow.classList.add('col-span-1');
-            // forwardArrow.classList.add(`forward${option}`);
-            // forwardArrow.innerHTML = '<i class="fa-solid fa-caret-right"></i>';
-            // optionDiv.appendChild(forwardArrow);
             const forwardArrow = makeElement('button', `${option}-forward`, ['arrow', 'col-span-1', `forward${option}`], optionDiv);
             forwardArrow.innerHTML = '<i class="fa-solid fa-caret-right"></i>';
 
             chooseContainer.appendChild(optionDiv);
         });
 
-        // const saveButton = document.createElement('button');
-        // saveButton.id = 'save';
-        // saveButton.innerText = 'Save';
-        // bioArea.appendChild(saveButton);
         const saveButton = makeElement('button', 'save', null, bioArea);
         saveButton.innerText = 'Save';
 
@@ -268,10 +227,7 @@ export default class ProfileView extends View {
 
             user = await dbInstance.updateUser(user);
 
-            const saveNoti = document.createElement('i');
-            saveNoti.className = 'fa-regular fa-circle-check';
-            saveNoti.id = 'saveNoti';
-            document.getElementById('profilePage-view').appendChild(saveNoti);
+            const saveNoti = makeElement('i', 'saveNoti', ['fa-regular', 'fa-circle-check'], document.getElementById('profilePage-view'));
 
             let op = 1;
             saveNoti.style.opacity = op + '';
