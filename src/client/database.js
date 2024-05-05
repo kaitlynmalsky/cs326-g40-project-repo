@@ -130,7 +130,7 @@ class Database {
 
 
   /**
-   * Saves `userID` to `localStorage`
+   * Saves `userID` to `localStorage` (keep client-side database calls)
    * @param {string} userID
    */
   async setCurrentUserId(userID) {
@@ -151,8 +151,9 @@ class Database {
     }
   }
 
+
   /**
-   * Retrieves the current `userID` from `localStorage`
+   * Retrieves the current `userID` from `localStorage` (keep client-side database calls)
    * @returns {Promise<string | null>}
    */
   async getCurrentUserID() {
@@ -171,7 +172,7 @@ class Database {
   }
 
   /**
-   * Deletes the current `userId` from `localStorage`
+   * Deletes the current `userId` from `localStorage` (keep client-side database calls)
    */
   async deleteCurrentUserId() {
     const docID = 'current_user';

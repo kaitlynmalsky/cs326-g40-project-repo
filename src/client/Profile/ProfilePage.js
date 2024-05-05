@@ -59,7 +59,7 @@ export default class ProfileView extends View {
         const userName = /** @type {HTMLInputElement}*/ (makeElement('input', 'userName', null, userDiv));
         userName.type = 'text';
         userName.value = (
-            await dbInstance.getUser(await dbInstance.getCurrentUserID())
+            await dbInstance.getUser(await dbInstance.getCurrentUserID()) // do not replacewith fetch call
         ).username;
 
         const iconPreview = /**@type {HTMLCanvasElement}*/ (makeElement('canvas', 'myIcon', null, creatorContainerLeft));
@@ -175,7 +175,18 @@ export default class ProfileView extends View {
 
         const layers = [bg, ears, body, hat];
 
-        const user = await dbInstance.getUser(await dbInstance.getCurrentUserID());
+
+        let user;
+        try {
+            const curr_user_id = await dbInstance.getCurrentUserID();
+            const getResponse = await fetch(`http://localhost:3260/users/${curr_user_id}`, { method: "GET" });
+            if (!getResponse.ok) {
+                console.error(`failed to get data of user ${curr_user_id}`);
+            }
+            user = await getResponse.json();
+        } catch (err) {
+            console.error(`failed getting user data: ${err}`);
+        }
 
         layers.forEach((l) => (l.i = user.avatarConfig[l.name]));
 
@@ -226,7 +237,7 @@ export default class ProfileView extends View {
             animation(b);
         };
 
-        document.getElementById('save').addEventListener('click', async () => {
+        document.getElementById('save').addEventListener('click', async() => {
             const userName = /**@type {HTMLInputElement} */ (
                 document.getElementById('userName')
             );
@@ -239,7 +250,16 @@ export default class ProfileView extends View {
             const bioInput = /** @type {HTMLTextAreaElement} */ (document.getElementById('bioInput'));
             const bioText = bioInput.value;
             user.bio = bioText;
-            await dbInstance.updateUser(user);
+            try {
+                const putResponse = await fetch(`http://localhost:3260/users/${user.userID}`, { method: "PUT", body: JSON.stringify(user) });
+                if (!putResponse.ok) {
+                    throw new Error(`Failed to update user`);
+                }
+                console.log("user updated successfully");
+            } catch (err) {
+                console.error(`Put failed: ${err}`);
+            }
+            //await dbInstance.updateUser(user);
 
             const saveNoti = document.createElement('i');
             saveNoti.className = 'fa-regular fa-circle-check';
