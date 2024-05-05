@@ -35,7 +35,7 @@
 
 #active-view {
     @apply w-full h-full;
-    background-color: #fdf3a2;
+    /* background-color: #fdf3a2; */
 }
 
 html {
