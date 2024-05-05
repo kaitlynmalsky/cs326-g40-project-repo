@@ -87,11 +87,8 @@ export default class LoginView extends View {
             this.showAlert(passwordDiv, 'Incorrect email or password!'); // Added line to show alert for wrong password
           } else if (loginResponse.status === 404) {
             // Invalid email
-            this.showAlert(emailDiv, 'Incorrect email or password!'); // Added line to show alert for incorrect email or not a user
-          } else {
-            // Some other error
-            // TODO: show something
-          }
+            this.showAlert(emailDiv, 'Incorrect email or User does not exist!'); // Added line to show alert for incorrect email or not a user
+          } 
         }
       } catch (error) {
         console.error('Error during authentication:', error);

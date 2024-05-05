@@ -136,17 +136,15 @@ export default class SignupView extends View {
 
     if (signupResponse.ok) {
       console.log('User signed up successfully');
-
       const user = await signupResponse.json();
-      // console.log(user);
       dbInstance.setCurrentUserId(user.userID); // Set current user ID
       GlobalEvents.login();
       GlobalEvents.navigate('profile');
     } else {
       const errorMessage = await signupResponse.text();
-      // console.log(errorMessage);
-      console.error('Error signing up:', errorMessage);
-      this.showAlert(formSection, 'Error signing up. Please try again later.');
+      const errorObject = JSON.parse(errorMessage);
+      const errorMessageText = errorObject.error;
+      this.showAlert(formSection, errorMessageText);
     }
   } catch (error) {
     console.error('Error signing up:', error);
