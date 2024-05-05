@@ -51,7 +51,7 @@ export default class MapView extends View {
    * @returns {Promise<HTMLElement>}
    */
   async render() {
-    await mockPins();
+    //await mockPins();
 
     // Create component root
     const elm = document.createElement('div');

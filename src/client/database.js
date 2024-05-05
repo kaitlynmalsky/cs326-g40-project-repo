@@ -192,6 +192,9 @@ class Database {
    */
   async createPin(pinData) {
     const createPinResponse = await fetch(`/pins`, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
       method: 'POST',
       body: JSON.stringify(pinData),
     });
@@ -234,6 +237,9 @@ class Database {
   async updatePin(pin) {
     const updatePinResponse = await fetch(`/pins/${pin.pinID}`, {
       method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
       body: JSON.stringify(pin),
     });
 
@@ -325,6 +331,9 @@ class Database {
   async updateUser(user) {
     const data = await fetch(`/users/${user.userID}`, {
       method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
       body: JSON.stringify(user),
     });
     if (!data.ok) {
@@ -349,6 +358,9 @@ class Database {
       };
       const data = await fetch(`/users/${newUserData.userID}`, {
         method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify(newUserData),
       });
       if (!data.ok) {
@@ -377,6 +389,9 @@ class Database {
         `/users/${connection.userID}/connections/`,
         {
           method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
           body: JSON.stringify({
             targetID: connection.targetID,
           }),
@@ -441,6 +456,9 @@ class Database {
   async joinPin(pinID) {
     const joinPinResponse = await fetch(`/${pinID}/attendees`, {
       method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
     });
 
     if (!joinPinResponse.ok) {

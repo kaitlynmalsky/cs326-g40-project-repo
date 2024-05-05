@@ -18,6 +18,7 @@ const pinsRouter = Router();
  * Create a new pin
  */
 pinsRouter.post('/', async (req, res) => {
+  console.log(req.body);
   const { startTime, endTime, details, coords } = req.body;
 
   if (!startTime || !endTime || !details || !coords) {
