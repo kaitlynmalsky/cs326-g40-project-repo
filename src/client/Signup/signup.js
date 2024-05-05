@@ -135,7 +135,7 @@ export default class SignupView extends View {
         if (signupResponse.ok) {
           console.log('User signed up successfully');
           const user = await signupResponse.json();
-          dbInstance.setCurrentUserId(user.userID); // Set current user ID
+          await dbInstance.setCurrentUserId(user.userID); // Set current user ID
           GlobalEvents.login();
           GlobalEvents.navigate('profile');
         } else {

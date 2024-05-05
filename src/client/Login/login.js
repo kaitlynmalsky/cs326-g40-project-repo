@@ -78,7 +78,7 @@ export default class LoginView extends View {
           const userResponse = await fetch(`/users/me`);
           const user = await userResponse.json();
 
-          dbInstance.setCurrentUserId(user.userID);
+          await dbInstance.setCurrentUserId(user.userID);
           GlobalEvents.login();
           GlobalEvents.navigate('map');
         } else {

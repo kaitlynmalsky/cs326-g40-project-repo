@@ -123,10 +123,11 @@ export class App {
       return this.#navigateTo('map');
     }
 
-    if (
-      this.#routes[routeKey].authRequired &&
-      !(await dbInstance.getCurrentUserID())
-    ) {
+    const currentUserID = await dbInstance.getCurrentUserID();
+
+    console.log('userID', currentUserID);
+
+    if (this.#routes[routeKey].authRequired && !currentUserID) {
       return GlobalEvents.navigate('login');
     }
 
