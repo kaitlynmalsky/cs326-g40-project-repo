@@ -146,11 +146,25 @@ export default class ProfileView extends View {
             '../icons/options/ketchupRaccoon.png',
             '../icons/options/limeRaccoon.png',
             '../icons/options/cheeseRaccoon.png',
+            '../icons/options/blueberryRaccoon.png',
+            '../icons/options/bubblegumRaccoon.png',
+            '../icons/options/ketchupCat.png',
+            '../icons/options/limeCat.png',
+            '../icons/options/cheeseCat.png',
+            '../icons/options/blueberryCat.png',
+            '../icons/options/bubblegumCat.png'
         ]);
         const ears = createLayer('ears', [
             '../icons/options/ketchupRaccoonEars.png',
             '../icons/options/limeRaccoonEars.png',
             '../icons/options/cheeseRaccoonEars.png',
+            '../icons/options/blueberryRaccoonEars.png',
+            '../icons/options/bubblegumRaccoonEars.png',
+            '../icons/options/ketchupCatEars.png',
+            '../icons/options/limeCatEars.png',
+            '../icons/options/cheeseCatEars.png',
+            '../icons/options/blueberryCatEars.png',
+            '../icons/options/bubblegumCatEars.png',
         ]);
         const hat = createLayer('hat', ['', '../icons/options/sombrero.png']);
         const bg = createLayer('bg', [
