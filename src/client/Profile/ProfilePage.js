@@ -178,10 +178,10 @@ export default class ProfileView extends View {
 
         let user;
         try {
-            const curr_user_id = await dbInstance.getCurrentUserID();
-            const getResponse = await fetch(`http://localhost:3260/users/${curr_user_id}`, { method: "GET" });
+
+            const getResponse = await fetch(`http://localhost:3260/users/me`, { method: "GET" });
             if (!getResponse.ok) {
-                console.error(`failed to get data of user ${curr_user_id}`);
+                console.error(`failed to get data of current user`);
             }
             user = await getResponse.json();
         } catch (err) {
