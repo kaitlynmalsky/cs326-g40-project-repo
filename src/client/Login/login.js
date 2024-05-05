@@ -1,7 +1,6 @@
 import GlobalEvents from '../Events/index.js';
 import View from '../View.js';
 import dbInstance from '../database.js';
-import 
 
 export default class LoginView extends View {
   constructor() {

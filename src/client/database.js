@@ -1,5 +1,3 @@
-
-
 /**
  * Avatar configuration
  * @typedef {object} AvatarConfig
@@ -177,10 +175,10 @@ class Database {
    */
   async deleteCurrentUserId() {
     const docID = 'current_user';
-    try{
+    try {
       const doc = await this.#db.get(docID);
       await this.#db.remove(doc);
-    } catch(err){
+    } catch (err) {
       console.error(err);
     }
   }
@@ -189,47 +187,38 @@ class Database {
   // Pins
   // ********************************************
 
-
   /**
-   * Creates a new pin
+   * Calls the backend route to create pin data 
    * @param {CreatePinInput} pinData Input data to create the pin
    * @returns {Promise<Pin>} The created pin
+   * @throws {Error}
    */
   async createPin(pinData) {
-    const pinStart = new Date(pinData.startTime);
-
-    const pinID = `${pinStart.getTime()}_${self.crypto.randomUUID()}`;
-
-    const pinDoc = {
-      _id: this.#formatPinKey(pinID),
-      pinID,
-      ...pinData,
-    };
-
-    const { id, rev, ok } = await this.#db.put(pinDoc);
-
-    if (!ok) {
-      console.error(`Failed to create ${pinID} (id=${id} , rev=${rev})`);
+    const pin_Data_Promise = await fetch(`http://localhost:3260/pins/`, {
+      method: 'POST',
+      body: JSON.stringify(pinData)
+    });
+    if (!pin_Data_Promise.ok) {
+      console.error(`FAILED TO CREATE PIN WITH ${pinData}`);
+      return;
     }
-
-    await this.addPinAttendee(pinID, pinData.hostID);
-
-    return {
-      ...pinDoc,
-      _id: id,
-      _rev: rev,
-    };
+    return await pin_Data_Promise.json();
   }
 
   /**
-   * Gets pin information
+   * Calls the backend route to get pin information
    * @param {string} pinID The ID of the pin to retrieve
    * @returns {Promise<Pin | null>}
    * @throws {Error}
    */
   async getPin(pinID) {
     try {
-      return await this.#db.get(this.#formatPinKey(pinID));
+      const pinData = await fetch(`http://localhost:3260/pins/${pinID}`);
+      if (!pinData.ok) {
+        console.error(`FAILED TO GET PIN ${pinID}`);
+        return null;
+      }
+      return await pinData.json();
     } catch (err) {
       console.error(err);
       return null;
@@ -237,47 +226,34 @@ class Database {
   }
 
   /**
-   * Updates a pin
+   * Calls the backend Update route to update pin 
    * @param {Pin} pin The pin to update
    * @returns {Promise<Pin>}
    */
   async updatePin(pin) {
-    const { rev, ok, id } = await this.#db.put(pin);
+    const data = await fetch(`http://localhost:3260/pins/${pin.pinID}`, {
+      method: 'PUT',
+      body: JSON.stringify(pin)
+    });
 
-    if (!ok) {
-      console.error(`Failed to update ${pin.pinID} (id=${id} , rev=${rev})`);
+
+    if (!data.ok) {
+      console.error(`Failed to update ${pin.pinID}`);
     }
 
-    pin._rev = rev;
-
-    return pin;
+    return await data.json();
   }
 
   /**
-   * Delete a pin
+   * Calls the backend Delete route to delete pin
    * @param {Pin} pin The pin to delete
    * @returns {Promise<PouchDB.Core.Response>}
    */
   async deletePin(pin) {
-    return this.#db.remove(pin);
-  }
-
-  /**
-   * Retrieve all pins
-   * @returns {Promise<Array<Pin>>}
-   */
-  async getAllPins() {
-    try {
-      const pinsResult = await this.#db.allDocs({
-        include_docs: true,
-        startkey: 'pin',
-        endkey: `pin\ufff0`,
-      });
-
-      return pinsResult.rows.map((row) => row.doc);
-    } catch (err) {
-      return null;
-    }
+    const data = await fetch(`http://localhost:3260/pins/${pin.pinID}`, {
+      method: 'DELETE',
+    });
+    return await data.json();
   }
 
   /**
