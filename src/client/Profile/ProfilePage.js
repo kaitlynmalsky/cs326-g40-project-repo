@@ -140,11 +140,15 @@ export default class ProfileView extends View {
             '../icons/options/blueberryCatEars.png',
             '../icons/options/bubblegumCatEars.png',
         ]);
-        const hat = createLayer('hat', ['', '../icons/options/sombrero.png']);
+        const hat = createLayer('hat', ['', '../icons/options/sombrero.png', '../icons/options/top_hat.png']);
         const bg = createLayer('bg', [
             '../icons/options/theStarryNight.png',
             '../icons/options/sunflowers.png',
             '../icons/options/kanagawaWave.png',
+            '../icons/options/Psychology.jpg',
+            '../icons/options/Sensor.jpg',
+            '../icons/options/sower.jpg',
+            '../icons/options/toxicLevel.jpg'
         ]);
 
         const layers = [bg, ears, body, hat];
