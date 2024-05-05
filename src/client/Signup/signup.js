@@ -141,10 +141,8 @@ export default class SignupView extends View {
       GlobalEvents.login();
       GlobalEvents.navigate('profile');
     } else {
-      const errorMessage = await signupResponse.text();
-      const errorObject = JSON.parse(errorMessage);
-      const errorMessageText = errorObject.error;
-      this.showAlert(formSection, errorMessageText);
+      const errorMessage = await signupResponse.json();
+      this.showAlert(formSection, errorMessage['error']);
     }
   } catch (error) {
     console.error('Error signing up:', error);
