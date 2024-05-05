@@ -89,6 +89,12 @@ export default class LoginView extends View {
             // Invalid email
             this.showAlert(emailDiv, 'Incorrect email or User does not exist!'); // Added line to show alert for incorrect email or not a user
           } 
+          else if (loginResponse.status === 400) {
+            const errorMessage = await loginResponse.text();
+            const errorObject = JSON.parse(errorMessage);
+            const errorMessageText = errorObject.error;
+            this.showAlert(passwordDiv, errorMessageText);
+          } 
         }
       } catch (error) {
         console.error('Error during authentication:', error);
