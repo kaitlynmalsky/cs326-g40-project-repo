@@ -191,15 +191,17 @@ class Database {
    * @throws {Error}
    */
   async createPin(pinData) {
-    const pin_Data_Promise = await fetch(`/pins`, {
+    const createPinResponse = await fetch(`/pins`, {
       method: 'POST',
       body: JSON.stringify(pinData),
     });
-    if (!pin_Data_Promise.ok) {
+
+    if (!createPinResponse.ok) {
       console.error(`FAILED TO CREATE PIN WITH ${pinData}`);
       return;
     }
-    return await pin_Data_Promise.json();
+
+    return createPinResponse.json();
   }
 
   /**
@@ -211,11 +213,13 @@ class Database {
   async getPin(pinID) {
     try {
       const pinData = await fetch(`/pins/${pinID}`);
+
       if (!pinData.ok) {
         console.error(`FAILED TO GET PIN ${pinID}`);
         return null;
       }
-      return await pinData.json();
+
+      return pinData.json();
     } catch (err) {
       console.error(err);
       return null;
@@ -228,16 +232,17 @@ class Database {
    * @returns {Promise<Pin>}
    */
   async updatePin(pin) {
-    const data = await fetch(`/pins/${pin.pinID}`, {
+    const updatePinResponse = await fetch(`/pins/${pin.pinID}`, {
       method: 'PUT',
       body: JSON.stringify(pin),
     });
 
-    if (!data.ok) {
+    if (!updatePinResponse.ok) {
       console.error(`Failed to update ${pin.pinID}`);
+      return null;
     }
 
-    return await data.json();
+    return updatePinResponse.json();
   }
 
   /**
@@ -246,10 +251,10 @@ class Database {
    * @returns {Promise<PouchDB.Core.Response>}
    */
   async deletePin(pin) {
-    const data = await fetch(`/pins/${pin.pinID}`, {
+    const deletePinResponse = await fetch(`/pins/${pin.pinID}`, {
       method: 'DELETE',
     });
-    return await data.json();
+    return await deletePinResponse.json();
   }
 
   /**
@@ -258,17 +263,17 @@ class Database {
    */
   async getUpcomingPins() {
     try {
-      const now = Date.now();
+      const upcomingPinsResponse = await fetch('/pins?type=active');
 
-      const pinsResult = await this.#db.allDocs({
-        include_docs: true,
-        startkey: `pin_${now}_`,
-        endkey: `pin_${now + 1000 * 60 * 60 * 24 * 2}_\ufff0`,
-      });
+      if (!upcomingPinsResponse.ok) {
+        console.log('Failed to get active pins');
+        return null;
+      }
 
-      return pinsResult.rows.map((row) => row.doc);
+      return upcomingPinsResponse.json();
     } catch (err) {
-      return null;
+      console.log(err);
+      return [];
     }
   }
 
@@ -284,11 +289,16 @@ class Database {
   async getUser(userID) {
     const userResponse = await fetch(`/users/${userID}`);
 
+    if (!userResponse.ok) {
+      console.error('Failed to get user');
+      return null;
+    }
+
     return userResponse.json();
   }
 
   /**
-   * Calls the get backend to get user by email 
+   * Calls the get backend to get user by email
    * @param {string} email The email of the user to retrieve
    * @returns {Promise<User>}
    */
@@ -299,7 +309,7 @@ class Database {
         console.error(`FAILED TO GET USER BY EMAIL ${email}`);
         return;
       }
-      return await data.json();
+      return data.json();
     } catch (err) {
       console.error(err);
       return null;
@@ -308,14 +318,14 @@ class Database {
 
   /**
    *
-   * Calls the update backend to update the user 
+   * Calls the update backend to update the user
    * @param {User} user
    * @returns {Promise<User>}
    */
   async updateUser(user) {
     const data = await fetch(`/users/${user.userID}`, {
       method: 'PUT',
-      body: JSON.stringify(user)
+      body: JSON.stringify(user),
     });
     if (!data.ok) {
       console.error(`FAILED TO UPDATE USER ${user}`);
@@ -325,8 +335,8 @@ class Database {
 
   /**
    * Calls the update backend to update the bio of the user with the given ID.
-   * @param {string} uID 
-   * @param {string} bio 
+   * @param {string} uID
+   * @param {string} bio
    * @returns {Promise<User|null>}
    */
   async updateUserBio(uID, bio) {
@@ -335,11 +345,11 @@ class Database {
       const newUserData = {
         ...user,
         userID: uID,
-        bio: bio
+        bio: bio,
       };
       const data = await fetch(`/users/${newUserData.userID}`, {
         method: 'PUT',
-        body: JSON.stringify(newUserData)
+        body: JSON.stringify(newUserData),
       });
       if (!data.ok) {
         console.error(`FAILED TO UPDATE USER BIO : ${uID}`);
@@ -357,18 +367,21 @@ class Database {
   // ********************************************
 
   /**
-   * Calls a post call to create connection 
+   * Calls a post call to create connection
    * @param {CreateVillageConnectionInput} connection Input data to create the connection
    * @returns {Promise<VillageConnection>} The newly created connection
    */
   async createConnection(connection) {
     try {
-      const createPromise = await fetch(`/users/${connection.userID}/connections/`, {
-        method: 'POST',
-        body: JSON.stringify({
-          targetID: connection.targetID
-        })
-      });
+      const createPromise = await fetch(
+        `/users/${connection.userID}/connections/`,
+        {
+          method: 'POST',
+          body: JSON.stringify({
+            targetID: connection.targetID,
+          }),
+        },
+      );
       if (!createPromise.ok) {
         console.error(`FAILED TO CREATE CONNECTION`);
         return;
@@ -380,7 +393,7 @@ class Database {
   }
 
   /**
-   * Calls the get call to get all connections of userID 
+   * Calls the get call to get all connections of userID
    * @param {string} [userID]
    * @returns {Promise<Array<VillageConnection>>}
    */
@@ -404,15 +417,16 @@ class Database {
    */
   async deleteConnection(connection) {
     try {
-      const deletePromise = await fetch(`/users/${connection.userID}/connections/${connection.targetID}`, {
-        method: 'DELETE'
-      });
+      const deletePromise = await fetch(
+        `/users/${connection.userID}/connections/${connection.targetID}`,
+        {
+          method: 'DELETE',
+        },
+      );
       return deletePromise.json();
-
     } catch (err) {
       console.error(err);
     }
-
   }
 
   // ********************************************
@@ -420,43 +434,21 @@ class Database {
   // ********************************************
 
   /**
-   * Format `pinId` and `userId` into a pin attendee database key
-   * @param {string} pinID
-   * @param {string} userID
-   */
-  #formatPinAttendeeKey(pinID, userID) {
-    return `pat_${pinID}_${userID}`;
-  }
-
-  /**
    * Add an attendee to a pin
    * @param {string} pinID
-   * @param {string} userID
    * @returns {Promise<PinAttendee>}
    */
-  async addPinAttendee(pinID, userID) {
-    const existingAttendee = await this.getPinAttendee(pinID, userID);
+  async joinPin(pinID) {
+    const joinPinResponse = await fetch(`/${pinID}/attendees`, {
+      method: 'POST',
+    });
 
-    if (existingAttendee) return existingAttendee;
-
-    const doc = {
-      _id: this.#formatPinAttendeeKey(pinID, userID),
-      pinID,
-      userID,
-    };
-
-    const { ok, id, rev } = await this.#db.put(doc);
-
-    if (!ok) {
-      console.error(
-        `Could not add userId=${userID} as attendee for pin pinI=${pinID}`,
-      );
+    if (!joinPinResponse.ok) {
+      console.error('Failed to join pin');
+      return null;
     }
 
-    return {
-      ...doc,
-      _rev: rev,
-    };
+    return joinPinResponse.json();
   }
 
   /**
@@ -464,27 +456,14 @@ class Database {
    * @param {string} pinID
    */
   async getPinAttendees(pinID) {
-    const pinAttendeesResult = await this.#db.allDocs({
-      include_docs: true,
-      startkey: `pat_${pinID}`,
-      endkey: `pat_${pinID}\ufff0`,
-    });
+    const pinAttendeesResponse = await fetch(`/${pinID}/attendees`);
 
-    return pinAttendeesResult.rows.map((row) => row.doc);
-  }
-
-  /**
-   * Gets the attendee for a pin
-   * @param {string} pinId
-   * @param {string} userID
-   * @returns {Promise<PinAttendee>}
-   */
-  async getPinAttendee(pinId, userID) {
-    try {
-      return await this.#db.get(this.#formatPinAttendeeKey(pinId, userID));
-    } catch (err) {
+    if (!pinAttendeesResponse.ok) {
+      console.error('Failed to get pin attendees');
       return null;
     }
+
+    return pinAttendeesResponse.json();
   }
 
   /**
@@ -492,7 +471,16 @@ class Database {
    * @param {PinAttendee} attendee
    */
   async removePinAttendee(attendee) {
-    return this.#db.remove(attendee);
+    const removeAttendeeResponse = await fetch(
+      `/${attendee.pinID}/attendees/${attendee.userID}`,
+      {
+        method: 'DELETE',
+      },
+    );
+
+    if (!removeAttendeeResponse.ok) {
+      console.error('Failed to leave pin');
+    }
   }
 
   // ********************************************
