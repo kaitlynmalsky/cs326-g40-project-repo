@@ -719,7 +719,7 @@ export async function addGroupChat(gcID) {
   const existingGC = await getGroupById(gcID);
   //console.log(`existingGC is ${existingGC}`);
   if (existingGC) {
-    console.error(`Group chat with ID ${gcID} already exists.`);
+    //console.error(`Group chat with ID ${gcID} already exists.`);
     return existingGC;
   } else {
     const gcDoc = {
@@ -791,9 +791,9 @@ export async function addGroupChatMember(pID, gcID) {
     (member) => member.PersonID === pID,
   );
   if (existingGCMember.length !== 0) {
-    console.error(
-      `GroupChatMember with person ID ${pID} and group chat ID ${gcID} already exists.`,
-    );
+    // console.error(
+    //   `GroupChatMember with person ID ${pID} and group chat ID ${gcID} already exists.`,
+    // );
     return existingGCMember[0];
   } else {
     const gcmDoc = {

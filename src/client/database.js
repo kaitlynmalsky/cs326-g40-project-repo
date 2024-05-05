@@ -344,7 +344,7 @@ class Database {
   async addUser(userData) {
     const existingUser = await this.getUserByEmail(userData.email);
     if (existingUser) {
-      console.error(`An account with ${userData.email} already exists`);
+      //console.error(`An account with ${userData.email} already exists`);
       return existingUser;
     } else {
       const userID = self.crypto.randomUUID();
@@ -633,7 +633,7 @@ class Database {
     const existingGC = await this.getGroupById(gcID);
     //console.log(`existingGC is ${existingGC}`);
     if (existingGC) {
-      console.error(`Group chat with ID ${gcID} already exists.`);
+      //console.error(`Group chat with ID ${gcID} already exists.`);
       return existingGC;
     } else {
       const gcDoc = {
@@ -705,9 +705,9 @@ class Database {
       (member) => member.UserID === uID,
     );
     if (existingGCMember.length !== 0) {
-      console.error(
-        `GroupChatMember with person ID ${uID} and group chat ID ${gcID} already exists.`,
-      );
+      // console.error(
+      //   `GroupChatMember with person ID ${uID} and group chat ID ${gcID} already exists.`,
+      // );
       return existingGCMember[0];
     } else {
       const gcmDoc = {
