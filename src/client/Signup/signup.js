@@ -111,7 +111,6 @@ export default class SignupView extends View {
         return;
       }
 
-
       try {
         const signupResponse = await fetch(`/signup`, {
           method: 'POST',
@@ -133,23 +132,24 @@ export default class SignupView extends View {
           }),
         });
 
-
-    if (signupResponse.ok) {
-      console.log('User signed up successfully');
-      const user = await signupResponse.json();
-      dbInstance.setCurrentUserId(user.userID); // Set current user ID
-      GlobalEvents.login();
-      GlobalEvents.navigate('profile');
-    } else {
-      const errorMessage = await signupResponse.json();
-      this.showAlert(formSection, errorMessage['error']);
-    }
-  } catch (error) {
-    console.error('Error signing up:', error);
-    this.showAlert(formSection, 'An error occurred. Please try again later.');
-  }
-});
-
+        if (signupResponse.ok) {
+          console.log('User signed up successfully');
+          const user = await signupResponse.json();
+          dbInstance.setCurrentUserId(user.userID); // Set current user ID
+          GlobalEvents.login();
+          GlobalEvents.navigate('profile');
+        } else {
+          const errorMessage = await signupResponse.json();
+          this.showAlert(formSection, errorMessage['error']);
+        }
+      } catch (error) {
+        console.error('Error signing up:', error);
+        this.showAlert(
+          formSection,
+          'An error occurred. Please try again later.',
+        );
+      }
+    });
 
     emailInput.querySelector('input').addEventListener('input', () => {
       this.hideAlert(formSection);

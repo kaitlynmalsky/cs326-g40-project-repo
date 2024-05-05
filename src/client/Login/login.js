@@ -64,7 +64,7 @@ export default class LoginView extends View {
         const loginResponse = await fetch(`/login`, {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
           },
           body: JSON.stringify({
             email,
@@ -77,7 +77,7 @@ export default class LoginView extends View {
 
           const userResponse = await fetch(`/users/me`);
           const user = await userResponse.json();
-          
+
           dbInstance.setCurrentUserId(user.userID);
           GlobalEvents.login();
           GlobalEvents.navigate('map');
@@ -88,11 +88,10 @@ export default class LoginView extends View {
           } else if (loginResponse.status === 404) {
             // Invalid email
             this.showAlert(emailDiv, 'Incorrect email or User does not exist!'); // Added line to show alert for incorrect email or not a user
-          } 
-          else if (loginResponse.status === 400) {
+          } else if (loginResponse.status === 400) {
             const errorMessage = await loginResponse.json();
             this.showAlert(passwordDiv, errorMessage['error']);
-          } 
+          }
         }
       } catch (error) {
         console.error('Error during authentication:', error);
