@@ -123,7 +123,10 @@ export class App {
       return this.#navigateTo('map');
     }
 
-    if (this.#routes[routeKey].authRequired && !await dbInstance.getCurrentUserID()) {
+    if (
+      this.#routes[routeKey].authRequired &&
+      !(await dbInstance.getCurrentUserID())
+    ) {
       return GlobalEvents.navigate('login');
     }
 

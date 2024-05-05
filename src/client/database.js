@@ -28,7 +28,7 @@
  * @property {string} password The user's password
  * @property {string} avatar The user's avatar
  * @property {string} bio The user's bio
- * @property {AvatarConfig} avatarConfig The configuration for the user's avatar 
+ * @property {AvatarConfig} avatarConfig The configuration for the user's avatar
  * @property {string} _id PouchDB ID
  * @property {string} _rev PouchDB revision
  */
@@ -128,7 +128,6 @@ class Database {
   // Current User
   // ********************************************
 
-
   /**
    * Saves `userID` to `localStorage` (keep client-side database calls)
    * @param {string} userID
@@ -142,15 +141,12 @@ class Database {
       await this.#db.put(doc);
     } catch (err) {
       if (err.name === 'not_found') {
-
         await this.#db.put({ _id: docID, userID: userID });
       } else {
-
         console.error('Error accessing the database', err);
       }
     }
   }
-
 
   /**
    * Retrieves the current `userID` from `localStorage` (keep client-side database calls)
@@ -189,7 +185,7 @@ class Database {
   // ********************************************
 
   /**
-   * Calls the backend route to create pin data 
+   * Calls the backend route to create pin data
    * @param {CreatePinInput} pinData Input data to create the pin
    * @returns {Promise<Pin>} The created pin
    * @throws {Error}
@@ -197,7 +193,7 @@ class Database {
   async createPin(pinData) {
     const pin_Data_Promise = await fetch(`/pins`, {
       method: 'POST',
-      body: JSON.stringify(pinData)
+      body: JSON.stringify(pinData),
     });
     if (!pin_Data_Promise.ok) {
       console.error(`FAILED TO CREATE PIN WITH ${pinData}`);
@@ -227,16 +223,15 @@ class Database {
   }
 
   /**
-   * Calls the backend Update route to update pin 
+   * Calls the backend Update route to update pin
    * @param {Pin} pin The pin to update
    * @returns {Promise<Pin>}
    */
   async updatePin(pin) {
     const data = await fetch(`/pins/${pin.pinID}`, {
       method: 'PUT',
-      body: JSON.stringify(pin)
+      body: JSON.stringify(pin),
     });
-
 
     if (!data.ok) {
       console.error(`Failed to update ${pin.pinID}`);
@@ -296,11 +291,14 @@ class Database {
    * @returns {Promise<User>}
    */
   async getUser(userID) {
-    try {
+    const userResponse = await fetch(`/users/${userID}`);
+
+    return userResponse.json();
+    /*try {
       return await this.#db.get(this.#formatUserKey(userID));
     } catch (err) {
       return null;
-    }
+    }*/
   }
 
   /**
@@ -352,7 +350,7 @@ class Database {
         _id: this.#formatUserKey(userID),
         userID,
         ...userData,
-        bio: "" // reminder to add this thing to the server side
+        bio: '', // reminder to add this thing to the server side
       };
 
       const { rev } = await this.#db.put(userDoc);
@@ -380,8 +378,8 @@ class Database {
 
   /**
    * Updates the bio of the user with the given ID.
-   * @param {string} uID 
-   * @param {string} bio 
+   * @param {string} uID
+   * @param {string} bio
    * @returns {Promise<User|null>}
    */
   async updateUserBio(uID, bio) {
@@ -481,7 +479,7 @@ class Database {
    * @returns {Promise<Array<VillageConnection>>}
    */
   async getConnections(userID) {
-    userID = userID || await this.getCurrentUserID();
+    userID = userID || (await this.getCurrentUserID());
     const connectionsFilterKey = `connection_${userID}`;
     const connectionsResult = await this.#db.allDocs({
       include_docs: true,
@@ -621,7 +619,6 @@ class Database {
       return null;
     }
   }
-
 
   /**
    * Adds a group chat with the given ID to the database.

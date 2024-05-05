@@ -59,7 +59,7 @@ export default class ProfileView extends View {
         const userName = /** @type {HTMLInputElement}*/ (makeElement('input', 'userName', null, userDiv));
         userName.type = 'text';
         userName.value = (
-            await dbInstance.getUser(await dbInstance.getCurrentUserID()) // do not replacewith fetch call
+            await dbInstance.getUser(await dbInstance.getCurrentUserID())
         ).username;
 
         const iconPreview = /**@type {HTMLCanvasElement}*/ (makeElement('canvas', 'myIcon', null, creatorContainerLeft));

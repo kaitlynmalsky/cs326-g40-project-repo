@@ -36,8 +36,9 @@ export default class NavBar {
     logoutBtn.innerHTML = '<i class="fa-solid fa-right-from-bracket"></i>';
     logoutBtn.title = 'Logout';
 
-    logoutBtn.addEventListener('click', (e) => {
+    logoutBtn.addEventListener('click', async (e) => {
       e.preventDefault();
+      await fetch('/logout');
       dbInstance.deleteCurrentUserId();
       GlobalEvents.logout();
       GlobalEvents.navigate('login');
