@@ -125,8 +125,6 @@ export class App {
 
     const currentUserID = await dbInstance.getCurrentUserID();
 
-    console.log('userID', currentUserID);
-
     if (this.#routes[routeKey].authRequired && !currentUserID) {
       return GlobalEvents.navigate('login');
     }

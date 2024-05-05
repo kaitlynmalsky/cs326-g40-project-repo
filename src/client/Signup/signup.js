@@ -2,9 +2,6 @@ import GlobalEvents from '../Events/index.js';
 import defaultAvatar from '../Profile/defaultAvatar.js';
 import View from '../View.js';
 import dbInstance from '../database.js';
-// import Database from '../database.js';
-// import { mockPins, mockUsers } from '../mock.js';
-// const API_URL = 'http://localhost:3260';
 
 export default class SignupView extends View {
   constructor() {

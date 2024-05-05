@@ -254,13 +254,12 @@ class Database {
   /**
    * Calls the backend Delete route to delete pin
    * @param {Pin} pin The pin to delete
-   * @returns {Promise<PouchDB.Core.Response>}
+   * @returns {Promise<void>}
    */
   async deletePin(pin) {
-    const deletePinResponse = await fetch(`/pins/${pin.pinID}`, {
+    await fetch(`/pins/${pin.pinID}`, {
       method: 'DELETE',
     });
-    return await deletePinResponse.json();
   }
 
   /**
@@ -428,17 +427,16 @@ class Database {
   /**
    * Calls the delete backend to delete connection
    * @param {VillageConnection} connection Connection to delete
-   * @returns {Promise<PouchDB.Core.Response>}
+   * @returns {Promise<void>}
    */
   async deleteConnection(connection) {
     try {
-      const deletePromise = await fetch(
+      await fetch(
         `/users/${connection.userID}/connections/${connection.targetID}`,
         {
           method: 'DELETE',
         },
       );
-      return deletePromise.json();
     } catch (err) {
       console.error(err);
     }

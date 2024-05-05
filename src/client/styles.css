@@ -1656,6 +1656,7 @@ button:hover {
 .icn {
   color: #412003;
   font-size: 20px;
+  padding-top: 15px;
 }
 
 .arrow {
@@ -1669,6 +1670,7 @@ button:hover {
   border: solid #412003;
   border-radius: 9999px;
   border-width: 2px;
+  margin-top: 5px;
 }
 
 .arrow:hover {

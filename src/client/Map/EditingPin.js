@@ -99,11 +99,12 @@ export default class EditingPin extends Pin {
     const nowMinutes = now.getMinutes();
 
     const datetime = new Date();
-    datetime.setSeconds(0);
     datetime.setHours(hour);
     datetime.setMinutes(minutes);
+    datetime.setSeconds(0);
+    datetime.setMilliseconds(0);
 
-    if (nowHour < hour || (nowHour === hour && nowMinutes < minutes)) {
+    if (hour < nowHour || (nowHour === hour && nowMinutes < minutes)) {
       datetime.setDate(datetime.getDate() + 1);
     }
 
@@ -125,10 +126,17 @@ export default class EditingPin extends Pin {
       parseInt(startHour),
       parseInt(startMinutes),
     ).toISOString();
-    const endTime = this.getClosestTimestamp(
+    let endTime = this.getClosestTimestamp(
       parseInt(endHour),
       parseInt(endMinutes),
     ).toISOString();
+
+    if (endTime < startTime) {
+      const endDate = new Date(endTime);
+      endDate.setDate(endDate.getDate() + 1);
+
+      endTime = endDate.toISOString();
+    }
 
     const { lat, lng } = this.marker.getLatLng();
 
