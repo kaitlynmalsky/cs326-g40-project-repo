@@ -252,17 +252,17 @@ export default class ProfileView extends View {
             user.bio = bioText;
 
 
-            try {
-                const putResponse = await fetch(`/users/${user.userID}`, { method: "PUT", body: JSON.stringify(user) });
-                if (!putResponse.ok) {
-                    throw new Error(`Failed to update user`);
-                }
-                console.log("user updated successfully");
-            } catch (err) {
-                console.error(`Put failed: ${err}`);
-            }
+            // try {
+            //     const putResponse = await fetch(`/users/${user.userID}`, { method: "PUT", body: JSON.stringify(user) });
+            //     if (!putResponse.ok) {
+            //         throw new Error(`Failed to update user`);
+            //     }
+            //     console.log("user updated successfully");
+            // } catch (err) {
+            //     console.error(`Put failed: ${err}`);
+            // }
 
-            //await dbInstance.updateUser(user);
+            await dbInstance.updateUser(user);
 
             const saveNoti = document.createElement('i');
             saveNoti.className = 'fa-regular fa-circle-check';
