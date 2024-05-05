@@ -368,6 +368,7 @@ button:hover {
 .icn {
     color: #412003;
     font-size: 20px;
+    padding-top: 15px;
 }
 
 .arrow {
@@ -376,6 +377,7 @@ button:hover {
     background: #bc6700;
     border: solid #412003;
     @apply border-2 rounded-full;
+    margin-top: 5px;
 }
 
 .arrow:hover {
