@@ -88,8 +88,8 @@ export default class ProfileView extends View {
         const bioLabel = makeElement('h1', 'bioLabel', null, bioArea);
         bioLabel.innerText = "Bio:";
         const bioInput = makeElement('textarea', 'bioInput', ['p-1'], bioArea);
-        (/**@type {HTMLTextAreaElement} */ (bioInput)).value = (
-          await dbInstance.getUser(await dbInstance.getCurrentUserID())
+        ( /**@type {HTMLTextAreaElement} */ (bioInput)).value = (
+            await dbInstance.getUser(await dbInstance.getCurrentUserID())
         ).bio;
 
         ['Bg', 'Body', 'Ears', 'Hat'].forEach((option, i) => {

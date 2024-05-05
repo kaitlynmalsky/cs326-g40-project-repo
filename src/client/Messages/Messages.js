@@ -65,10 +65,10 @@ export default class MessagesView extends View {
 
     // Demo messages
     this.#currUser = await database.getUser(await database.getCurrentUserID());
-    if ((await database.getAllGroupChats()).length === 0) {
-      await mockMessages();
-    }
-    await this.loadDBMessages();
+    // if ((await database.getAllGroupChats()).length === 0) {
+    //   await mockMessages();
+    // }
+   await this.loadDBMessages();
 
 
     if (this.groupChats.length !== 0) {
@@ -100,7 +100,7 @@ export default class MessagesView extends View {
     this.#col1.appendChild(fillerBox);
     //console.log("this.#curr_id is", this.#curr_id);
 
-    if (this.#curr_id !== undefined) {
+    if (this.groupChats && this.groupChats.length !== 0) {
       // i.e. If the user actually has any chats
       this.changeChat(0);
     }
