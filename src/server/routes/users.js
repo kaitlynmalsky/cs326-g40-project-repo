@@ -7,6 +7,7 @@ import {
   getConnections,
   getConnection,
   deleteConnection,
+  getConnectionSuggestions,
 } from '../database.js';
 
 const userRouter = Router();
@@ -156,6 +157,21 @@ userRouter.put('/me', async (req, res) => {
   delete updatedUser.password;
 
   return res.status(200).json(updatedUser);
+});
+
+/**
+ * Get Connection Suggestions
+ */
+userRouter.get('/:userID/suggestions', async (req, res) => {
+  const userID = req.params.userID;
+
+  const suggestPromise = await getConnectionSuggestions(userID);
+
+  if (!suggestPromise) {
+    return res.status(404).end();
+  }
+
+  return res.status(200).json(suggestPromise);
 });
 
 export default userRouter;

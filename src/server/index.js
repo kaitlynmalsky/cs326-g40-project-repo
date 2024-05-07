@@ -9,6 +9,7 @@ import PouchDBSessionStore from './session.js';
 import morgan from 'morgan';
 import startPinsService from './pinsService.js';
 import cors from 'cors';
+import { addConnections } from './mock.js';
 
 const app = express();
 
@@ -89,6 +90,8 @@ app.post('/api/login', async (req, res, next) => {
 
   /** @type {AuthenticatedSessionData} */
   (req.session).userID = user.userID;
+
+  await addConnections(/** @type {AuthenticatedSessionData} */(req.session).userID);
 
   return res.status(204).end();
 });

@@ -56,7 +56,7 @@
     "start": "node ./src/server/index.js"
   },
   "devDependencies": {
-    "@types/faker": "^5.5.3",
+    "@faker-js/faker": "^8.4.1",
     "@types/leaflet": "^1.9.11",
     "@types/pouchdb": "^6.4.2",
     "concurrently": "^8.2.2",
