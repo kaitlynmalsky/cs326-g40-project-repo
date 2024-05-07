@@ -858,3 +858,19 @@ export async function getMembersByGroupChatID(gcID) {
   });
   return memberResult.rows.map((row) => row.doc);
 }
+
+export async function hasMocked() {
+  const docID = 'mock_data';
+  try {
+    const doc = await db.get(docID);
+
+    if (!doc.hasMock) {
+      doc.hasMock = true;
+      await db.put(doc);
+    }
+    return doc.hasMock;
+  } catch (err) {
+    console.error(err);
+    return false;
+  }
+}
