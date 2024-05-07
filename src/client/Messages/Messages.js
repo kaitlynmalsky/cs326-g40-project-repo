@@ -137,27 +137,28 @@ export default class MessagesView extends View {
 
   /**
    * Changes the chat view to the given chat ID.
-   * @param {number} id
+   * @param {number} id (change to s string!)
    */
   changeChat(id) {
     this.#chatView.innerHTML = '';
-    this.groupChats[id].messages.forEach((messageElm) => {
+    this.groupChats[id].messages.forEach((messageElm) => { // this can stay the same
       this.#chatView.appendChild(messageElm);
     });
-    this.groupChats[this.#active_id].gcElm.classList.remove(
+    this.groupChats[this.#active_id].gcElm.classList.remove( // this can stay the same
       'active-group-chat',
     );
-    this.groupChats[id].gcElm.classList.add('active-group-chat');
+    this.groupChats[id].gcElm.classList.add('active-group-chat'); // this can stay the same
     this.#active_id = id;
   }
 
   /**
    * (people IS A TEMPORARY PARAM!) Adds a group chat to the left panel and to the user's internal messageList.
    * @param {import('../database.js').User[]} users
+   * @param {Object} [pinID] (change to required when fully implemented)
    * @returns {Promise<void>}
    */
 
-  async addGroupChat(users) {
+  async addGroupChat(users, pinID = undefined) {
     this.#curr_id = this.groupList.length; // replace with pin id, add parameter to addGroupChat
     this.groupList.push({
       id: this.#curr_id, // replace with pin id
@@ -193,7 +194,7 @@ export default class MessagesView extends View {
     });
 
     this.#col1.appendChild(gcElm);
-    this.groupChats[this.#curr_id] = { // replace with pin id (this.groupChats becomes an object with pin id indices)
+    this.groupChats[this.#curr_id] = { // replace with pin id (this.groupChats becomes an object with pin id (string) indices)
       id: this.#curr_id, // replace with pin id
       messages: [],
       gcElm: gcElm,
@@ -302,7 +303,7 @@ export default class MessagesView extends View {
       messageElm.appendChild(messageContent);
     }
 
-    this.groupChats[gcID].messages.push(messageElm);
+    this.groupChats[gcID].messages.push(messageElm); // this can stay the same
 
     //this.#chatView.appendChild(messageElm);
     return messageElm;
