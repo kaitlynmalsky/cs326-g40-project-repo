@@ -109,7 +109,7 @@ export default class SignupView extends View {
       }
 
       try {
-        const signupResponse = await fetch(`/signup`, {
+        const signupResponse = await fetch(`/api/signup`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

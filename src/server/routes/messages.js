@@ -8,7 +8,7 @@ const messagesRouter = Router();
  */
 messagesRouter.get('/:gcID', async(req, res) => {
     const gcID = req.params.gcID;
-    const gc = await getGroupById(Number(gcID));
+    const gc = await getGroupById(gcID);
     if (!gc) {
         return res.status(404).end({ error: `Group chat with ID=${gcID} not found` });
     }

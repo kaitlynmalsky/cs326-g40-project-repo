@@ -61,7 +61,7 @@ export default class LoginView extends View {
       });
 
       try {
-        const loginResponse = await fetch(`/login`, {
+        const loginResponse = await fetch(`/api/login`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -75,7 +75,7 @@ export default class LoginView extends View {
         if (loginResponse.ok) {
           console.log('Authentication successful');
 
-          const userResponse = await fetch(`/users/me`);
+          const userResponse = await fetch(`/api/users/me`);
           const user = await userResponse.json();
 
           await dbInstance.setCurrentUserId(user.userID);

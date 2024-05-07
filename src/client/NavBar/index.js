@@ -38,7 +38,7 @@ export default class NavBar {
 
     logoutBtn.addEventListener('click', async (e) => {
       e.preventDefault();
-      await fetch('/logout');
+      await fetch('/api/logout');
       dbInstance.deleteCurrentUserId();
       GlobalEvents.logout();
       GlobalEvents.navigate('login');

@@ -191,7 +191,7 @@ class Database {
    * @throws {Error}
    */
   async createPin(pinData) {
-    const createPinResponse = await fetch(`/pins`, {
+    const createPinResponse = await fetch(`/api/pins`, {
       headers: {
         'Content-Type': 'application/json',
       },
@@ -215,7 +215,7 @@ class Database {
    */
   async getPin(pinID) {
     try {
-      const pinData = await fetch(`/pins/${pinID}`);
+      const pinData = await fetch(`/api/pins/${pinID}`);
 
       if (!pinData.ok) {
         console.error(`FAILED TO GET PIN ${pinID}`);
@@ -235,7 +235,7 @@ class Database {
    * @returns {Promise<Pin>}
    */
   async updatePin(pin) {
-    const updatePinResponse = await fetch(`/pins/${pin.pinID}`, {
+    const updatePinResponse = await fetch(`/api/pins/${pin.pinID}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -257,7 +257,7 @@ class Database {
    * @returns {Promise<void>}
    */
   async deletePin(pin) {
-    await fetch(`/pins/${pin.pinID}`, {
+    await fetch(`/api/pins/${pin.pinID}`, {
       method: 'DELETE',
     });
   }
@@ -268,7 +268,7 @@ class Database {
    */
   async getUpcomingPins() {
     try {
-      const upcomingPinsResponse = await fetch('/pins?type=active');
+      const upcomingPinsResponse = await fetch('/api/pins?type=active');
 
       if (!upcomingPinsResponse.ok) {
         console.log('Failed to get active pins');
@@ -292,7 +292,7 @@ class Database {
    * @returns {Promise<User>}
    */
   async getUser(userID) {
-    const userResponse = await fetch(`/users/${userID}`);
+    const userResponse = await fetch(`/api/users/${userID}`);
 
     if (!userResponse.ok) {
       console.error('Failed to get user');
@@ -309,7 +309,7 @@ class Database {
    */
   async getUserByEmail(email) {
     try {
-      const data = await fetch(`/users/?email=${email}`);
+      const data = await fetch(`/api/users/?email=${email}`);
       if (!data.ok) {
         console.error(`FAILED TO GET USER BY EMAIL ${email}`);
         return;
@@ -328,7 +328,7 @@ class Database {
    * @returns {Promise<User>}
    */
   async updateUser(user) {
-    const data = await fetch(`/users/me`, {
+    const data = await fetch(`/api/users/me`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -355,7 +355,7 @@ class Database {
         userID: uID,
         bio: bio,
       };
-      const data = await fetch(`/users/${newUserData.userID}`, {
+      const data = await fetch(`/api/users/${newUserData.userID}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -385,7 +385,7 @@ class Database {
   async createConnection(connection) {
     try {
       const createPromise = await fetch(
-        `/users/${connection.userID}/connections/`,
+        `/api/users/${connection.userID}/connections/`,
         {
           method: 'POST',
           headers: {
@@ -413,7 +413,7 @@ class Database {
    */
   async getConnections(userID) {
     try {
-      const getPromise = await fetch(`/users/${userID}/connections`);
+      const getPromise = await fetch(`/api/users/${userID}/connections`);
       if (!getPromise.ok) {
         console.error(`FAILED TO GET ALL CONNECTIONS OF ${userID}`);
         return;
@@ -432,7 +432,7 @@ class Database {
   async deleteConnection(connection) {
     try {
       await fetch(
-        `/users/${connection.userID}/connections/${connection.targetID}`,
+        `/api/users/${connection.userID}/connections/${connection.targetID}`,
         {
           method: 'DELETE',
         },
@@ -452,7 +452,7 @@ class Database {
    * @returns {Promise<PinAttendee>}
    */
   async joinPin(pinID) {
-    const joinPinResponse = await fetch(`/pins/${pinID}/attendees`, {
+    const joinPinResponse = await fetch(`/api/pins/${pinID}/attendees`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -473,7 +473,7 @@ class Database {
    * @returns {Promise<PinAttendee[]>}
    */
   async getPinAttendees(pinID) {
-    const pinAttendeesResponse = await fetch(`/pins/${pinID}/attendees`);
+    const pinAttendeesResponse = await fetch(`/api/pins/${pinID}/attendees`);
 
     if (!pinAttendeesResponse.ok) {
       console.error('Failed to get pin attendees');
@@ -489,7 +489,7 @@ class Database {
    */
   async removePinAttendee(attendee) {
     const removeAttendeeResponse = await fetch(
-      `/pins/${attendee.pinID}/attendees/${attendee.userID}`,
+      `/api/pins/${attendee.pinID}/attendees/${attendee.userID}`,
       {
         method: 'DELETE',
       },

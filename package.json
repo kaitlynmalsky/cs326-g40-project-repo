@@ -52,7 +52,7 @@
     "milestone-02": "http-server src/client -p 3000 -c-1 -o -s -P http://localhost:3260",
     "validate-html": "html-validate 'src/**/*.html'",
     "prettier": "prettier -w src",
-    "dev": "concurrently \"npm run milestone-02\" \"tailwindcss -i ./src/client/main.css -o ./src/client/styles.css --watch\" \"nodemon ./src/server/index.js\"",
+    "dev": "concurrently \"tailwindcss -i ./src/client/main.css -o ./src/client/styles.css --watch\" \"nodemon ./src/server/index.js\"",
     "start": "node ./src/server/index.js"
   },
   "devDependencies": {

@@ -62,7 +62,7 @@ function hashPassword(userID, password) {
  */
 
 // Login
-app.post('/login', async (req, res, next) => {
+app.post('/api/login', async (req, res, next) => {
   const { email, password } = req.body;
 
   if (/** @type {AuthenticatedSessionData} */ (req.session).userID) {
@@ -93,7 +93,7 @@ app.post('/login', async (req, res, next) => {
   return res.status(204).end();
 });
 
-app.get('/logout', isAuthenticated, async (req, res, next) => {
+app.get('/api/logout', isAuthenticated, async (req, res, next) => {
   req.session.destroy((err) => {
     if (err) {
       return console.log(err);
@@ -104,7 +104,7 @@ app.get('/logout', isAuthenticated, async (req, res, next) => {
 });
 
 // Signup
-app.post('/signup', async (req, res, next) => {
+app.post('/api/signup', async (req, res, next) => {
   const { username, name, avatar, avatarConfig, email, password } = req.body;
 
   if (/** @type {AuthenticatedSessionData} */ (req.session).userID) {
@@ -163,13 +163,15 @@ app.post('/signup', async (req, res, next) => {
 });
 
 // User routes
-app.use('/users', isAuthenticated, userRouter);
+app.use('/api/users', isAuthenticated, userRouter);
 
 // Pin routes
-app.use('/pins', isAuthenticated, pinsRouter);
+app.use('/api/pins', isAuthenticated, pinsRouter);
 
 // Message routes
-app.use('/messages', isAuthenticated, messagesRouter);
+app.use('/api/messages', isAuthenticated, messagesRouter);
+
+app.use(express.static('./src/client', {}));
 
 app.route('*').all(async (request, response) => {
   response.status(404).send(`Not found: ${request.path}`);
@@ -178,7 +180,7 @@ app.route('*').all(async (request, response) => {
 // Start pins service
 startPinsService();
 
-const PORT = 3260;
+const PORT = 3000;
 app.listen(PORT, () => {
   console.log(`Server started on port ${PORT}`);
 });
