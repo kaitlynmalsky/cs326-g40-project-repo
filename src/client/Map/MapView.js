@@ -1,7 +1,7 @@
 import View from '../View.js';
 import ExistingPin from './ExistingPin.js';
 import EditingPin from './EditingPin.js';
-import database from '../database.js';
+import database from '../api.js';
 import Pin from './Pin.js';
 import { mockPins } from '../mock.js';
 
@@ -125,7 +125,7 @@ export default class MapView extends View {
 
   /**
    * Delete a pin
-   * @param {import('../database.js').Pin} pin
+   * @param {import('../api.js').Pin} pin
    */
   async deletePin(pin) {
     await database.deletePin(pin);
@@ -135,7 +135,7 @@ export default class MapView extends View {
 
   /**
    * Saves a new pin to the database and calls addPin to add it to map
-   * @param { import('../database.js').CreatePinInput} pinInfo
+   * @param { import('../api.js').CreatePinInput} pinInfo
    */
   async savePin(pinInfo) {
     const pinData = await database.createPin(pinInfo);
@@ -146,7 +146,7 @@ export default class MapView extends View {
 
   /**
    * Update a pin
-   * @param {import('../database.js').Pin} pin
+   * @param {import('../api.js').Pin} pin
    */
   async updatePin(pin) {
     const pinData = await database.updatePin(pin);
@@ -166,7 +166,7 @@ export default class MapView extends View {
 
   /**
    * Adds an existing or created pin to the map
-   * @param {import('../database.js').Pin} pinInfo
+   * @param {import('../api.js').Pin} pinInfo
    */
   async addPin(pinInfo) {
     const pin = new ExistingPin(this, pinInfo);

@@ -1,5 +1,5 @@
 import View from '../View.js';
-import database from '../database.js';
+import database from '../api.js';
 import { mockMessages } from '../mock.js';
 import ExistingPin from "../Map/ExistingPin.js" // this might be relevant soon
 
@@ -13,7 +13,7 @@ import ExistingPin from "../Map/ExistingPin.js" // this might be relevant soon
 /**
  * @typedef Group
  * @property {string} id
- * @property {import('../database.js').User[]} people
+ * @property {import('../api.js').User[]} people
  */
 export default class MessagesView extends View {
   /**
@@ -45,7 +45,7 @@ export default class MessagesView extends View {
    */
   #sendView;
   /**
-   * @type {import('../database.js').User}
+   * @type {import('../api.js').User}
    */
   #currUser;
 
@@ -185,7 +185,7 @@ export default class MessagesView extends View {
 
   /**
    * (people IS A TEMPORARY PARAM!) Adds a group chat to the left panel and to the user's internal messageList.
-   * @param {import('../database.js').User[]} users
+   * @param {import('../api.js').User[]} users
    * @param {string} pinID (change to required when fully implemented)
    * @returns {Promise<void>}
    */
@@ -217,7 +217,7 @@ export default class MessagesView extends View {
 
   /**
    * Adds a message to a chat.
-   * @param {import('../database.js').User} user
+   * @param {import('../api.js').User} user
    * @param {Date} timestamp
    * @param {string} message
    * @param {string} gcID
@@ -323,7 +323,7 @@ export default class MessagesView extends View {
 
   /**
    * 
-   * @param {import('../database.js').User[]} users 
+   * @param {import('../api.js').User[]} users 
    * @param {string} pinID
    * @returns {HTMLElement}
    */
@@ -357,7 +357,7 @@ export default class MessagesView extends View {
   /**
    * 
    * @param {string} pinID 
-   * @param {import('../database.js').User} user 
+   * @param {import('../api.js').User} user 
    */
   async addGroupChatMember(pinID, user) {
     this.groupList[pinID].people.push(user);

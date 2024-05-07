@@ -1,4 +1,4 @@
-import dbInstance from '../database.js';
+import dbInstance from '../api.js';
 import MapView from './MapView.js';
 import Pin from './Pin.js';
 
@@ -15,7 +15,7 @@ export default class EditingPin extends Pin {
    */
   #type;
   /**
-   * @type {import('../database.js').Pin}
+   * @type {import('../api.js').Pin}
    */
   #pinInfo;
 
@@ -46,7 +46,7 @@ export default class EditingPin extends Pin {
    * Constructor for EditingPin
    * @param {MapView} map
    * @param {PinEditType} type
-   * @param {import('../database.js').Pin} [pinInfo]
+   * @param {import('../api.js').Pin} [pinInfo]
    */
   constructor(map, type = 'new', pinInfo) {
     super(map);
@@ -142,7 +142,7 @@ export default class EditingPin extends Pin {
 
     if (this.#type === 'new') {
       /**
-       * @type {import('../database.js').CreatePinInput}
+       * @type {import('../api.js').CreatePinInput}
        */
       const pinInfo = {
         hostID: await dbInstance.getCurrentUserID(),
@@ -155,7 +155,7 @@ export default class EditingPin extends Pin {
       await this.map.savePin(pinInfo);
     } else {
       /**
-       * @type {import('../database.js').Pin}
+       * @type {import('../api.js').Pin}
        */
       const pinInfo = {
         ...this.#pinInfo,

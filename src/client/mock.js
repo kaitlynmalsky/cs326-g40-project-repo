@@ -1,4 +1,4 @@
-import dbInstance from './database.js';
+import dbInstance from './api.js';
 import mockBios from './mockBios.js';
 
 /**
@@ -15,7 +15,7 @@ let userCount = 0;
 
 /**
  * Creates random user data
- * @returns {import('./database.js').CreateUserInput}
+ * @returns {import('./api.js').CreateUserInput}
  */
 function testUser() {
   const randomName = faker.name.findName();
@@ -25,7 +25,7 @@ function testUser() {
   const userAvatar = `https://picsum.photos/150/150?random=${++userCount}`;
 
   /**
-   * @type {import('./database.js').CreateUserInput}
+   * @type {import('./api.js').CreateUserInput}
    */
   const user = {
     name: randomName,
@@ -160,7 +160,7 @@ export async function mockPins() {
       const time = generateRandomTimeRange();
 
       /**
-       * @type {import('./database.js').CreatePinInput}
+       * @type {import('./api.js').CreatePinInput}
        */
       const pinData = {
         hostID: userId,

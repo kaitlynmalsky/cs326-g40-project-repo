@@ -1,4 +1,4 @@
-import dbInstance from '../database.js';
+import dbInstance from '../api.js';
 import MapView from './MapView.js';
 import Pin from './Pin.js';
 
@@ -11,15 +11,15 @@ export default class ExistingPin extends Pin {
    */
   id;
   /**
-   * @type {import('../database.js').Pin}
+   * @type {import('../api.js').Pin}
    */
   #pinInfo;
   /**
-   * @type {import('../database.js').User}
+   * @type {import('../api.js').User}
    */
   #host;
   /**
-   * @type {import('../database.js').PinAttendee}
+   * @type {import('../api.js').PinAttendee}
    */
   attendee;
 
@@ -33,7 +33,7 @@ export default class ExistingPin extends Pin {
   /**
    *
    * @param {MapView} map
-   * @param {import('../database.js').Pin} pinInfo
+   * @param {import('../api.js').Pin} pinInfo
    */
   constructor(map, pinInfo) {
     super(map);

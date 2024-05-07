@@ -6,7 +6,7 @@ import ProfileView from './Profile/ProfilePage.js';
 import VillageView from './Village/index.js';
 import LoginView from './Login/login.js';
 import SignupView from './Signup/signup.js';
-import dbInstance from './database.js';
+import dbInstance from './api.js';
 import View from './View.js';
 
 /**
@@ -38,7 +38,7 @@ export class App {
    */
   #routes = {};
 
-  constructor() {}
+  constructor() { }
 
   /**
    * Renders the application

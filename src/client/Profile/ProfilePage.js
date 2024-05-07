@@ -1,5 +1,5 @@
 import View from '../View.js';
-import dbInstance from '../database.js';
+import dbInstance from '../api.js';
 
 const icnsStatic = [
     'fa-solid fa-house-chimney-window',
@@ -214,7 +214,7 @@ export default class ProfileView extends View {
             animation(b);
         };
 
-        document.getElementById('save').addEventListener('click', async() => {
+        document.getElementById('save').addEventListener('click', async () => {
             const userName = /**@type {HTMLInputElement} */ (
                 document.getElementById('userName')
             );

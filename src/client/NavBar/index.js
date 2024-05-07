@@ -1,5 +1,5 @@
 import GlobalEvents from '../Events/index.js';
-import dbInstance from '../database.js';
+import dbInstance from '../api.js';
 
 /**
  * @typedef {Object}  NavRoute

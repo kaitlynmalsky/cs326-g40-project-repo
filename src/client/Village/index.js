@@ -1,5 +1,5 @@
 import View from '../View.js';
-import dbInstance from '../database.js';
+import dbInstance from '../api.js';
 
 export default class VillageView extends View {
   /**
