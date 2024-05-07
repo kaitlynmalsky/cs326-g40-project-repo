@@ -9,7 +9,7 @@ import ExistingPin from "../Map/ExistingPin.js" // this might be relevant soon
 export default class MessagesView extends View {
   groupList;
   groupChats;
-  #curr_id;
+  #curr_id; // replace with pin id
   #active_id;
   #col1;
   #col2;
@@ -24,7 +24,7 @@ export default class MessagesView extends View {
 
   constructor() {
     super();
-    this.#curr_id = 0;
+    this.#curr_id = 0; // replace with pin id
     this.#active_id = 0;
     this.groupList = [];
     this.groupChats = [];
@@ -71,7 +71,7 @@ export default class MessagesView extends View {
    await this.loadDBMessages();
 
 
-    if (this.groupChats.length !== 0) {
+    if (this.groupChats.length !== 0) { // replace with Object.keys(this.groupChats).length
       this.#chatView.className =
       'pt-1 overscroll-contain overflow-y-scroll overflow-x-hidden gap-2.5 grid grid-flow-row auto-rows-max row-span-4'; // content-end breaks scrolling for some reason???
       this.initializeSendView();
@@ -100,9 +100,8 @@ export default class MessagesView extends View {
     const fillerBox = document.createElement('div');
     fillerBox.className = 'h-full max-h-full bg-slate-100';
     this.#col1.appendChild(fillerBox);
-    //console.log("this.#curr_id is", this.#curr_id);
 
-    if (this.groupChats && this.groupChats.length !== 0) {
+    if (this.groupChats && this.groupChats.length !== 0) { // replace with Object.keys(this.groupChats).length
       // i.e. If the user actually has any chats
       this.changeChat(0);
     }
@@ -159,15 +158,15 @@ export default class MessagesView extends View {
    */
 
   async addGroupChat(users) {
-    this.#curr_id = this.groupList.length;
+    this.#curr_id = this.groupList.length; // replace with pin id, add parameter to addGroupChat
     this.groupList.push({
-      id: this.#curr_id,
+      id: this.#curr_id, // replace with pin id
       people: users,
     });
 
-    await database.addGroupChat(this.#curr_id);
+    await database.addGroupChat(this.#curr_id); // replace with pin id, add parameter to addGroupChat
     for (let user of users) {
-      await database.addGroupChatMember(user.userID, this.#curr_id);
+      await database.addGroupChatMember(user.userID, this.#curr_id); // replace with pin id
     }
 
     const gcElm = document.createElement('div');
@@ -187,20 +186,20 @@ export default class MessagesView extends View {
       }
     });
 
-    const temp = this.#curr_id;
+    const temp = this.#curr_id; // replace with pin id
 
     gcElm.addEventListener('click', () => {
       this.changeChat(temp);
     });
 
     this.#col1.appendChild(gcElm);
-    this.groupChats[this.#curr_id] = {
-      id: this.#curr_id,
+    this.groupChats[this.#curr_id] = { // replace with pin id (this.groupChats becomes an object with pin id indices)
+      id: this.#curr_id, // replace with pin id
       messages: [],
       gcElm: gcElm,
     };
 
-    this.#curr_id++;
+    this.#curr_id++; // this will be removed after the change
   }
 
   /**
