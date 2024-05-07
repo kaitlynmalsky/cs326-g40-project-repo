@@ -83,7 +83,7 @@
 /**
  * Represents a group chat object.
  * @typedef {Object} GroupChat
- * @property {number} GroupChatID
+ * @property {string} GroupChatID
  * @property {string} _id PouchDB ID
  * @property {string} _rev PouchDB revision
  */
@@ -92,7 +92,7 @@
  * Represents which people are in which group chats.
  * @typedef {Object} GroupChatMember
  * @property {string} UserID
- * @property {number} GroupChatID
+ * @property {string} GroupChatID
  * @property {string} _id PouchDB ID
  * @property {string} _rev PouchDB revision
  */
@@ -101,7 +101,7 @@
  * Represents a message.
  * @typedef {Object} GroupChatMessage
  * @property {string} messageID
- * @property {number} GroupChatID
+ * @property {string} GroupChatID
  * @property {string} UserID
  * @property {string} messageContent
  * @property {Date} time
@@ -510,7 +510,7 @@ class Database {
 
   /**
    * Formats `gcID` into a database key
-   * @param {number} gcID The ID of the group chat
+   * @param {string} gcID The ID of the group chat
    * @returns {string}
    */
   #formatGroupKey(gcID) {
@@ -529,7 +529,7 @@ class Database {
 
   /**
    * Retrieves group chat with given ID.
-   * @param {number} gcID
+   * @param {string} gcID
    * @returns {Promise<GroupChat | null>}
    */
   async getGroupById(gcID) {
@@ -543,7 +543,7 @@ class Database {
 
   /**
    * Adds a group chat with the given ID to the database.
-   * @param {number} gcID
+   * @param {string} gcID
    * @returns {Promise<GroupChat>}
    */
   async addGroupChat(gcID) {
@@ -575,7 +575,7 @@ class Database {
 
   /**
    * Adds a message with the given group chat ID, author ID, content, and time sent to the database
-   * @param {number} gcID
+   * @param {string} gcID
    * @param {string} uID
    * @param {string} content
    * @param {Date} time
@@ -615,7 +615,7 @@ class Database {
   /**
    * Adds a group chat member with the given person ID and group chat ID.
    * @param {string} uID
-   * @param {number} gcID
+   * @param {string} gcID
    * @returns {Promise<GroupChatMember>}
    */
   async addGroupChatMember(uID, gcID) {
@@ -664,7 +664,7 @@ class Database {
 
   /**
    * Retrieves all messages given a group chat's ID.
-   * @param {number} gcID
+   * @param {string} gcID
    * @returns {Promise<Array<GroupChatMessage>>}
    */
   async getMessagesByGroupChatID(gcID) {
@@ -679,7 +679,7 @@ class Database {
 
   /**
    * Retrieves all members
-   * @param {number} gcID
+   * @param {string} gcID
    * @returns {Promise<Array<GroupChatMember>>}
    */
   async getMembersByGroupChatID(gcID) {

@@ -102,7 +102,7 @@ export const db = new PouchDB('villagelink');
 /**
  * Represents a group chat object.
  * @typedef {Object} GroupChat
- * @property {number} GroupChatID
+ * @property {string} GroupChatID
  * @property {string} _id PouchDB ID
  * @property {string} _rev PouchDB revision
  */
@@ -111,7 +111,7 @@ export const db = new PouchDB('villagelink');
  * Represents which people are in which group chats.
  * @typedef {Object} GroupChatMember
  * @property {number} PersonID
- * @property {number} GroupChatID
+ * @property {string} GroupChatID
  * @property {string} _id PouchDB ID
  * @property {string} _rev PouchDB revision
  */
@@ -120,7 +120,7 @@ export const db = new PouchDB('villagelink');
  * Represents a message.
  * @typedef {Object} GroupChatMessage
  * @property {string} messageID
- * @property {number} GroupChatID
+ * @property {string} GroupChatID
  * @property {number} PersonID
  * @property {string} messageContent
  * @property {Date} time
@@ -669,7 +669,7 @@ export async function removePinAttendee(attendee) {
 
 /**
  * Formats `gcID` into a database key
- * @param {number} gcID The ID of the group chat
+ * @param {string} gcID The ID of the group chat
  * @returns {string}
  */
 function formatGroupKey(gcID) {
@@ -697,7 +697,7 @@ function formatPersonKey(pID) {
 
 /**
  * Retrieves group chat with given ID.
- * @param {number} gcID
+ * @param {string} gcID
  * @returns {Promise<GroupChat | null>}
  */
 export async function getGroupById(gcID) {
@@ -711,7 +711,7 @@ export async function getGroupById(gcID) {
 
 /**
  * Adds a group chat with the given ID to the database.
- * @param {number} gcID
+ * @param {string} gcID
  * @returns {Promise<GroupChat>}
  */
 export async function addGroupChat(gcID) {
@@ -743,7 +743,7 @@ export async function addGroupChat(gcID) {
 
 /**
  * Adds a message with the given group chat ID, author ID, content, and time sent to the database
- * @param {number} gcID
+ * @param {string} gcID
  * @param {number} pID
  * @param {string} content
  * @param {Date} time
@@ -783,7 +783,7 @@ function formatGroupChatMemberKey(gcId, pID) {
 /**
  * Adds a group chat member with the given person ID and group chat ID.
  * @param {number} pID
- * @param {number} gcID
+ * @param {string} gcID
  * @returns {Promise<GroupChatMember>}
  */
 export async function addGroupChatMember(pID, gcID) {
@@ -847,7 +847,7 @@ export async function getMessagesByGroupChatID(gcID) {
 
 /**
  * Retrieves all members
- * @param {number} gcID
+ * @param {string} gcID
  * @returns {Promise<Array<GroupChatMember>>}
  */
 export async function getMembersByGroupChatID(gcID) {
