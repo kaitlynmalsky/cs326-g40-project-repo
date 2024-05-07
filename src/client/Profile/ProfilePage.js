@@ -126,9 +126,13 @@ export default class ProfileView extends View {
             '../icons/options/limeCat.png',
             '../icons/options/cheeseCat.png',
             '../icons/options/blueberryCat.png',
-            '../icons/options/bubblegumCat.png'
+            '../icons/options/bubblegumCat.png',
+            '../icons/options/mr_ice.png',
+            '../icons/options/mr_warm.png',
+            '../icons/options/mike.png',
         ]);
         const ears = createLayer('ears', [
+            '../icons/options/none.png',
             '../icons/options/ketchupRaccoonEars.png',
             '../icons/options/limeRaccoonEars.png',
             '../icons/options/cheeseRaccoonEars.png',
@@ -139,8 +143,14 @@ export default class ProfileView extends View {
             '../icons/options/cheeseCatEars.png',
             '../icons/options/blueberryCatEars.png',
             '../icons/options/bubblegumCatEars.png',
+            '../icons/options/mr_ice_ears.png',
+            '../icons/options/mr_warm_ears.png',
         ]);
-        const hat = createLayer('hat', ['', '../icons/options/sombrero.png', '../icons/options/top_hat.png']);
+        const hat = createLayer('hat', [
+            '', 
+            '../icons/options/sombrero.png', 
+            '../icons/options/top_hat.png',
+        ]);
         const bg = createLayer('bg', [
             '../icons/options/theStarryNight.png',
             '../icons/options/sunflowers.png',
@@ -217,17 +227,6 @@ export default class ProfileView extends View {
             const bioInput = /** @type {HTMLTextAreaElement} */ (document.getElementById('bioInput'));
             const bioText = bioInput.value;
             user.bio = bioText;
-
-
-            // try {
-            //     const putResponse = await fetch(`/users/${user.userID}`, { method: "PUT", body: JSON.stringify(user) });
-            //     if (!putResponse.ok) {
-            //         throw new Error(`Failed to update user`);
-            //     }
-            //     console.log("user updated successfully");
-            // } catch (err) {
-            //     console.error(`Put failed: ${err}`);
-            // }
 
             user = await dbInstance.updateUser(user);
 
