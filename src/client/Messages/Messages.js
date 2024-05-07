@@ -155,7 +155,7 @@ export default class MessagesView extends View {
             gcUsersDB.push(userDB);
           }
         }
-        await this.addGroupChat(gcUsersDB);
+        await this.addGroupChat(gcUsersDB, groupChatsDB[i].GroupChatID);
         const gcMessagesDB = await database.getMessagesByGroupChatID(groupChatsDB[i].GroupChatID);
         gcMessagesDB.sort(function (a, b) {
           return new Date(a.time).getTime() - new Date(b.time).getTime();
@@ -186,7 +186,7 @@ export default class MessagesView extends View {
   /**
    * (people IS A TEMPORARY PARAM!) Adds a group chat to the left panel and to the user's internal messageList.
    * @param {import('../database.js').User[]} users
-   * @param {string} [pinID] (change to required when fully implemented)
+   * @param {string} pinID (change to required when fully implemented)
    * @returns {Promise<void>}
    */
 
@@ -200,33 +200,12 @@ export default class MessagesView extends View {
       people: users
     }
 
-    await database.addGroupChat(pinID); // replace with pin id, add parameter to addGroupChat
+    await database.addGroupChat(pinID);
     for (let user of users) {
-      await database.addGroupChatMember(user.userID, pinID); // replace with pin id
+      await database.addGroupChatMember(user.userID, pinID);
     }
 
-    const gcElm = document.createElement('div');
-    gcElm.className =
-      'flex -space-x-4 rtl:space-x-reverse bg-slate-100 hover:cursor-pointer';
-    gcElm.classList.add('py-5');
-    gcElm.classList.add('pl-2');
-    gcElm.classList.add('gc-stack');
-
-    users.forEach((user) => {
-      if (user.userID !== this.#currUser.userID) {
-        const avatarElm = document.createElement('img');
-        avatarElm.className = 'w-10 h-10 border-2 border-white rounded-full';
-  
-        avatarElm.src = user.avatar;
-        gcElm.appendChild(avatarElm);
-      }
-    });
-
-    const temp = pinID; // replace with pin id
-
-    gcElm.addEventListener('click', () => {
-      this.changeChat(pinID);
-    });
+    const gcElm = this.generateGCElm(users, pinID);
 
     this.#col1.appendChild(gcElm);
     this.groupChats[pinID] = { // replace with pin id (this.groupChats becomes an object with pin id (string) indices)
@@ -340,6 +319,51 @@ export default class MessagesView extends View {
 
     //this.#chatView.appendChild(messageElm);
     return messageElm;
+  }
+
+  /**
+   * 
+   * @param {import('../database.js').User[]} users 
+   * @param {string} pinID
+   * @returns {HTMLElement}
+   */
+  generateGCElm(users, pinID) {
+    const gcElm = document.createElement('div');
+    gcElm.className =
+      'flex -space-x-4 rtl:space-x-reverse bg-slate-100 hover:cursor-pointer';
+    gcElm.classList.add('py-5');
+    gcElm.classList.add('pl-2');
+    gcElm.classList.add('gc-stack');
+
+    users.forEach((user) => {
+      if (user.userID !== this.#currUser.userID) {
+        const avatarElm = document.createElement('img');
+        avatarElm.className = 'w-10 h-10 border-2 border-white rounded-full';
+  
+        avatarElm.src = user.avatar;
+        gcElm.appendChild(avatarElm);
+      }
+    });
+
+    const temp = pinID; // replace with pin id
+
+    gcElm.addEventListener('click', () => {
+      this.changeChat(temp);
+    });
+    return gcElm;
+  }
+
+
+  /**
+   * 
+   * @param {string} pinID 
+   * @param {import('../database.js').User} user 
+   */
+  async addGroupChatMember(pinID, user) {
+    this.groupList[pinID].people.push(user);
+    let gcElm = this.generateGCElm(this.groupList[pinID].people, pinID);
+    this.groupChats[pinID].gcElm = gcElm;
+    await database.addGroupChatMember(user.userID, pinID);
   }
 
   /**
