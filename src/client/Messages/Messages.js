@@ -1,6 +1,6 @@
 import View from '../View.js';
 import database from '../api.js';
-import { mockMessages } from '../mock.js';
+
 import ExistingPin from "../Map/ExistingPin.js" // this might be relevant soon
 
 /**

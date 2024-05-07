@@ -3,7 +3,7 @@ import ExistingPin from './ExistingPin.js';
 import EditingPin from './EditingPin.js';
 import database from '../api.js';
 import Pin from './Pin.js';
-import { mockPins } from '../mock.js';
+
 
 /**
  * @typedef {import('leaflet')} Leaflet
