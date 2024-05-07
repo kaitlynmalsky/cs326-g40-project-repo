@@ -75,7 +75,6 @@ userRouter.get('/:userID/connections', async (req, res) => {
   }
 });
 
-
 /**
  * Delete a connection between userID and targetID
  */
@@ -129,28 +128,32 @@ userRouter.get('/:userID', async (req, res) => {
 });
 
 /**
- * Update a user
+ * Update the calling user
  */
-userRouter.put('/:userID', async (req, res) => {
-  const userID = req.params.userID;
+userRouter.put('/me', async (req, res) => {
+  const userID = /** @type {import('../index.js').AuthenticatedSessionData} */ (
+    req.session
+  ).userID;
   const userData = req.body;
 
-  console.log("in update route");
+  console.log('in update route');
   console.log(userData.bio);
 
-  if (
-    /** @type {import('../index.js').AuthenticatedSessionData} */ (req.session)
-      .userID !== userID
-  ) {
+  if (userID !== userData.userID) {
     return res.status(403).end();
   }
-  if (userID !== userData.userID) {
-    return res
-      .status(400)
-      .json({ error: 'Wrong userID provided in update data' });
+
+  const existingUser = await getUser(userID);
+
+  if (!existingUser) {
+    return res.status(404).json({ error: 'User not found' });
   }
 
+  userData.password = existingUser.password;
+
   const updatedUser = await updateUser(userData);
+
+  delete updatedUser.password;
 
   return res.status(200).json(updatedUser);
 });

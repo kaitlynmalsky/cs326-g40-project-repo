@@ -328,7 +328,7 @@ class Database {
    * @returns {Promise<User>}
    */
   async updateUser(user) {
-    const data = await fetch(`/users/${user.userID}`, {
+    const data = await fetch(`/users/me`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
