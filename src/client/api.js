@@ -287,9 +287,24 @@ class Database {
   // ********************************************
 
   /**
+   * Fetches the current user
+   * @returns {Promise<User | null>}
+   */
+  async getMe() {
+    const meResponse = await fetch('/api/users/me');
+
+    if (!meResponse.ok) {
+      console.error('Failed to get me');
+      return null;
+    }
+
+    return meResponse.json();
+  }
+
+  /**
    * Calls the get backend to get user by userID
    * @param {string} userID The ID of the user to retrieve
-   * @returns {Promise<User>}
+   * @returns {Promise<User | null>}
    */
   async getUser(userID) {
     const userResponse = await fetch(`/api/users/${userID}`);
@@ -305,7 +320,7 @@ class Database {
   /**
    * Calls the get backend to get user by email
    * @param {string} email The email of the user to retrieve
-   * @returns {Promise<User>}
+   * @returns {Promise<User | null>}
    */
   async getUserByEmail(email) {
     try {

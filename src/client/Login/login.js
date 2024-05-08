@@ -75,8 +75,7 @@ export default class LoginView extends View {
         if (loginResponse.ok) {
           console.log('Authentication successful');
 
-          const userResponse = await fetch(`/api/users/me`);
-          const user = await userResponse.json();
+          const user = await dbInstance.getMe();
 
           await dbInstance.setCurrentUserId(user.userID);
           GlobalEvents.login();

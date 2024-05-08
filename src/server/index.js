@@ -9,6 +9,7 @@ import PouchDBSessionStore from './session.js';
 import morgan from 'morgan';
 import startPinsService from './pinsService.js';
 import cors from 'cors';
+import { addConnections } from './mock.js';
 
 
 const app = express();
