@@ -1,9 +1,8 @@
 import View from '../View.js';
 import ExistingPin from './ExistingPin.js';
 import EditingPin from './EditingPin.js';
-import database from '../api.js';
+import api from '../api.js';
 import Pin from './Pin.js';
-
 
 /**
  * @typedef {import('leaflet')} Leaflet
@@ -51,8 +50,6 @@ export default class MapView extends View {
    * @returns {Promise<HTMLElement>}
    */
   async render() {
-    //await mockPins();
-
     // Create component root
     const elm = document.createElement('div');
     elm.id = 'map-view';
@@ -90,7 +87,20 @@ export default class MapView extends View {
   async onLoad() {
     this.setView(42.3868, -72.5293, 17);
 
-    const pins = await database.getUpcomingPins();
+    this.loadPins();
+
+    setInterval(() => this.loadPins(), 1000 * 60); // Refresh pins every minute
+  }
+
+  async loadPins() {
+    // Clear existing pins
+    for (const pinID in this.#pins) {
+      this.#pins[pinID].removeMarker();
+      delete this.#pins[pinID];
+    }
+
+    // Add pins
+    const pins = await api.getUpcomingPins();
 
     for (const pin of pins) {
       this.addPin(pin);
@@ -111,7 +121,7 @@ export default class MapView extends View {
    * @param {string} pinID
    */
   async editPin(pinID) {
-    const pin = await database.getPin(pinID);
+    const pin = await api.getPin(pinID);
 
     if (this.editingPin) {
       this.editingPin.cancel();
@@ -128,7 +138,7 @@ export default class MapView extends View {
    * @param {import('../api.js').Pin} pin
    */
   async deletePin(pin) {
-    await database.deletePin(pin);
+    await api.deletePin(pin);
     this.#pins[pin.pinID].removeMarker();
     delete this.#pins[pin.pinID];
   }
@@ -138,7 +148,7 @@ export default class MapView extends View {
    * @param { import('../api.js').CreatePinInput} pinInfo
    */
   async savePin(pinInfo) {
-    const pinData = await database.createPin(pinInfo);
+    const pinData = await api.createPin(pinInfo);
     this.#fabElm.innerText = 'Add Pin';
     await this.addPin(pinData);
     this.editingPin = null;
@@ -149,7 +159,7 @@ export default class MapView extends View {
    * @param {import('../api.js').Pin} pin
    */
   async updatePin(pin) {
-    const pinData = await database.updatePin(pin);
+    const pinData = await api.updatePin(pin);
     this.#fabElm.innerText = 'Add Pin';
     this.addPin(pinData);
     this.editingPin = null;
