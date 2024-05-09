@@ -650,6 +650,7 @@ export async function getPinAttendees(pinID) {
 /**
  * Gets the pins a user is a part of
  * @param {string} userID
+ * @return {Promise<{userID: string, pinID: string}[]>}
  */
 export async function getUserPins(userID) {
   const userPinsResult = await db.allDocs({

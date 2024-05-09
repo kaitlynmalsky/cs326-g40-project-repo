@@ -553,6 +553,55 @@ class Database {
       console.error('Failed to leave pin');
     }
   }
+  // ********************************************
+  // Groups
+  // ********************************************
+
+  /**
+   * 
+   * @returns {Promise<{userID: string, pinID: string}[]>}
+   */
+  async getUserGroups() {
+    const getPinsResponse = await fetch(`/api/groups/`, {method: 'GET'});
+    if (!getPinsResponse.ok) {
+      console.error(`Failed to get user groups`);
+    }
+    return getPinsResponse.json();
+  }
+
+  /**
+   * Sends message with given pin ID, timestamp, and content. (can this return void idk)
+   * @param {string} pinID 
+   * @param {Date} time 
+   * @param {string} content 
+   * @returns {Promise<void>} change later??
+   */
+  async sendMessage(pinID, time, content) {
+    const sendMessageResponse = await fetch(`api/groups/${pinID}/messages`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({content: content, timeString: time.toString()})
+     });
+     if (!sendMessageResponse.ok) {
+        console.error(`Error sending message`);
+     }
+     return;
+  }
+
+  /**
+   * Gets all messages from a given pin (group) ID.
+   * @param {string} pinID 
+   */
+  async getGroupMessages(pinID) {
+    const getMessagesResponse = await fetch(`/api/groups/${pinID}/messages`, {method: 'GET'})
+    if (!getMessagesResponse.ok) {
+      console.error(`Failed to get messages`);
+    }
+    return getMessagesResponse.json(); 
+  }
+
 
   // ********************************************
   // User Pin Notifications
@@ -744,6 +793,9 @@ class Database {
     });
     return memberResult.rows.map((row) => row.doc);
   }
+
+
+
 }
 
 const dbInstance = new Database();

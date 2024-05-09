@@ -29,7 +29,7 @@ groupsRouter.post('/:groupID/messages', async(req, res) => {
         req.session
     ).userID;
     const groupID = req.params.groupID;
-    const { timeString, content } = req.body;
+    const { content, timeString } = req.body;
     let timestamp = new Date(timeString);
     try {
         await addGroupChatMessage(groupID, userID, content, timestamp);
