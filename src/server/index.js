@@ -11,7 +11,6 @@ import startPinsService from './pinsService.js';
 import cors from 'cors';
 import { addConnections } from './mock.js';
 
-
 const app = express();
 
 app.set('trust proxy', true);

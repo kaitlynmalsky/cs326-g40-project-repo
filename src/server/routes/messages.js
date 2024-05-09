@@ -1,5 +1,5 @@
 import Router from 'express';
-import { getAllGroupChats, getGroupById, addGroupChatMessage } from '../database.js';
+import { getAllGroupChats, getGroupById, addGroupChatMessage, getUserPins, getMessagesByGroupChatID } from '../database.js';
 
 const messagesRouter = Router();
 
@@ -20,10 +20,15 @@ const messagesRouter = Router();
 // returns a list of pins you are a part of
 messagesRouter.get('/groups', async(req, res) => {
     // will return a list of pins/groups that the current user is a part of
-    return res.status(501).end({ error: "Not implemented" });
     const userID = /** @type {import('../index.js').AuthenticatedSessionData} */ (
         req.session
     ).userID;
+    try {
+        let pins = await getUserPins(userID);
+        return res.status(200).json({ pins: pins });
+    } catch (err) {
+        return res.status(500).json({ error: `Failed to get user pins` })
+    }
 })
 
 // Send message to group chat
@@ -40,7 +45,13 @@ messagesRouter.post('/groups/:groupID/messages', async(req, res) => {
     const groupID = req.params.groupID;
     const { timeString, content } = req.body;
     let timestamp = new Date(timeString);
-    await addGroupChatMessage(groupID, userID, content, timestamp);
+    try {
+        await addGroupChatMessage(groupID, userID, content, timestamp);
+        return res.status(200);
+    } catch (err) {
+        return res.status(500).json({ error: `Failed to send message` });
+    }
+
 
 })
 
@@ -49,10 +60,17 @@ messagesRouter.get('/groups/:groupID/messages', async(req, res) => {
     if (!req.params.groupID) {
         return res.status(400).json({ error: `Missing groupID query argument` });
     }
-    return res.status(501).end({ error: "Not implemented" });
+    //return res.status(501).end({ error: "Not implemented" });
     const userID = /** @type {import('../index.js').AuthenticatedSessionData} */ (
         req.session
     ).userID;
+    const groupID = req.params.groupID;
+    try {
+        let messages = await getMessagesByGroupChatID(groupID);
+        return res.status(200).json({ messages: messages });
+    } catch (err) {
+        return res.status(500).json({ error: `Failed to get messages` });
+    }
 })
 
 

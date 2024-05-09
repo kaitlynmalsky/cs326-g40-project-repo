@@ -586,6 +586,16 @@ function formatPinAttendeeKey(pinID, userID) {
 }
 
 /**
+ * Format userID and pinID into a user pin
+ * @param {string} userID
+ * @param {string} pinID
+ * @returns
+ */
+function formatUserPin(userID, pinID) {
+  return `upin_${userID}_${pinID}`;
+}
+
+/**
  * Add an attendee to a pin
  * @param {string} pinID
  * @param {string} userID
@@ -596,13 +606,19 @@ export async function addPinAttendee(pinID, userID) {
 
   if (existingAttendee) return existingAttendee;
 
-  const doc = {
+  const attendeeDoc = {
     _id: formatPinAttendeeKey(pinID, userID),
     pinID,
     userID,
   };
 
-  const { ok, id, rev } = await db.put(doc);
+  const { ok, id, rev } = await db.put(attendeeDoc);
+
+  await db.put({
+    _id: formatUserPin(userID, pinID),
+    userID,
+    pinID,
+  });
 
   if (!ok) {
     console.error(
@@ -611,7 +627,7 @@ export async function addPinAttendee(pinID, userID) {
   }
 
   return {
-    ...doc,
+    ...attendeeDoc,
     _rev: rev,
   };
 }
@@ -629,6 +645,34 @@ export async function getPinAttendees(pinID) {
   });
 
   return pinAttendeesResult.rows.map((row) => row.doc);
+}
+
+/**
+ * Gets the pins a user is a part of
+ * @param {string} userID
+ */
+export async function getUserPins(userID) {
+  const userPinsResult = await db.allDocs({
+    include_docs: true,
+    startkey: `upin_${userID}`,
+    endkey: `upin_${userID}\ufff0`,
+  });
+
+  return userPinsResult.rows.map((row) => row.doc);
+}
+
+/**
+ * Get user pin
+ * @param {string} userID
+ * @param {string} pinID
+ * @returns
+ */
+export async function getUserPin(userID, pinID) {
+  try {
+    return await db.get(formatUserPin(userID, pinID));
+  } catch (err) {
+    return null;
+  }
 }
 
 /**
@@ -650,6 +694,12 @@ export async function getPinAttendee(pinID, userID) {
  * @param {PinAttendee} attendee
  */
 export async function removePinAttendee(attendee) {
+  const userPin = await getUserPin(attendee.userID, attendee.pinID);
+
+  if (userPin) {
+    await db.remove(userPin);
+  }
+
   return db.remove(attendee);
 }
 
@@ -772,7 +822,6 @@ export async function addGroupChatMember(uID, gcID) {
     (member) => member.UserID === uID,
   );
   if (existingGCMember.length !== 0) {
-
     return existingGCMember[0];
   } else {
     const gcmDoc = {
@@ -811,7 +860,7 @@ export async function getAllGroupChats() {
 
 /**
  * Retrieves all messages given a group chat's ID.
- * @param {number} gcID
+ * @param {string} gcID
  * @returns {Promise<Array<GroupChatMessage>>}
  */
 export async function getMessagesByGroupChatID(gcID) {
