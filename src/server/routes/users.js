@@ -163,7 +163,6 @@ userRouter.put('/me', async (req, res) => {
 /**
  * Delete Connection Suggestions
  */
-userRouter
 userRouter.delete('/:userID/suggestions/:targetID', async (req, res) => {
   const userID = req.params.userID;
   const targetID = req.params.userID;
@@ -171,7 +170,7 @@ userRouter.delete('/:userID/suggestions/:targetID', async (req, res) => {
   try {
     const suggestConnection = await getConnection(userID, targetID);
     const del = await deleteConnectionSuggestion(suggestConnection);
-    res.status(201).json(del);
+    res.status(204).end();
   } catch (err) {
     res.status(500).json({ error: 'Failed to delete connection suggestion' });
   }
