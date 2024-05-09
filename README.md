@@ -10,6 +10,8 @@ VillageLink is a web application that makes it simpler and easier to make new fr
 
 To view the milestone submissions, download the repository and enter `npm run milestone-01` (Project Planning) for Milestone 1 or `npm run milestone-02` for Milestone 2 (Frontend). The milestone you run will open in [http://127.0.0.1:3000](http://127.0.0.1:3000).
 
+Altertnatively, you can visit our domain at [https://villagelink.fly.dev](https://villagelink.fly.dev/#login)!
+
 ## How to use
 
 ### Map View
