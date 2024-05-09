@@ -860,7 +860,7 @@ export async function getAllGroupChats() {
 
 /**
  * Retrieves all messages given a group chat's ID.
- * @param {number} gcID
+ * @param {string} gcID
  * @returns {Promise<Array<GroupChatMessage>>}
  */
 export async function getMessagesByGroupChatID(gcID) {
