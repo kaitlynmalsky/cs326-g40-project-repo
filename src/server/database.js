@@ -306,6 +306,35 @@ export async function getUser(userID) {
 }
 
 /**
+ * Gets multiple users by their userIDs
+ * @param {string[]} userIDs
+ * @returns {Promise<User[]>}
+ */
+export async function getUsers(userIDs) {
+  try {
+    const users = await db.allDocs({
+      keys: userIDs.map((userID) => formatUserKey(userID)),
+      include_docs: true,
+    });
+
+    return users.rows
+      .filter(
+        (row) =>
+          //@ts-ignore
+          row.doc,
+      )
+      .map(
+        (row) =>
+          //@ts-ignore
+          row.doc,
+      );
+  } catch (err) {
+    console.error(err);
+    return [];
+  }
+}
+
+/**
  * Retrieves user by email
  * @param {string} email The email of the user to retrieve
  * @returns {Promise<User>}

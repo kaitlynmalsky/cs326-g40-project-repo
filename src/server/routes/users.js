@@ -8,31 +8,57 @@ import {
   getConnection,
   deleteConnection,
   getConnectionSuggestions,
+  getConnectionSuggestion,
   deleteConnectionSuggestion,
-  getConnectionSuggestion
+  getUsers
 } from '../database.js';
 
 const userRouter = Router();
 
 /**
- * Filter users by email
+ * Get users by email or id
  */
 userRouter.get('/', async (req, res) => {
-  let { email } = req.query;
+  let { email, userID } = req.query;
 
-  if (!email) {
-    return res.status(400).json({ error: 'Missing email query argument' });
+  if (!email && !userID) {
+    return res
+      .status(400)
+      .json({ error: 'Missing email or userID query argument' });
   }
 
-  email = email.toString();
+  if (email) {
+    // Get user by email
+    email = email.toString();
 
-  const user = await getUserByEmail(email);
+    const user = await getUserByEmail(email);
 
-  if (!user) {
-    return res.status(404).end();
+    if (!user) {
+      return res.status(404).end();
+    }
+
+    return res.status(200).json(user);
+  } else {
+    // Get user(s) by id
+    if (typeof userID === 'string') {
+      // Get one user
+      const user = await getUser(userID);
+
+      if (!user) {
+        return res.status(404).end();
+      }
+
+      delete user.password;
+
+      return res.status(200).json(user);
+    } else {
+      const users = await getUsers(/** @type {string[]} */ (userID));
+
+      users.forEach((user) => delete user.password);
+
+      return res.status(200).json(users);
+    }
   }
-
-  return res.status(200).json(user);
 });
 
 /**
@@ -177,7 +203,6 @@ userRouter.delete('/:userID/suggestions/:targetID', async (req, res) => {
     res.status(500).json({ error: 'Failed to delete connection suggestion' });
   }
 });
-
 
 /**
  * Get Connection Suggestions
