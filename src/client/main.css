@@ -412,3 +412,20 @@ button:hover {
     color: #24ba73;
     opacity: 0;
 }
+
+#dice {
+    @apply font-bold py-2 px-4 rounded-full;
+    color: #412003;
+    background: #bc6700;
+    border: solid #412003;
+    @apply border-2 rounded-full;
+    margin-top: 10px;
+}
+
+#dice:hover {
+    background: #8b4d01;
+}
+
+#die {
+    pointer-events: none;
+}

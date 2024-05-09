@@ -51,7 +51,7 @@ export default class ProfileView extends View {
 
         const userDiv = makeElement('div', 'userDiv', null, creatorContainerRight);
 
-        for (let i = 0; i < 3; i++) creatorContainerRight.appendChild(document.createElement('br'));
+        for (let i = 0; i < 2; i++) creatorContainerRight.appendChild(document.createElement('br'));
 
         const userNameLabel = makeElement('h1', 'userNameLabel', null, userDiv);
         userNameLabel.innerText = "Username:";
@@ -90,6 +90,21 @@ export default class ProfileView extends View {
             chooseContainer.appendChild(optionDiv);
         });
 
+        const dice = makeElement('button', 'dice', null, creatorContainerRight);
+        dice.innerHTML = '<i id="die" class="fa-solid fa-dice-six"></i>';
+        dice.addEventListener('mouseover', () => {
+            dice.innerHTML = '<i id="die" class="fa-solid fa-dice-six fa-spin fa-spin-reverse"></i>';
+        });
+        dice.addEventListener('mouseout', () => {
+            dice.innerHTML = '<i id="die" class="fa-solid fa-dice-six"></i>';
+        });
+        dice.addEventListener('mousedown', () => {
+            dice.innerHTML = '<i id="die" class="fa-solid fa-dice-six fa-shake"></i>';
+        });
+        dice.addEventListener('mouseup', () => {
+            dice.innerHTML = '<i id="die" class="fa-solid fa-dice-six fa-spin fa-spin-reverse"></i>';
+        });
+
         const saveButton = makeElement('button', 'save', null, bioArea);
         saveButton.innerText = 'Save';
 
@@ -116,6 +131,15 @@ export default class ProfileView extends View {
             };
         };
 
+        const bg = createLayer('bg', [
+            '../icons/options/theStarryNight.png',
+            '../icons/options/sunflowers.png',
+            '../icons/options/kanagawaWave.png',
+            '../icons/options/Psychology.jpg',
+            '../icons/options/Sensor.jpg',
+            '../icons/options/sower.jpg',
+            '../icons/options/toxicLevel.jpg'
+        ]);
         const body = createLayer('body', [
             '../icons/options/ketchupRaccoon.png',
             '../icons/options/limeRaccoon.png',
@@ -150,15 +174,6 @@ export default class ProfileView extends View {
             '', 
             '../icons/options/sombrero.png', 
             '../icons/options/top_hat.png',
-        ]);
-        const bg = createLayer('bg', [
-            '../icons/options/theStarryNight.png',
-            '../icons/options/sunflowers.png',
-            '../icons/options/kanagawaWave.png',
-            '../icons/options/Psychology.jpg',
-            '../icons/options/Sensor.jpg',
-            '../icons/options/sower.jpg',
-            '../icons/options/toxicLevel.jpg'
         ]);
 
         const layers = [bg, ears, body, hat];
@@ -213,6 +228,11 @@ export default class ProfileView extends View {
             });
             animation(b);
         };
+
+        document.getElementById('dice').addEventListener('click', () => {
+            layers.forEach(l => {l.i = Math.floor(Math.random() * l.imgs.length);});
+            render2(0);
+        });
 
         document.getElementById('save').addEventListener('click', async () => {
             const userName = /**@type {HTMLInputElement} */ (
