@@ -1704,6 +1704,28 @@ button:hover {
   opacity: 0;
 }
 
+#dice {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  font-weight: 700;
+  color: #412003;
+  background: #bc6700;
+  border: solid #412003;
+  border-radius: 9999px;
+  border-width: 2px;
+  margin-top: 10px;
+}
+
+#dice:hover {
+  background: #8b4d01;
+}
+
+#die {
+  pointer-events: none;
+}
+
 .placeholder\:text-gray-400::-moz-placeholder {
   --tw-text-opacity: 1;
   color: rgb(156 163 175 / var(--tw-text-opacity));

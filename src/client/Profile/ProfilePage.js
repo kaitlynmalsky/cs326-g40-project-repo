@@ -51,7 +51,8 @@ export default class ProfileView extends View {
 
         const userDiv = makeElement('div', 'userDiv', null, creatorContainerRight);
 
-        for (let i = 0; i < 2; i++) creatorContainerRight.appendChild(document.createElement('br'));
+        // putting i < 2 here breaks css on firefox and safari for some reason
+        for (let i = 0; i < 3; i++) creatorContainerRight.appendChild(document.createElement('br'));
 
         const userNameLabel = makeElement('h1', 'userNameLabel', null, userDiv);
         userNameLabel.innerText = "Username:";
@@ -171,8 +172,8 @@ export default class ProfileView extends View {
             '../icons/options/mr_warm_ears.png',
         ]);
         const hat = createLayer('hat', [
-            '', 
-            '../icons/options/sombrero.png', 
+            '',
+            '../icons/options/sombrero.png',
             '../icons/options/top_hat.png',
         ]);
 
@@ -230,11 +231,11 @@ export default class ProfileView extends View {
         };
 
         document.getElementById('dice').addEventListener('click', () => {
-            layers.forEach(l => {l.i = Math.floor(Math.random() * l.imgs.length);});
+            layers.forEach(l => { l.i = Math.floor(Math.random() * l.imgs.length); });
             render2(0);
         });
 
-        document.getElementById('save').addEventListener('click', async () => {
+        document.getElementById('save').addEventListener('click', async() => {
             const userName = /**@type {HTMLInputElement} */ (
                 document.getElementById('userName')
             );
