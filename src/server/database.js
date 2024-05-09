@@ -90,16 +90,6 @@ export const db = new PouchDB('villagelink');
  */
 
 /**
- * Reprsents a person with a name and a link to their avatar image.
- * @typedef {Object} Person
- * @property {number} id
- * @property {string} name
- * @property {string} avatar
- * @property {string} _id PouchDB ID
- * @property {string} _rev PouchDB revision
- */
-
-/**
  * Represents a group chat object.
  * @typedef {Object} GroupChat
  * @property {string} GroupChatID
@@ -110,7 +100,7 @@ export const db = new PouchDB('villagelink');
 /**
  * Represents which people are in which group chats.
  * @typedef {Object} GroupChatMember
- * @property {number} PersonID
+ * @property {string} UserID
  * @property {string} GroupChatID
  * @property {string} _id PouchDB ID
  * @property {string} _rev PouchDB revision
@@ -121,7 +111,7 @@ export const db = new PouchDB('villagelink');
  * @typedef {Object} GroupChatMessage
  * @property {string} messageID
  * @property {string} GroupChatID
- * @property {number} PersonID
+ * @property {string} UserID
  * @property {string} messageContent
  * @property {Date} time
  * @property {string} _id PouchDB ID
@@ -687,15 +677,6 @@ function formatGroupMessageKey(gcID, msgID) {
 }
 
 /**
- * Formats person (temp) db key
- * @param {number} pID
- * @returns {string}
- */
-function formatPersonKey(pID) {
-  return `person_${pID}`;
-}
-
-/**
  * Retrieves group chat with given ID.
  * @param {string} gcID
  * @returns {Promise<GroupChat | null>}
@@ -744,17 +725,17 @@ export async function addGroupChat(gcID) {
 /**
  * Adds a message with the given group chat ID, author ID, content, and time sent to the database
  * @param {string} gcID
- * @param {number} pID
+ * @param {string} uID
  * @param {string} content
  * @param {Date} time
  */
-export async function addGroupChatMessage(gcID, pID, content, time) {
+export async function addGroupChatMessage(gcID, uID, content, time) {
   const messageID = `${Date.now()}_${randomUUID()}`;
   const messageDoc = {
     _id: formatGroupMessageKey(`${gcID}`, messageID),
     messageID: messageID,
     GroupChatID: gcID,
-    PersonID: pID,
+    UserID: uID,
     messageContent: content,
     time: time,
   };
@@ -781,31 +762,29 @@ function formatGroupChatMemberKey(gcId, pID) {
 }
 
 /**
- * Adds a group chat member with the given person ID and group chat ID.
- * @param {number} pID
+ * Adds a group chat member with the given user ID and group chat ID.
+ * @param {string} uID
  * @param {string} gcID
  * @returns {Promise<GroupChatMember>}
  */
-export async function addGroupChatMember(pID, gcID) {
+export async function addGroupChatMember(uID, gcID) {
   const existingGCMember = (await getMembersByGroupChatID(gcID)).filter(
-    (member) => member.PersonID === pID,
+    (member) => member.UserID === uID,
   );
   if (existingGCMember.length !== 0) {
-    // console.error(
-    //   `GroupChatMember with person ID ${pID} and group chat ID ${gcID} already exists.`,
-    // );
+
     return existingGCMember[0];
   } else {
     const gcmDoc = {
-      _id: formatGroupChatMemberKey(`${gcID}`, `${pID}`),
-      PersonID: pID,
+      _id: formatGroupChatMemberKey(`${gcID}`, `${uID}`),
+      UserID: uID,
       GroupChatID: gcID,
     };
 
     const { id, rev, ok } = await db.put(gcmDoc);
 
     if (!ok) {
-      console.error(`Failed to create ${gcID}_${pID} (id=${id}, rev=${rev})`);
+      console.error(`Failed to create ${gcID}_${uID} (id=${id}, rev=${rev})`);
     }
 
     return {

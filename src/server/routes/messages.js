@@ -1,5 +1,5 @@
 import Router from 'express';
-import { getAllGroupChats, getGroupById } from '../database.js';
+import { getAllGroupChats, getGroupById, addGroupChatMessage } from '../database.js';
 
 const messagesRouter = Router();
 
@@ -21,6 +21,9 @@ const messagesRouter = Router();
 messagesRouter.get('/groups', async(req, res) => {
     // will return a list of pins/groups that the current user is a part of
     return res.status(501).end({ error: "Not implemented" });
+    const userID = /** @type {import('../index.js').AuthenticatedSessionData} */ (
+        req.session
+    ).userID;
 })
 
 // Send message to group chat
@@ -31,6 +34,13 @@ messagesRouter.post('/groups/:groupID/messages', async(req, res) => {
     if (!req.body) {
         return res.status(400).json({ error: "Request body missing" });
     }
+    const userID = /** @type {import('../index.js').AuthenticatedSessionData} */ (
+        req.session
+    ).userID;
+    const groupID = req.params.groupID;
+    const { timeString, content } = req.body;
+    let timestamp = new Date(timeString);
+    await addGroupChatMessage(groupID, userID, content, timestamp);
 
 })
 
@@ -40,6 +50,9 @@ messagesRouter.get('/groups/:groupID/messages', async(req, res) => {
         return res.status(400).json({ error: `Missing groupID query argument` });
     }
     return res.status(501).end({ error: "Not implemented" });
+    const userID = /** @type {import('../index.js').AuthenticatedSessionData} */ (
+        req.session
+    ).userID;
 })
 
 
