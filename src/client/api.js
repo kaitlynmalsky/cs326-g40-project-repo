@@ -457,6 +457,45 @@ class Database {
     }
   }
 
+
+  /**
+   * Calls the get backend to get Connection Suggestions
+   * @param {string} [userID]
+   * @returns {Promise<Array<import("../server/database.js").ConnectionSuggestion>>}
+   */
+  async getConnectionSuggestions(userID) {
+    try {
+      const getPromise = await fetch(
+        `/api/users/${userID}/suggestions`
+      );
+      if (!getPromise.ok) {
+        console.error(`FAILED TO GET CONNECTION SUGGESTIONS`);
+        return;
+      }
+      return getPromise.json();
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  /**
+   * Calls the delete backend to delete connection
+   * @param {string} [userID]
+   * @param {string} [targetID]
+   * @returns {Promise<void>}
+   */
+  async deConnectionSuggestions(userID, targetID) {
+    try {
+      await fetch(
+        `/api/users/${userID}/suggestions/${targetID}`,
+        {
+          method: 'DELETE'
+        }
+      );
+    } catch (err) {
+      console.error(err);
+    }
+  }
   // ********************************************
   // Pin Attendees
   // ********************************************

@@ -104,10 +104,10 @@ export default class EditingPin extends Pin {
     datetime.setSeconds(0);
     datetime.setMilliseconds(0);
 
-    if (hour < nowHour || (nowHour === hour && nowMinutes < minutes)) {
+    if (hour < nowHour || (nowHour === hour && minutes < nowMinutes)) {
       datetime.setDate(datetime.getDate() + 1);
     }
-
+    console.log('date of pin:', datetime.getDate());
     return datetime;
   }
 
@@ -118,6 +118,9 @@ export default class EditingPin extends Pin {
     const startTimeInputValue = this.startTimeInputElm.value;
     const endTimeInputValue = this.endTimeInputElm.value;
     const details = this.detailInputElm.value;
+
+    console.log('startTime', startTimeInputValue);
+    console.log('endTime', endTimeInputValue);
 
     const [startHour, startMinutes] = startTimeInputValue.split(':');
     const [endHour, endMinutes] = endTimeInputValue.split(':');
@@ -151,6 +154,7 @@ export default class EditingPin extends Pin {
         details,
         coords: /** @type {[number, number]} */ ([lat, lng]),
       };
+      console.log('pin info :', pinInfo);
 
       await this.map.savePin(pinInfo);
     } else {
@@ -165,6 +169,8 @@ export default class EditingPin extends Pin {
         details,
         coords: /** @type {[number, number]} */ ([lat, lng]),
       };
+
+      console.log('pin info :', pinInfo);
 
       await this.map.updatePin(pinInfo);
     }
