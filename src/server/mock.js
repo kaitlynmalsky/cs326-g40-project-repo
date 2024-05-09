@@ -54,10 +54,6 @@ export async function addConnections(userID) {
     console.log(users);
 
     for (const user of users) {
-        const connection = {
-            userID: userID,
-            targetID: user.userID,
-        }
         const connPromise = await createConnection({
             userID: userID,
             targetID: user.userID,
@@ -66,6 +62,21 @@ export async function addConnections(userID) {
             targetID: userID,
             userID: user.userID,
         })
+    }
+
+    const user1 = users[0];
+    for(let i = 1; i<users.length; i++){
+
+        const connPromise = await createConnection({
+            userID: user1.userID,
+            targetID: users[i].userID
+        });
+
+        const connPromise2 = await createConnection({
+            targetID: user1.userID,
+            userID: users[i].userID
+        });
+
     }
 
 }

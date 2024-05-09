@@ -81,18 +81,9 @@ export default class VillageView extends View {
    */
   async loadConnections() {
     this.connectionsDiv.innerHTML = '';
-    const userData = await fetch(`/users/me`)
-    if (!userData.ok) {
-      console.error("FAILED TO GET USERDATA");
-    }
-    const userJson = await userData.json();
-    const userID = userJson.userID;
+    const userID = await dbInstance.getCurrentUserID();
 
-    const connectionData = await fetch(`/users/${userID}/connections`);
-    if (!connectionData.ok) {
-      console.error(`FAILED TO GET CONNECTIONS OF ${userID}`);
-    }
-    const connections = await connectionData.json();
+    const connections = await dbInstance.getConnections(userID);
 
     console.log('connections', connections);
 
@@ -103,11 +94,7 @@ export default class VillageView extends View {
     let connectionCount = 0;
     let currentPopover;
     for (const connection of connections) {
-      const userD = await fetch(`/users/${connection.targetID}/`);
-      if (!userD.ok) {
-        console.error(`FAILED TO GET DATA OF USER ${connection}`);
-      }
-      const user = await userD.json();
+      const user = await dbInstance.getUser(connection.targetID);
       const connectionElm = document.createElement('div');
       connectionElm.className = `user_connections`;
 
@@ -134,19 +121,11 @@ export default class VillageView extends View {
       subConn.className = 'sub-connections';
       subConn.style.maxHeight = '200px';
       subConn.style.overflowY = 'auto';
-      let dataArrData = await fetch(`/users/${user.userID}/connections/`)
-      if (!dataArrData.ok) {
-        console.error("FAILED TO GET CURRENT USER CONNECTIONS");
-      }
-      const dataArr = await dataArrData.json();
+      let dataArr = await dbInstance.getConnections(user.userID);
       console.log(dataArr);
 
       for (const elm of dataArr) {
-        const dataElmPromise = await fetch(`/users/${elm.targetID}/`)
-        if (!dataElmPromise.ok) {
-          console.error(`FAILED TO GET USER DATA OF ${elm}`);
-        }
-        const dataElm = await dataElmPromise.json();
+        const dataElm = await dbInstance.getUser(elm.targetID);
         console.log(dataElm);
         const subConnElm = document.createElement('div');
         subConnElm.className = 'sub-connection-elements';
@@ -184,12 +163,7 @@ export default class VillageView extends View {
       delBtn.innerText = 'Delete';
       delBtn.addEventListener('click', async () => {
         try {
-          const delResponse = await fetch(`/users/${connection.userID}/connections/${connection.targetID}`, {
-            method: 'DELETE'
-          });
-          if (!delResponse.ok) {
-            throw new Error('Failed to delete connection');
-          }
+          const del = await dbInstance.deleteConnection(connection);
           console.log('Connection deleted successfully');
           this.loadConnections();
         } catch (error) {
