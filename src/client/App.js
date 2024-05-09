@@ -38,7 +38,7 @@ export class App {
    */
   #routes = {};
 
-  constructor() { }
+  constructor() {}
 
   /**
    * Renders the application
@@ -77,7 +77,16 @@ export class App {
     const profileView = new ProfileView();
     this.#addRoute('profile', { view: profileView });
 
-    if (await dbInstance.getCurrentUserID()) {
+    const currentUserID = await dbInstance.getCurrentUserID();
+
+    if (currentUserID) {
+      const me = await dbInstance.getMe();
+
+      if (!me) {
+        await dbInstance.deleteCurrentUserId();
+        return this.#navigateTo('login');
+      }
+
       if (location.hash.startsWith('#')) {
         const routeKey = location.hash.split('#')[1];
 
