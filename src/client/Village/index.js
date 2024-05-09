@@ -6,6 +6,8 @@ export default class VillageView extends View {
    * @type {boolean}
    */
   #showButton;
+  #showSuggestionButton;
+
 
   /**
    * @type {string}
@@ -14,6 +16,7 @@ export default class VillageView extends View {
   constructor() {
     super();
     this.#showButton = false;
+    this.#showSuggestionButton = false;
 
     this.initEventHandlers();
   }
@@ -24,8 +27,20 @@ export default class VillageView extends View {
   initEventHandlers() {
     document.addEventListener(
       'toggleDelete',
-      this.toggleDeleteButton.bind(this),
+      () => this.toggleDeleteButton(),
     );
+    document.addEventListener(
+      'toggleDeleteSuggestion',
+      () => this.toggleDeleteSugButton(),
+    );
+  }
+
+  /**
+   * To toggle button on and off condition of suggestions
+   */
+  toggleDeleteSugButton() {
+    this.#showSuggestionButton = !this.#showSuggestionButton;
+    this.updateSugButtonsVisibility();
   }
 
   /**
@@ -34,6 +49,18 @@ export default class VillageView extends View {
   toggleDeleteButton() {
     this.#showButton = !this.#showButton;
     this.updateDeleteButtonsVisibility();
+  }
+
+  /**
+   * Updates the visibility of delete suggestion button based on the value of the 'showSuggestionButton' property
+   * If 'showSuggestionButton' is true, sets the display style of delete suggestion button to 'block', 
+   * otherwise sets it to 'none'
+   */
+  updateSugButtonsVisibility() {
+    const deleteButtons = document.querySelectorAll('.delete-suggestion-button');
+    deleteButtons.forEach((/** @type {HTMLElement} */ btn) => {
+      btn.style.display = this.#showSuggestionButton ? 'block' : 'none';
+    });
   }
 
   /**
@@ -59,8 +86,8 @@ export default class VillageView extends View {
 
     const headerElm = document.createElement('div');
     headerElm.className = 'header';
-    headerElm.innerHTML = `<h2 id="connection-label">CONNECTION SUGGESTIONS</h2>`
-    //headerElm.innerHTML = `<h2 id="connection-label">CONNECTION SUGGESTIONS</h2><button onclick="document.dispatchEvent(new CustomEvent('toggleDelete'))">Toggle Delete Suggestion</button>`;
+    //headerElm.innerHTML = `<h2 id="connection-label">CONNECTION SUGGESTIONS</h2>`
+    headerElm.innerHTML = `<h2 id="connection-label">CONNECTION SUGGESTIONS</h2><button onclick="document.dispatchEvent(new CustomEvent('toggleDeleteSuggestion'))">Toggle Delete Suggestion</button>`;
     villageViewElm.appendChild(headerElm);
 
     const connectionSuggestions = document.createElement('div');
@@ -102,7 +129,7 @@ export default class VillageView extends View {
     grid.className = 'grid-dude';
 
     let currentPopover;
-    for (const connection of connectionSuggestions){
+    for (const connection of connectionSuggestions) {
       const user = await dbInstance.getUser(connection.targetID);
       const connectionElm = document.createElement('div');
       connectionElm.className = `user_connections`;
@@ -165,31 +192,31 @@ export default class VillageView extends View {
       });
 
       connectionElm.appendChild(grp);
-      
-      //const delBtn = document.createElement('button');
-      //delBtn.className = 'delete-button';
-      //delBtn.style.display = 'none';
-      //delBtn.innerText = 'Delete';
-      //delBtn.addEventListener('click', async () => {
-      //  try {
-      //    const del = await dbInstance.deleteConnection(connection);
-      //    console.log('Connection deleted successfully');
-      //    this.loadConnections();
-      //  } catch (error) {
-      //    console.error(`Delete failed: ${error}`);
-      //  }
-      //});
+
+      const delBtn = document.createElement('button');
+      delBtn.className = 'delete-suggestion-button';
+      delBtn.style.display = 'none';
+      delBtn.innerText = 'Delete';
+      delBtn.addEventListener('click', async () => {
+        try {
+          const del = await dbInstance.delConnectionSuggestions(connection.userID, connection.targetID);
+          console.log('Connection deleted successfully');
+          this.loadConnectionSuggestions();
+        } catch (error) {
+          console.error(`Delete failed: ${error}`);
+        }
+      });
 
 
-      //connectionElm.appendChild(delBtn);
+      connectionElm.appendChild(delBtn);
 
       grid.appendChild(connectionElm);
     }
 
-    this.connectionsDiv.appendChild(grid);
+    this.connectionSuggestions.appendChild(grid);
 
-    //this.updateDeleteButtonsVisibility();
-    
+    this.updateDeleteButtonsVisibility();
+
   }
 
 

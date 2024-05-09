@@ -484,7 +484,7 @@ class Database {
    * @param {string} [targetID]
    * @returns {Promise<void>}
    */
-  async deConnectionSuggestions(userID, targetID) {
+  async delConnectionSuggestions(userID, targetID) {
     try {
       await fetch(
         `/api/users/${userID}/suggestions/${targetID}`,

@@ -8,7 +8,8 @@ import {
   getConnection,
   deleteConnection,
   getConnectionSuggestions,
-  deleteConnectionSuggestion
+  deleteConnectionSuggestion,
+  getConnectionSuggestion
 } from '../database.js';
 
 const userRouter = Router();
@@ -165,13 +166,14 @@ userRouter.put('/me', async (req, res) => {
  */
 userRouter.delete('/:userID/suggestions/:targetID', async (req, res) => {
   const userID = req.params.userID;
-  const targetID = req.params.userID;
+  const targetID = req.params.targetID;
 
   try {
-    const suggestConnection = await getConnection(userID, targetID);
+    const suggestConnection = await getConnectionSuggestion(userID, targetID);
     const del = await deleteConnectionSuggestion(suggestConnection);
     res.status(204).end();
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: 'Failed to delete connection suggestion' });
   }
 });
