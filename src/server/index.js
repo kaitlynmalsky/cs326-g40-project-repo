@@ -1,7 +1,7 @@
 import express from 'express';
 import userRouter from './routes/users.js';
 import pinsRouter from './routes/pins.js';
-import messagesRouter from './routes/messages.js';
+import groupsRouter from './routes/groups.js';
 import { randomUUID, scryptSync } from 'crypto';
 import { createUser, db, getUserByEmail } from './database.js';
 import session, { Session } from 'express-session';
@@ -174,7 +174,7 @@ app.use('/api/users', isAuthenticated, userRouter);
 app.use('/api/pins', isAuthenticated, pinsRouter);
 
 // Message routes
-app.use('/api/messages', isAuthenticated, messagesRouter);
+app.use('/api/groups', isAuthenticated, groupsRouter);
 
 app.use(express.static('./src/client', {}));
 

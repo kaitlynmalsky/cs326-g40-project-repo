@@ -145,6 +145,7 @@ export default class MessagesView extends View {
 
   async loadDBMessages() {
     const groupChatsDB = await database.getAllGroupChats();
+    // const userPins = await database.get
     if (groupChatsDB && groupChatsDB.length > 0) {
       for (let i = 0; i < groupChatsDB.length; i++) {
         const gcMembersDB = await database.getMembersByGroupChatID(groupChatsDB[i].GroupChatID);
@@ -184,26 +185,22 @@ export default class MessagesView extends View {
   }
 
   /**
-   * (people IS A TEMPORARY PARAM!) Adds a group chat to the left panel and to the user's internal messageList.
+   * Adds a group chat to the left panel and to the user's internal messageList.
    * @param {import('../api.js').User[]} users
-   * @param {string} pinID (change to required when fully implemented)
+   * @param {string} pinID
    * @returns {Promise<void>}
    */
 
   async addGroupChat(users, pinID = undefined) {
-    // this.groupList.push({
-    //   id: pinID, // replace with pin id
-    //   people: users,
-    // });
     this.groupList[pinID] = {
       id: pinID,
       people: users
     }
 
-    await database.addGroupChat(pinID);
-    for (let user of users) {
-      await database.addGroupChatMember(user.userID, pinID);
-    }
+    // await database.addGroupChat(pinID);
+    // for (let user of users) {
+    //   await database.addGroupChatMember(user.userID, pinID);
+    // }
 
     const gcElm = this.generateGCElm(users, pinID);
 
