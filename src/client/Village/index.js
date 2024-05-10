@@ -55,9 +55,13 @@ export default class VillageView extends View {
     const deleteButtons = document.querySelectorAll(
       '.delete-suggestion-button',
     );
-    deleteButtons.forEach((/** @type {HTMLElement} */ btn) => {
-      btn.style.display = this.#showSuggestionButton ? 'block' : 'none';
-    });
+    // deleteButtons.forEach((/** @type {HTMLElement} */ btn) => {
+    //   btn.style.display = this.#showSuggestionButton ? 'block' : 'none';
+    // });
+    deleteButtons.forEach((/**@type {HTMLElement} */ btn) => {
+      btn.style.display = 'block';
+      btn.innerText = btn.innerText === "Accept" ? "Decline" : "Accept";
+    })
   }
 
   /**
@@ -83,7 +87,7 @@ export default class VillageView extends View {
     const headerElm = document.createElement('div');
     headerElm.className = 'header';
     //headerElm.innerHTML = `<h2 id="connection-label">CONNECTION SUGGESTIONS</h2>`
-    headerElm.innerHTML = `<h2 id="connection-label">CONNECTION SUGGESTIONS</h2><button onclick="document.dispatchEvent(new CustomEvent('toggleDeleteSuggestion'))">Toggle Delete Suggestion</button>`;
+    headerElm.innerHTML = `<h2 id="connection-label">CONNECTION SUGGESTIONS</h2><button id="del-sug-button" onclick="document.dispatchEvent(new CustomEvent('toggleDeleteSuggestion'))">Toggle Delete Suggestion</button>`;
     villageViewElm.appendChild(headerElm);
 
     const connectionSuggestions = document.createElement('div');
