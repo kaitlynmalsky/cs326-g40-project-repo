@@ -143,6 +143,18 @@ export default class MessagesView extends View {
     return elm;
   }
 
+  /**
+   * Generates a message element without adding it to the database.
+   * @param {string} authorID 
+   * @param {string} content 
+   * @param {Date} timestamp 
+   * @param {string} pinID 
+   * @returns {Promise<void>}
+   */
+  async addMessageHTMLOnly(authorID, content, timestamp, pinID) {
+    this.#chatView.appendChild(await this.generateMessageElm(await api.getUser(authorID), timestamp, content, pinID));
+  }
+
   async loadDBMessages() {
     const pinsDB = await api.getUserGroups();
     if (pinsDB && pinsDB.length > 0) {
@@ -357,20 +369,6 @@ export default class MessagesView extends View {
     return gcElm;
   }
 
-
-  // This function isn't called so I'm commenting it out for now.
-
-  // /**
-  //  * 
-  //  * @param {string} pinID 
-  //  * @param {import('../api.js').User} user 
-  //  */
-  // async addGroupChatMember(pinID, user) {
-  //   this.groupList[pinID].people.push(user);
-  //   let gcElm = this.generateGCElm(this.groupList[pinID].people, pinID);
-  //   this.groupChats[pinID].gcElm = gcElm;
-  //   await api.addGroupChatMember(user.userID, pinID);
-  // }
 
   /**
    * Renders the send-message texarea.
