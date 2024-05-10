@@ -10,7 +10,7 @@ import {
   getConnectionSuggestions,
   getConnectionSuggestion,
   deleteConnectionSuggestion,
-  getUsers
+  getUsers,
 } from '../database.js';
 
 const userRouter = Router();
@@ -50,7 +50,7 @@ userRouter.get('/', async (req, res) => {
 
       delete user.password;
 
-      return res.status(200).json(user);
+      return res.status(200).json([user]);
     } else {
       const users = await getUsers(/** @type {string[]} */ (userID));
 
@@ -113,8 +113,14 @@ userRouter.delete('/:userID/connections/:targetID', async (req, res) => {
 
   try {
     const connection = await getConnection(userID, targetID);
-    const del = await deleteConnection(connection);
-    res.status(201).json(del);
+    const oppositeConnection = await getConnection(targetID, userID);
+
+    await Promise.all([
+      deleteConnection(connection),
+      deleteConnection(oppositeConnection),
+    ]);
+
+    res.status(204).end();
   } catch (err) {
     res.status(500).json({ error: 'Failed to get connection' });
   }
@@ -196,7 +202,7 @@ userRouter.delete('/:userID/suggestions/:targetID', async (req, res) => {
 
   try {
     const suggestConnection = await getConnectionSuggestion(userID, targetID);
-    const del = await deleteConnectionSuggestion(suggestConnection);
+    await deleteConnectionSuggestion(suggestConnection);
     res.status(204).end();
   } catch (err) {
     console.error(err);

@@ -8,7 +8,6 @@ export default class VillageView extends View {
   #showButton;
   #showSuggestionButton;
 
-
   /**
    * @type {string}
    */
@@ -25,13 +24,9 @@ export default class VillageView extends View {
    * Initializes event handler for toggle delete button
    */
   initEventHandlers() {
-    document.addEventListener(
-      'toggleDelete',
-      () => this.toggleDeleteButton(),
-    );
-    document.addEventListener(
-      'toggleDeleteSuggestion',
-      () => this.toggleDeleteSugButton(),
+    document.addEventListener('toggleDelete', () => this.toggleDeleteButton());
+    document.addEventListener('toggleDeleteSuggestion', () =>
+      this.toggleDeleteSugButton(),
     );
   }
 
@@ -53,11 +48,13 @@ export default class VillageView extends View {
 
   /**
    * Updates the visibility of delete suggestion button based on the value of the 'showSuggestionButton' property
-   * If 'showSuggestionButton' is true, sets the display style of delete suggestion button to 'block', 
+   * If 'showSuggestionButton' is true, sets the display style of delete suggestion button to 'block',
    * otherwise sets it to 'none'
    */
   updateSugButtonsVisibility() {
-    const deleteButtons = document.querySelectorAll('.delete-suggestion-button');
+    const deleteButtons = document.querySelectorAll(
+      '.delete-suggestion-button',
+    );
     deleteButtons.forEach((/** @type {HTMLElement} */ btn) => {
       btn.style.display = this.#showSuggestionButton ? 'block' : 'none';
     });
@@ -70,7 +67,7 @@ export default class VillageView extends View {
    */
   updateDeleteButtonsVisibility() {
     const deleteButtons = document.querySelectorAll('.delete-button');
-    deleteButtons.forEach((/** @type {HTMLElement} */btn) => {
+    deleteButtons.forEach((/** @type {HTMLElement} */ btn) => {
       btn.style.display = this.#showButton ? 'block' : 'none';
     });
   }
@@ -80,7 +77,6 @@ export default class VillageView extends View {
    * @returns {Promise<HTMLDivElement>}
    */
   async render() {
-
     const villageViewElm = document.createElement('div');
     villageViewElm.id = 'village-view';
 
@@ -121,7 +117,11 @@ export default class VillageView extends View {
     this.connectionSuggestions.innerHTML = '';
     const userID = await dbInstance.getCurrentUserID();
 
-    const connectionSuggestions = await dbInstance.getConnectionSuggestions(userID);
+    const connectionSuggestions =
+      await dbInstance.getConnectionSuggestions(userID);
+    const connectionSuggestionUsers = await dbInstance.getUsers(
+      connectionSuggestions.map((c) => c.targetID),
+    );
 
     console.log('connection suggestion', connectionSuggestions);
 
@@ -129,8 +129,7 @@ export default class VillageView extends View {
     grid.className = 'grid-dude';
 
     let currentPopover;
-    for (const connection of connectionSuggestions) {
-      const user = await dbInstance.getUser(connection.targetID);
+    for (const connectionSuggestionUser of connectionSuggestionUsers) {
       const connectionElm = document.createElement('div');
       connectionElm.className = `user_connections`;
 
@@ -138,8 +137,8 @@ export default class VillageView extends View {
       grp.className = 'group';
       grp.setAttribute('data-toggle', 'popover');
       const img = document.createElement('img');
-      img.src = user.avatar;
-      img.alt = user.name;
+      img.src = connectionSuggestionUser.avatar;
+      img.alt = connectionSuggestionUser.name;
       grp.appendChild(img);
 
       const popover = document.createElement('div');
@@ -149,7 +148,7 @@ export default class VillageView extends View {
       content.className = 'popover-content';
       const text = document.createElement('h3');
       text.className = 'popover-title';
-      text.innerHTML = user.name;
+      text.innerHTML = connectionSuggestionUser.name;
       content.appendChild(text);
       popover.appendChild(content);
 
@@ -157,24 +156,28 @@ export default class VillageView extends View {
       subConn.className = 'sub-connections';
       subConn.style.maxHeight = '200px';
       subConn.style.overflowY = 'auto';
-      let dataArr = await dbInstance.getConnections(user.userID);
-      console.log(dataArr);
 
-      for (const elm of dataArr) {
-        const dataElm = await dbInstance.getUser(elm.targetID);
-        console.log(dataElm);
+      const secondDegreeConnections = await dbInstance.getConnections(
+        connectionSuggestionUser.userID,
+      );
+      const secondDegreeConnectionUsers = await dbInstance.getUsers(
+        secondDegreeConnections.map((c) => c.targetID),
+      );
+
+      for (const secondDegreeUser of secondDegreeConnectionUsers) {
         const subConnElm = document.createElement('div');
         subConnElm.className = 'sub-connection-elements';
         const imgElm = document.createElement('img');
-        imgElm.src = dataElm.avatar;
-        imgElm.alt = dataElm.name;
+        imgElm.src = secondDegreeUser.avatar;
+        imgElm.alt = secondDegreeUser.name;
         const nameSpan = document.createElement('span');
-        nameSpan.textContent = dataElm.name;
+        nameSpan.textContent = secondDegreeUser.name;
         nameSpan.className = 'sub-connection-name';
         subConnElm.appendChild(imgElm);
         subConnElm.appendChild(nameSpan);
         subConn.appendChild(subConnElm);
       }
+
       content.appendChild(subConn);
 
       grp.appendChild(popover);
@@ -199,14 +202,16 @@ export default class VillageView extends View {
       delBtn.innerText = 'Delete';
       delBtn.addEventListener('click', async () => {
         try {
-          const del = await dbInstance.delConnectionSuggestions(connection.userID, connection.targetID);
+          const del = await dbInstance.delConnectionSuggestions(
+            userID,
+            connectionSuggestionUser.userID,
+          );
           console.log('Connection deleted successfully');
           this.loadConnectionSuggestions();
         } catch (error) {
           console.error(`Delete failed: ${error}`);
         }
       });
-
 
       connectionElm.appendChild(delBtn);
 
@@ -216,9 +221,7 @@ export default class VillageView extends View {
     this.connectionSuggestions.appendChild(grid);
 
     this.updateDeleteButtonsVisibility();
-
   }
-
 
   /**
    * Asynchronously loads connections data and renders them on the UI.
@@ -228,15 +231,15 @@ export default class VillageView extends View {
     const userID = await dbInstance.getCurrentUserID();
 
     const connections = await dbInstance.getConnections(userID);
-
-    console.log('connections', connections);
+    const connectionUsers = await dbInstance.getUsers(
+      connections.map((c) => c.targetID),
+    );
 
     const grid = document.createElement('div');
     grid.className = 'grid-dude';
 
     let currentPopover;
-    for (const connection of connections) {
-      const user = await dbInstance.getUser(connection.targetID);
+    for (const connectionUser of connectionUsers) {
       const connectionElm = document.createElement('div');
       connectionElm.className = `user_connections`;
 
@@ -244,8 +247,8 @@ export default class VillageView extends View {
       grp.className = 'group';
       grp.setAttribute('data-toggle', 'popover');
       const img = document.createElement('img');
-      img.src = user.avatar;
-      img.alt = user.name;
+      img.src = connectionUser.avatar;
+      img.alt = connectionUser.name;
       grp.appendChild(img);
 
       const popover = document.createElement('div');
@@ -255,7 +258,7 @@ export default class VillageView extends View {
       content.className = 'popover-content';
       const text = document.createElement('h3');
       text.className = 'popover-title';
-      text.innerHTML = user.name;
+      text.innerHTML = connectionUser.name;
       content.appendChild(text);
       popover.appendChild(content);
 
@@ -263,24 +266,28 @@ export default class VillageView extends View {
       subConn.className = 'sub-connections';
       subConn.style.maxHeight = '200px';
       subConn.style.overflowY = 'auto';
-      let dataArr = await dbInstance.getConnections(user.userID);
-      console.log(dataArr);
 
-      for (const elm of dataArr) {
-        const dataElm = await dbInstance.getUser(elm.targetID);
-        console.log(dataElm);
+      const secondDegreeConnections = await dbInstance.getConnections(
+        connectionUser.userID,
+      );
+      const secondDegreeConnectionUsers = await dbInstance.getUsers(
+        secondDegreeConnections.map((c) => c.targetID),
+      );
+
+      for (const secondDegreeUser of secondDegreeConnectionUsers) {
         const subConnElm = document.createElement('div');
         subConnElm.className = 'sub-connection-elements';
         const imgElm = document.createElement('img');
-        imgElm.src = dataElm.avatar;
-        imgElm.alt = dataElm.name;
+        imgElm.src = secondDegreeUser.avatar;
+        imgElm.alt = secondDegreeUser.name;
         const nameSpan = document.createElement('span');
-        nameSpan.textContent = dataElm.name;
+        nameSpan.textContent = secondDegreeUser.name;
         nameSpan.className = 'sub-connection-name';
         subConnElm.appendChild(imgElm);
         subConnElm.appendChild(nameSpan);
         subConn.appendChild(subConnElm);
       }
+
       content.appendChild(subConn);
 
       grp.appendChild(popover);
@@ -305,14 +312,16 @@ export default class VillageView extends View {
       delBtn.innerText = 'Delete';
       delBtn.addEventListener('click', async () => {
         try {
-          const del = await dbInstance.deleteConnection(connection);
+          const del = await dbInstance.deleteConnection(
+            userID,
+            connectionUser.userID,
+          );
           console.log('Connection deleted successfully');
           this.loadConnections();
         } catch (error) {
           console.error(`Delete failed: ${error}`);
         }
       });
-
 
       connectionElm.appendChild(delBtn);
 

@@ -318,6 +318,26 @@ class Database {
   }
 
   /**
+   * Gets a list of users by userIDs
+   * @param {string[]} userIDs
+   * @returns {Promise<User[]>}
+   */
+  async getUsers(userIDs) {
+    const reqUrl = new URL('/api/users', location.origin);
+
+    userIDs.forEach((userID) => reqUrl.searchParams.append('userID', userID));
+
+    const usersResponse = await fetch(reqUrl);
+
+    if (!usersResponse.ok) {
+      console.error('Failed to get users');
+      return [];
+    }
+
+    return usersResponse.json();
+  }
+
+  /**
    * Calls the get backend to get user by email
    * @param {string} email The email of the user to retrieve
    * @returns {Promise<User | null>}
@@ -441,22 +461,19 @@ class Database {
 
   /**
    * Calls the delete backend to delete connection
-   * @param {VillageConnection} connection Connection to delete
+   * @param {string} userID Source of the connection
+   * @param {string} targetID Target of the connection
    * @returns {Promise<void>}
    */
-  async deleteConnection(connection) {
+  async deleteConnection(userID, targetID) {
     try {
-      await fetch(
-        `/api/users/${connection.userID}/connections/${connection.targetID}`,
-        {
-          method: 'DELETE',
-        },
-      );
+      await fetch(`/api/users/${userID}/connections/${targetID}`, {
+        method: 'DELETE',
+      });
     } catch (err) {
       console.error(err);
     }
   }
-
 
   /**
    * Calls the get backend to get Connection Suggestions
@@ -465,9 +482,7 @@ class Database {
    */
   async getConnectionSuggestions(userID) {
     try {
-      const getPromise = await fetch(
-        `/api/users/${userID}/suggestions`
-      );
+      const getPromise = await fetch(`/api/users/${userID}/suggestions`);
       if (!getPromise.ok) {
         console.error(`FAILED TO GET CONNECTION SUGGESTIONS`);
         return;
@@ -486,12 +501,9 @@ class Database {
    */
   async delConnectionSuggestions(userID, targetID) {
     try {
-      await fetch(
-        `/api/users/${userID}/suggestions/${targetID}`,
-        {
-          method: 'DELETE'
-        }
-      );
+      await fetch(`/api/users/${userID}/suggestions/${targetID}`, {
+        method: 'DELETE',
+      });
     } catch (err) {
       console.error(err);
     }
@@ -562,7 +574,7 @@ class Database {
    * @returns {Promise<{userID: string, pinID: string}[]>}
    */
   async getUserGroups() {
-    const getPinsResponse = await fetch(`/api/groups/`, {method: 'GET'});
+    const getPinsResponse = await fetch(`/api/groups/`, { method: 'GET' });
     if (!getPinsResponse.ok) {
       console.error(`Failed to get user groups`);
     }
@@ -571,9 +583,9 @@ class Database {
 
   /**
    * Sends message with given pin ID, timestamp, and content. (can this return void idk)
-   * @param {string} pinID 
-   * @param {string} time 
-   * @param {string} content 
+   * @param {string} pinID
+   * @param {string} time
+   * @param {string} content
    * @returns {Promise<void>} change later??
    */
   async sendMessage(pinID, time, content) {
@@ -582,26 +594,27 @@ class Database {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({content: content, timeString: time})
-     });
-     if (!sendMessageResponse.ok) {
-        console.error(`Error sending message`);
-     }
-     return;
+      body: JSON.stringify({ content: content, timeString: time }),
+    });
+    if (!sendMessageResponse.ok) {
+      console.error(`Error sending message`);
+    }
+    return;
   }
 
   /**
    * Gets all messages from a given pin (group) ID.
-   * @param {string} pinID 
+   * @param {string} pinID
    */
   async getGroupMessages(pinID) {
-    const getMessagesResponse = await fetch(`/api/groups/${pinID}/messages`, {method: 'GET'})
+    const getMessagesResponse = await fetch(`/api/groups/${pinID}/messages`, {
+      method: 'GET',
+    });
     if (!getMessagesResponse.ok) {
       console.error(`Failed to get messages`);
     }
-    return getMessagesResponse.json(); 
+    return getMessagesResponse.json();
   }
-
 
   // ********************************************
   // User Pin Notifications
@@ -793,9 +806,6 @@ class Database {
     });
     return memberResult.rows.map((row) => row.doc);
   }
-
-
-
 }
 
 const dbInstance = new Database();
