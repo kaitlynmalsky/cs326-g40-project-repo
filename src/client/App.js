@@ -77,6 +77,15 @@ export class App {
     const profileView = new ProfileView();
     this.#addRoute('profile', { view: profileView });
 
+    GlobalEvents.addEventListener('navigate', (navEvent) =>
+      this.#navigateTo(navEvent.navTarget),
+    );
+    window.addEventListener('popstate', (e) => {
+      if (e.state) {
+        this.#navigateTo(e.state);
+      }
+    });
+
     const currentUserID = await dbInstance.getCurrentUserID();
 
     if (currentUserID) {
@@ -97,15 +106,6 @@ export class App {
     } else {
       this.#navigateTo('login');
     }
-
-    GlobalEvents.addEventListener('navigate', (navEvent) =>
-      this.#navigateTo(navEvent.navTarget),
-    );
-    window.addEventListener('popstate', (e) => {
-      if (e.state) {
-        this.#navigateTo(e.state);
-      }
-    });
   }
 
   /**

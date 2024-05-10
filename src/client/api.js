@@ -291,14 +291,18 @@ class Database {
    * @returns {Promise<User | null>}
    */
   async getMe() {
-    const meResponse = await fetch('/api/users/me');
+    try {
+      const meResponse = await fetch('/api/users/me');
 
-    if (!meResponse.ok) {
-      console.error('Failed to get me');
+      if (!meResponse.ok) {
+        console.error('Failed to get me');
+        return null;
+      }
+
+      return meResponse.json();
+    } catch (err) {
       return null;
     }
-
-    return meResponse.json();
   }
 
   /**
