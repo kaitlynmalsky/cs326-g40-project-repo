@@ -93,6 +93,7 @@ export class App {
 
       if (!me) {
         await dbInstance.deleteCurrentUserId();
+        GlobalEvents.logout();
         return this.#navigateTo('login');
       }
 
