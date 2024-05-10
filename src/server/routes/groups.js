@@ -53,7 +53,7 @@ groupsRouter.get('/:groupID/messages', async(req, res) => {
     const groupID = req.params.groupID;
     try {
         let messages = await getMessagesByGroupChatID(groupID);
-        return res.status(200).json({ messages: messages });
+        return res.status(200).json(messages);
     } catch (err) {
         return res.status(500).json({ error: `Failed to get messages` });
     }
