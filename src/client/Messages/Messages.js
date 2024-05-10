@@ -144,21 +144,20 @@ export default class MessagesView extends View {
   }
 
   async loadDBMessages() {
-    const groupChatsDB = await database.getAllGroupChats();
-    // const userPins = await database.get
-    if (groupChatsDB && groupChatsDB.length > 0) {
-      for (let i = 0; i < groupChatsDB.length; i++) {
-        const gcMembersDB = await database.getMembersByGroupChatID(groupChatsDB[i].GroupChatID);
-        const gcUsersDB = [];
+    const pinsDB = await database.getUserGroups();
+    if (pinsDB && pinsDB.length > 0) {
+      for (let i = 0; i < pinsDB.length; i++) {
+        const gcMembersDB = await database.getPinAttendees(pinsDB[i].pinID);
+        const gcUsersDB = []
         for (let gcMember of gcMembersDB) {
-          const userDB = await database.getUser(gcMember.UserID);
+          const userDB = await database.getUser(gcMember.userID);
           if (userDB !== null) {
             gcUsersDB.push(userDB);
           }
         }
-        await this.addGroupChat(gcUsersDB, groupChatsDB[i].GroupChatID);
-        const gcMessagesDB = await database.getMessagesByGroupChatID(groupChatsDB[i].GroupChatID);
-        gcMessagesDB.sort(function (a, b) {
+        await this.addGroupChat(gcUsersDB, pinsDB[i].pinID);
+        const gcMessagesDB = await database.getGroupMessages(pinsDB[i].pinID);
+        gcMessagesDB.sort(function (/**@type import('../api.js').GroupChatMessage*/ a, /**@type import('../api.js').GroupChatMessage*/ b) {
           return new Date(a.time).getTime() - new Date(b.time).getTime();
         });
         for (let message of gcMessagesDB) {
@@ -351,17 +350,19 @@ export default class MessagesView extends View {
   }
 
 
-  /**
-   * 
-   * @param {string} pinID 
-   * @param {import('../api.js').User} user 
-   */
-  async addGroupChatMember(pinID, user) {
-    this.groupList[pinID].people.push(user);
-    let gcElm = this.generateGCElm(this.groupList[pinID].people, pinID);
-    this.groupChats[pinID].gcElm = gcElm;
-    await database.addGroupChatMember(user.userID, pinID);
-  }
+  // This function isn't called so I'm commenting it out for now.
+
+  // /**
+  //  * 
+  //  * @param {string} pinID 
+  //  * @param {import('../api.js').User} user 
+  //  */
+  // async addGroupChatMember(pinID, user) {
+  //   this.groupList[pinID].people.push(user);
+  //   let gcElm = this.generateGCElm(this.groupList[pinID].people, pinID);
+  //   this.groupChats[pinID].gcElm = gcElm;
+  //   await database.addGroupChatMember(user.userID, pinID);
+  // }
 
   /**
    * Renders the send-message texarea.
@@ -386,12 +387,13 @@ export default class MessagesView extends View {
             this.#active_id,
           ),
         );
-        await database.addGroupChatMessage(
-          this.#active_id,
-          this.#currUser.userID,
-          messageArea.value,
-          sentDate,
-        );
+        // await database.addGroupChatMessage(
+        //   this.#active_id,
+        //   this.#currUser.userID,
+        //   messageArea.value,
+        //   sentDate,
+        // );
+        await database.sendMessage(this.#active_id, sentDate, messageArea.value);
         this.#chatView.scrollTop = this.#chatView.scrollHeight;
         messageForm.reset();
       }

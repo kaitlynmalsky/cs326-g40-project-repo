@@ -558,7 +558,7 @@ class Database {
   // ********************************************
 
   /**
-   * 
+   * Returns a list of pins that the current user is a part of.
    * @returns {Promise<{userID: string, pinID: string}[]>}
    */
   async getUserGroups() {
