@@ -61,6 +61,7 @@ export default class VillageView extends View {
     deleteButtons.forEach((/**@type {HTMLElement} */ btn) => {
       btn.style.display = 'block';
       btn.innerText = btn.innerText === "Accept" ? "Decline" : "Accept";
+      btn.style.backgroundColor = btn.innerText === "Accept" ? "#00ad03": "#b91c1b"
     })
   }
 
@@ -87,7 +88,7 @@ export default class VillageView extends View {
     const headerElm = document.createElement('div');
     headerElm.className = 'header';
     //headerElm.innerHTML = `<h2 id="connection-label">CONNECTION SUGGESTIONS</h2>`
-    headerElm.innerHTML = `<h2 id="connection-label">CONNECTION SUGGESTIONS</h2><button id="del-sug-button" onclick="document.dispatchEvent(new CustomEvent('toggleDeleteSuggestion'))">Toggle Delete Suggestion</button>`;
+    headerElm.innerHTML = `<h2 id="connection-label">CONNECTION SUGGESTIONS</h2><button id="del-sug-button" onclick="document.dispatchEvent(new CustomEvent('toggleDeleteSuggestion'))">Toggle Accept/Decline</button>`;
     villageViewElm.appendChild(headerElm);
 
     const connectionSuggestions = document.createElement('div');
@@ -102,6 +103,8 @@ export default class VillageView extends View {
     const connectionsDiv = document.createElement('div');
     this.connectionsDiv = connectionsDiv;
     villageViewElm.appendChild(connectionsDiv);
+
+    this.updateSugButtonsVisibility();
 
     return villageViewElm;
   }
@@ -202,8 +205,9 @@ export default class VillageView extends View {
 
       const delBtn = document.createElement('button');
       delBtn.className = 'delete-suggestion-button';
-      delBtn.style.display = 'none';
-      delBtn.innerText = 'Delete';
+      delBtn.style.display = 'block';
+      delBtn.innerText = 'Accept';
+      delBtn.style.backgroundColor = "#00ad03";
       delBtn.addEventListener('click', async () => {
         try {
           const del = await dbInstance.delConnectionSuggestions(
@@ -212,6 +216,13 @@ export default class VillageView extends View {
           );
           console.log('Connection deleted successfully');
           this.loadConnectionSuggestions();
+          if (delBtn.innerText === 'Accept') {
+            await dbInstance.createConnection({
+              userID: await dbInstance.getCurrentUserID(),
+              targetID: connectionSuggestionUser.userID
+            })
+            this.loadConnections();
+          }
         } catch (error) {
           console.error(`Delete failed: ${error}`);
         }
