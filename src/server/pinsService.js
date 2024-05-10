@@ -20,7 +20,7 @@ async function handlePinAttendee(attendee, pinAttendees) {
 
   await Promise.all(
     pinAttendees
-      .filter((a) => !existingConnections.find((c) => c.userID === a.userID) || (a.userID !== attendee.userID))
+      .filter((a) => !existingConnections.find((c) => c.userID === a.userID) && (a.userID !== attendee.userID))
       .map((a) =>
         createConnectionSuggestion({
           userID: attendee.userID,
