@@ -1,6 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 #root {
     @apply h-full flex flex-col;
 }
@@ -126,6 +127,29 @@ main {
     color: #412003;
 }
 
+.grid-dude,
+.grid-bro {
+    display: flex;
+    /* Enables Flexbox */
+    flex-wrap: wrap;
+    /* Allows items to wrap onto multiple lines */
+    justify-content: center;
+    /* Centers items horizontally in the container */
+    gap: 35px;
+    /* Sets the gap between items */
+    padding: 10px;
+    /* Optional: Adds some padding inside the container */
+}
+
+.item {
+    flex: 1 1 150px;
+    /* Flex items will grow and shrink from a base of 150px */
+    max-width: calc(100% - 35px);
+    /* Optional: Ensures that max width considers the gap */
+}
+
+
+/*
 .grid-dude {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -139,6 +163,7 @@ main {
     grid-gap: 35px;
     justify-content: center;
 }
+*/
 
 .header {
     display: flex;
