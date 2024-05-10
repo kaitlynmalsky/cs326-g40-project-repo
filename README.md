@@ -8,11 +8,25 @@ VillageLink is a web application that makes it simpler and easier to make new fr
 
 ## Installation and Setup
 
-To view the milestone submissions, download the repository and enter `npm run milestone-01` (Project Planning) for Milestone 1 or `npm run milestone-02` for Milestone 2 (Frontend). The milestone you run will open in [http://127.0.0.1:3000](http://127.0.0.1:3000).
+To view the older milestone submissions, download the repository and enter `npm run milestone-01` (Project Planning) for Milestone 1 or `npm run milestone-02` for Milestone 2 (Frontend). The milestone you run will open in [http://127.0.0.1:3000](http://127.0.0.1:3000).
 
-Altertnatively, you can visit our domain at [https://villagelink.fly.dev](https://villagelink.fly.dev/#login)!
+To run milestone 3 (Backend) download the repository and enter `npm run start` into the terminal.
+Alternatively, you can visit our domain at [https://villagelink.fly.dev](https://villagelink.fly.dev/#login)!
 
 ## How to use
+
+To use VillageLink, you need to first create an account.
+
+In the **Profile** section, you can customize and save your avatar.
+
+To post an event, go to the **Map** section and click **Add Pin**. Enter a start time and end time for your event, and add details. _The application is built with short-term events in mind, so the implication is that the event is today. Set a start time after the current time._ You can also select a current pin to join it.
+
+Once you create or join a pin, a new group chat will be created. This chat can be seen in **Messages**.
+
+Once a pin's event has expired, the application will prompt you to add a village connection to other pin attendees. These prompts, along with your villages and your friends' villages, are visible in **Villages**.
+
+## Routes
+_finish writing this_
 
 ### Map View
 
