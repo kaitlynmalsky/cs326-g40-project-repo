@@ -34,7 +34,7 @@ groupsRouter.post('/:groupID/messages', async(req, res) => {
     let timestamp = new Date(timeString);
     try {
         await addGroupChatMessage(groupID, userID, content, timestamp);
-        return res.status(200);
+        return res.status(200).end();
     } catch (err) {
         return res.status(500).json({ error: `Failed to send message` });
     }
