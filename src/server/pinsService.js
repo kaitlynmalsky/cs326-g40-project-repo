@@ -15,12 +15,15 @@ const PIN_SCAN_INTERVAL = 1000 * 60 * 5; // 5 minutes
  * @param {import('./database.js').PinAttendee[]} pinAttendees
  */
 async function handlePinAttendee(attendee, pinAttendees) {
-
   const existingConnections = await getConnections(attendee.userID);
 
   await Promise.all(
     pinAttendees
-      .filter((a) => !existingConnections.find((c) => c.userID === a.userID) && (a.userID !== attendee.userID))
+      .filter(
+        (a) =>
+          !existingConnections.find((c) => c.targetID === a.userID) &&
+          a.userID !== attendee.userID,
+      )
       .map((a) =>
         createConnectionSuggestion({
           userID: attendee.userID,
