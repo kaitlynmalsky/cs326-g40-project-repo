@@ -146,6 +146,7 @@ export default class MessagesView extends View {
   async loadDBMessages() {
     const pinsDB = await api.getUserGroups();
     if (pinsDB && pinsDB.length > 0) {
+      this.#active_id = pinsDB[0].pinID;
       for (const currPin of Object.values(pinsDB)) {
         const gcMembersDB = await api.getPinAttendees(currPin.pinID);
         const gcUsersDB = []
