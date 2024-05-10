@@ -202,7 +202,19 @@ userRouter.delete('/:userID/suggestions/:targetID', async (req, res) => {
 
   try {
     const suggestConnection = await getConnectionSuggestion(userID, targetID);
-    await deleteConnectionSuggestion(suggestConnection);
+    const oppositeConnectionSuggestion = await getConnectionSuggestion(
+      targetID,
+      userID,
+    );
+
+    if (suggestConnection) {
+      await deleteConnectionSuggestion(suggestConnection);
+    }
+
+    if (oppositeConnectionSuggestion) {
+      await deleteConnectionSuggestion(oppositeConnectionSuggestion);
+    }
+
     res.status(204).end();
   } catch (err) {
     console.error(err);
