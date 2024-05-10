@@ -1,5 +1,5 @@
 import View from '../View.js';
-import database from '../api.js';
+import api from '../api.js';
 
 import ExistingPin from "../Map/ExistingPin.js" // this might be relevant soon
 
@@ -95,8 +95,8 @@ export default class MessagesView extends View {
     this.#col2.appendChild(this.#sendView);
 
     // Demo messages
-    this.#currUser = await database.getUser(await database.getCurrentUserID());
-    // if ((await database.getAllGroupChats()).length === 0) {
+    this.#currUser = await api.getUser(await api.getCurrentUserID());
+    // if ((await api.getAllGroupChats()).length === 0) {
     //   await mockMessages();
     // }
    await this.loadDBMessages();
@@ -144,25 +144,32 @@ export default class MessagesView extends View {
   }
 
   async loadDBMessages() {
-    const pinsDB = await database.getUserGroups();
+    const pinsDB = await api.getUserGroups();
     if (pinsDB && pinsDB.length > 0) {
-      for (let i = 0; i < pinsDB.length; i++) {
-        const gcMembersDB = await database.getPinAttendees(pinsDB[i].pinID);
+      for (const currPin of Object.values(pinsDB)) {
+        const gcMembersDB = await api.getPinAttendees(currPin.pinID);
         const gcUsersDB = []
         for (let gcMember of gcMembersDB) {
-          const userDB = await database.getUser(gcMember.userID);
+          const userDB = await api.getUser(gcMember.userID);
           if (userDB !== null) {
             gcUsersDB.push(userDB);
           }
         }
-        await this.addGroupChat(gcUsersDB, pinsDB[i].pinID);
-        const gcMessagesDB = await database.getGroupMessages(pinsDB[i].pinID);
-        gcMessagesDB.sort(function (/**@type import('../api.js').GroupChatMessage*/ a, /**@type import('../api.js').GroupChatMessage*/ b) {
+        await this.addGroupChat(gcUsersDB, currPin.pinID);
+        const gcMessagesDB = await api.getGroupMessages(currPin.pinID);
+        let messageArray = Object.values(gcMessagesDB)
+        messageArray = messageArray.sort(function (/**@type import('../api.js').GroupChatMessage*/ a, /**@type import('../api.js').GroupChatMessage*/ b) {
           return new Date(a.time).getTime() - new Date(b.time).getTime();
         });
-        for (let message of gcMessagesDB) {
-          this.#chatView.appendChild(await this.generateMessageElm(await database.getUser(message.UserID), new Date(message.time), message.messageContent, message.GroupChatID));
+        for (let message of messageArray) {
+          // user is undefined here?
+          this.#chatView.appendChild(await this.generateMessageElm(await api.getUser(message.UserID), new Date(message.time), message.messageContent, message.GroupChatID));
         }
+      }
+      if (this.groupChats && Object.keys(this.groupChats).length !== 0) { // replace with Object.keys(this.groupChats).length
+        // i.e. If the user actually has any chats
+        let firstKey = Object.keys(this.groupChats)[0];
+        this.changeChat(firstKey);
       }
     }
   }
@@ -196,9 +203,9 @@ export default class MessagesView extends View {
       people: users
     }
 
-    // await database.addGroupChat(pinID);
+    // await api.addGroupChat(pinID);
     // for (let user of users) {
-    //   await database.addGroupChatMember(user.userID, pinID);
+    //   await api.addGroupChatMember(user.userID, pinID);
     // }
 
     const gcElm = this.generateGCElm(users, pinID);
@@ -332,13 +339,13 @@ export default class MessagesView extends View {
     gcElm.classList.add('gc-stack');
 
     users.forEach((user) => {
-      if (user.userID !== this.#currUser.userID) {
+
         const avatarElm = document.createElement('img');
         avatarElm.className = 'w-10 h-10 border-2 border-white rounded-full';
   
         avatarElm.src = user.avatar;
         gcElm.appendChild(avatarElm);
-      }
+      
     });
 
     const temp = pinID; // replace with pin id
@@ -361,7 +368,7 @@ export default class MessagesView extends View {
   //   this.groupList[pinID].people.push(user);
   //   let gcElm = this.generateGCElm(this.groupList[pinID].people, pinID);
   //   this.groupChats[pinID].gcElm = gcElm;
-  //   await database.addGroupChatMember(user.userID, pinID);
+  //   await api.addGroupChatMember(user.userID, pinID);
   // }
 
   /**
@@ -387,14 +394,15 @@ export default class MessagesView extends View {
             this.#active_id,
           ),
         );
-        // await database.addGroupChatMessage(
+        // await api.addGroupChatMessage(
         //   this.#active_id,
         //   this.#currUser.userID,
         //   messageArea.value,
         //   sentDate,
         // );
-        await database.sendMessage(this.#active_id, sentDate, messageArea.value);
+        await api.sendMessage(this.#active_id, sentDate.toString(), messageArea.value);
         this.#chatView.scrollTop = this.#chatView.scrollHeight;
+        messageArea.value = "";
         messageForm.reset();
       }
     });

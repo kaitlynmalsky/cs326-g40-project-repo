@@ -572,7 +572,7 @@ class Database {
   /**
    * Sends message with given pin ID, timestamp, and content. (can this return void idk)
    * @param {string} pinID 
-   * @param {Date} time 
+   * @param {string} time 
    * @param {string} content 
    * @returns {Promise<void>} change later??
    */
@@ -582,7 +582,7 @@ class Database {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({content: content, timeString: time.toString()})
+      body: JSON.stringify({content: content, timeString: time})
      });
      if (!sendMessageResponse.ok) {
         console.error(`Error sending message`);

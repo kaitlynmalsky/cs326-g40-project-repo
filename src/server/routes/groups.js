@@ -6,12 +6,13 @@ const groupsRouter = Router();
 
 groupsRouter.get('/', async(req, res) => {
     // will return a list of pins/groups that the current user is a part of
+    console.log("trying to get groups");
     const userID = /** @type {import('../index.js').AuthenticatedSessionData} */ (
         req.session
     ).userID;
     try {
         let pins = await getUserPins(userID);
-        return res.status(200).json({ pins: pins });
+        return res.status(200).json(pins);
     } catch (err) {
         return res.status(500).json({ error: `Failed to get user pins` })
     }
