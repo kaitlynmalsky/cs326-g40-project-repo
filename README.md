@@ -26,7 +26,31 @@ Once you create or join a pin, a new group chat will be created. This chat can b
 Once a pin's event has expired, the application will prompt you to add a village connection to other pin attendees. These prompts, along with your villages and your friends' villages, are visible in **Villages**.
 
 ## Routes
-_finish writing this_
+
+| Route | Method | Description | URL Parameters | Body | Requires Authentication? 
+| -------- | ------- | ------- | ------- | ------- | ------- |
+| `/api/login` | POST | Logs the user in using the given email and password. | none | email, password | No
+| `/api/logout` | GET | Logs out the current user. | none | none | Yes
+| `/api/signup` | POST | Adds a new user to the database with the given attributes and logs them in. | none | username, name, avatar, avatarConfig, email, password | No
+| `/api/users/` | GET | Gets a user with the given email or user ID. Only requires one of the stated URL parameters. If both are given, use email. | email, userID |  none | No
+| `/api/users/:userID/connections/` | POST | Creates a bi-directional connection between userID and targetID. | userID | targetData | No
+| `/api/users/:userID/connections/` | GET | Get all connections of userID. | userID | none | No
+| `/api/users/:userID/connections/:targetID` | DELETE | Deletes the connection between userID and targetID. | userID, targetID | none | No
+| `/api/users/me` | GET | Get current user. | none | none | Yes
+| `/api/users/:userID` | GET | Get the user with the given userID. | userID | none | No
+| `/api/users/:userID/suggestions/:targetID` | DELETE | Delete the given connection suggestion. | userID, targetID | none | No
+| `/api/users/:userID/suggestions/` | GET | Get the connection suggestions of the user with the given userID. | userID | none | No
+| `/api/pins/` | POST | Create a new pin with the given data. | none | startTime, endTime, details, coords | Yes
+| `/api/pins/` | GET | Get all filtered pins with given type. | type | none | No
+| `/api/pins/:pinID/attendees/` | GET | Get attendees of the given pin. | pinID | none | No
+| `/api/pins/:pinID/attendees/` | POST | Join given pin as an attendee. | pinID | none | Yes
+| `/api/pins/:pinID/attendees/:attendeeID/` | DELETE | Leave a pin as an attendee. | pinID, attendeeID | none | Yes
+| `/api/pins/:pinID` | GET | Gets a pin with the given ID. | pinID | none | No
+| `/api/pins/:pinID`| PUT | Updates the given pin if the current user is the host. | pinID | none | Yes
+| `/api/pins/:pinID` | DELETE | Deletes the given pin if the current user is the host. | pinID | none | Yes
+| `/api/groups/` | GET | Returns a list of groups (pins) that the current user is a part of. | none | none | Yes
+| `/api/groups/:groupID/messages/` | POST | Send a message to the given group chat. | groupID | content, timeString | Yes
+| `/api/groups/:groupID/messages/` | GET | Get messages from a group chat. | groupID | none | Yes
 
 ### Map View
 
