@@ -8,10 +8,15 @@ VillageLink is a web application that makes it simpler and easier to make new fr
 
 ## Installation and Setup
 
-To view the older milestone submissions, download the repository and enter `npm run milestone-01` (Project Planning) for Milestone 1 or `npm run milestone-02` for Milestone 2 (Frontend). The milestone you run will open in [http://127.0.0.1:3000](http://127.0.0.1:3000).
+Download the repository and run `npm run install`.
 
-To run milestone 3 (Backend) download the repository and enter `npm run start` into the terminal.
-Alternatively, you can visit our domain at [https://villagelink.fly.dev](https://villagelink.fly.dev/#login)!
+To view the older milestone submissions, run `npm run milestone-01` (Project Planning) for Milestone 1 or `npm run milestone-02` for Milestone 2 (Frontend). 
+
+To run milestone 3  enter `npm run start` into the terminal.
+
+Each milestone opens in [http://127.0.0.1:3000](http://127.0.0.1:3000).
+
+Alternatively, for milestone 3, you can visit our domain at [https://villagelink.fly.dev](https://villagelink.fly.dev/#login)!
 
 ## How to use
 
